@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/Profile/views/follow_vendors_view.dart';
 import 'package:quopon/app/modules/Profile/views/settings_view.dart';
 import 'package:quopon/common/profileCard.dart';
 import '../controllers/profile_controller.dart';
@@ -75,7 +76,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         GestureDetector(
                           onTap: () {
-
+                            Get.to(() => FollowVendorsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FollowedVendors.png', title: 'Followed Vendors'),
                         ),
