@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 
 class VendorCard extends GetView {
   final String brandLogo;
@@ -82,28 +85,28 @@ class VendorCard extends GetView {
               ],
             ),
             GestureDetector(
-              onTap: () {
-
-              },
-              child: Container(
-                width: 93,
-                height: 32,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Color(0xFFD62828)
-                ),
-                child: Center(
-                  child: Text(
-                    'View Profile',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      fontWeight: FontWeight.w500
+                onTap: () {
+                  Get.to(() => VendorProfileView());
+                },
+                child: Container(
+                  width: 93,
+                  height: 32,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Color(0xFFD62828)
+                  ),
+                  child: Center(
+                    child: Text(
+                      'View Profile',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        fontWeight: FontWeight.w500
+                      ),
                     ),
                   ),
                 ),
               ),
-            )
           ],
         ),
         SizedBox(height: 5,),

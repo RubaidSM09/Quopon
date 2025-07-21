@@ -17,6 +17,8 @@ abstract class Routes {
   static const MY_DEALS_DETAILS = _Paths.MY_DEALS_DETAILS;
   static const CHOOSE_REDEMPTION_DEAL = _Paths.CHOOSE_REDEMPTION_DEAL;
   static const PROFILE = _Paths.PROFILE;
+  static const VENDOR_PROFILE = _Paths.VENDOR_PROFILE;
+  static const PRODUCT_DETAILS = _Paths.PRODUCT_DETAILS;
 }
 
 abstract class _Paths {
@@ -35,4 +37,6 @@ abstract class _Paths {
   static const MY_DEALS_DETAILS = '/my-deals-details';
   static const CHOOSE_REDEMPTION_DEAL = '/choose-redemption-deal';
   static const PROFILE = '/profile';
+  static const VENDOR_PROFILE = '/vendor-profile';
+  static const PRODUCT_DETAILS = '/product-details';
 }

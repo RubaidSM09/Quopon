@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:quopon/app/modules/VendorProfile/controllers/vendor_profile_controller.dart';
 
 // Custom Gradient Button Widget
 class GradientButton extends StatelessWidget {

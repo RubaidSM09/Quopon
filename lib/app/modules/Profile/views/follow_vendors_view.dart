@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/common/VendorCard.dart';
 
-class FollowVendorsView extends GetView {
+import '../controllers/follow_vendors_controller.dart';
+
+class FollowVendorsView extends GetView<FollowVendorsController> {
   const FollowVendorsView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final FollowVendorsController controller = Get.put(FollowVendorsController());
+
     return Scaffold(
         backgroundColor: Color(0xFFF9FBFC),
       body: Padding(
@@ -78,107 +83,27 @@ class FollowVendorsView extends GetView {
               ),
             ),
 
-            SizedBox(height: 20),
+            // SizedBox(height: 20),
 
-            Column(
-              children: [
-              VendorCard(
-                brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                dealStoreName: 'Starbucks',
-                dealType: 'Food & Beverage',
-                activeDeals: 3,
-              ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-                VendorCard(
-                  brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                  dealStoreName: 'Starbucks',
-                  dealType: 'Food & Beverage',
-                  activeDeals: 3,
-                ),
-              ],
+            Expanded(
+              child: Obx(() {
+                if (controller.vendorList.isEmpty) {
+                  return const Center(child: Text("No vendors found"));
+                }
+
+                return ListView.builder(
+                  itemCount: controller.vendorList.length,
+                  itemBuilder: (context, index) {
+                    final vendor = controller.vendorList[index];
+                    return VendorCard(
+                      brandLogo: vendor.brandLogo,
+                      dealStoreName: vendor.dealStoreName,
+                      dealType: vendor.dealType,
+                      activeDeals: vendor.activeDeals,
+                    );
+                  },
+                );
+              }),
             )
           ],
         ),

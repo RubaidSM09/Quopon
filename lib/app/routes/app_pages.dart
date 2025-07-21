@@ -6,12 +6,16 @@ import '../modules/MyDeals/bindings/my_deals_binding.dart';
 import '../modules/MyDeals/views/my_deals_view.dart';
 import '../modules/MyDealsDetails/bindings/my_deals_details_binding.dart';
 import '../modules/MyDealsDetails/views/my_deals_details_view.dart';
+import '../modules/ProductDetails/bindings/product_details_binding.dart';
+import '../modules/ProductDetails/views/product_details_view.dart';
 import '../modules/Profile/bindings/profile_binding.dart';
 import '../modules/Profile/views/profile_view.dart';
 import '../modules/QRScanner/bindings/q_r_scanner_binding.dart';
 import '../modules/QRScanner/views/q_r_scanner_view.dart';
 import '../modules/Search/bindings/search_binding.dart';
 import '../modules/Search/views/search_view.dart';
+import '../modules/VendorProfile/bindings/vendor_profile_binding.dart';
+import '../modules/VendorProfile/views/vendor_profile_view.dart';
 import '../modules/dealDetail/bindings/deal_detail_binding.dart';
 import '../modules/dealDetail/views/deal_detail_view.dart';
 import '../modules/deals/bindings/deals_binding.dart';
@@ -34,7 +38,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.ONBOARDING;
+  static const INITIAL = Routes.PRODUCT_DETAILS;
 
   static final routes = [
     GetPage(
@@ -120,6 +124,16 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_PROFILE,
+      page: () => const VendorProfileView(),
+      binding: VendorProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT_DETAILS,
+      page: () => ProductDetailsView(title: 'Blonde Roast - Sunsera', price: 3.15, calory: 0, description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.', image: 'assets/images/VendorProfile/Shake.png',),
+      binding: ProductDetailsBinding(),
     ),
   ];
 }
