@@ -55,16 +55,16 @@ class SettingsView extends GetView {
                       onTap: () {
                         // Get.to(() => EditProfileView());
                       },
-                      child: ProfileCard(icon: 'assets/images/Profile/Language.png', title: 'Language'),
+                      child: ProfileCard(icon: 'assets/images/Profile/Settings/Language.png', title: 'Language'),
                     ),
                     GestureDetector(
                       onTap: () {
                         // Get.to(() => SettingsView());
                       },
-                      child: ProfileCard(icon: 'assets/images/Profile/Privacy Policy.png', title: 'Privacy Policy'),
+                      child: ProfileCard(icon: 'assets/images/Profile/Settings/PrivacyPolicy.png', title: 'Privacy Policy'),
                     ),
-                    ProfileCard(icon: 'assets/images/Profile/Notifications.png', title: 'Notifications'),
-                    ProfileCard(icon: 'assets/images/Profile/Change Password.png', title: 'Change Password'),
+                    ProfileCard(icon: 'assets/images/Profile/Settings/Notifications.png', title: 'Notifications'),
+                    ProfileCard(icon: 'assets/images/Profile/Settings/ChangePassword.png', title: 'Change Password'),
                   ],
                 ),
               ),

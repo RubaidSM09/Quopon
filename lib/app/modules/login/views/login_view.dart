@@ -34,7 +34,7 @@ class _LoginViewState extends State<LoginView> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Image.asset(
-                  'assets/images/login/Logo Icon (1).png',
+                  'assets/images/login/Logo Icon.png',
                   fit: BoxFit.cover,
                 )
               ),
@@ -71,7 +71,7 @@ class _LoginViewState extends State<LoginView> {
               CustomTextField(
                   headingText: 'Email Address',
                   fieldText: 'Enter email address',
-                  iconImagePath: 'assets/images/login/Language.png',
+                  iconImagePath: 'assets/images/login/Email.png',
                   controller: _emailController,
                   isRequired: true
               ),
@@ -82,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
               CustomTextField(
                   headingText: 'Password',
                   fieldText: '••••••••••••',
-                  iconImagePath: 'assets/images/login/Icon (1).png',
+                  iconImagePath: 'assets/images/login/Password.png',
                   controller: _passwordController,
                   isRequired: true,
                   isPassword: true

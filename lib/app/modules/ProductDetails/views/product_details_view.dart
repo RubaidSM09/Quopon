@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../common/customTextButton.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
@@ -96,7 +97,6 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                     ),
                   ),
                   Divider(color: Color(0xFFEAECED), thickness: 1),
-                  SizedBox(height: 10),
 
                   // Addons section
                   Obx(() {
@@ -104,155 +104,146 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       return const Text("No active add-ons available.");
                     }
 
-                    double addOnHeight = 355;
-                    double totalHeight = addOnHeight + 12;
-                    double boxHeight = totalHeight * controller.itemAddOns.length;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: controller.itemAddOns.map((addOn) {
+                        // double addOnHeight = 50; // Default height
+                        if (addOn.addOnOptions.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
 
-                    return SizedBox(
-                      height: boxHeight, // Adjust the height of this section
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.itemAddOns.length,
-                        // separatorBuilder: (context, index) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          final addOn = controller.itemAddOns[index];
-                          double addOnHeight = 58;
-                          if(addOn.addOnOptions[index].price==0.0){
-                            addOnHeight = 41;
-                          }
-                          double totalHeight = addOnHeight + 12;
-                          double boxHeight = totalHeight * addOn.addOnOptions.length;
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 20),
-                              Row(
-                                children: [
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Text(
+                                  addOn.addOnTitle,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: Color(0xFF020711),
+                                  ),
+                                ),
+                                if (addOn.addOnType)
                                   Text(
-                                    addOn.addOnTitle,
+                                    "*",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18,
-                                      color: Color(0xFF020711),
+                                      color: Color(0xFFD62828),
                                     ),
                                   ),
-                                  if (addOn
-                                      .addOnType) // Only add "*" if addOnType is true
-                                    Text(
-                                      "*",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18,
-                                        color: Color(0xFFD62828),
-                                      ),
-                                    ),
-                                ],
+                              ],
+                            ),
+                            SizedBox(height: 6),
+
+                            // Addon options section
+                            addOn.addOnOptions.isEmpty
+                                ? const Text("No options available.")
+                                : Container(
+                              width: 500,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              SizedBox(height: 6),
+                              child: Column(
+                                children: addOn.addOnOptions.asMap().entries.map((entry) {
+                                  final option = entry.value;
+                                  final index = entry.key;
 
-                              // Addon options section
-                              addOn.addOnOptions.isEmpty
-                                  ? const Text("No options available.")
-                                  : SizedBox(
-                                      height: boxHeight,
-                                      child: Center(
-                                        child: Container(
-                                          width: 500,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
+                                  return Padding(
+                                    padding: const EdgeInsets.only(left: 12),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              option.title,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                                color: Color(0xFF020711),
+                                              ),
                                             ),
-                                          ),
-                                          child: ListView.separated(
-                                            itemCount:
-                                                addOn.addOnOptions.length,
-                                            separatorBuilder:
-                                                (context, index) =>
-                                                    const SizedBox(width: 8),
-                                            itemBuilder: (context, index) {
-                                              final option =
-                                                  addOn.addOnOptions[index];
-
-                                              return Padding(
-                                                padding: const EdgeInsets.all(
-                                                  12.0,
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      children: [
-                                                        Text(
-                                                          option.title,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 14,
-                                                            color: Color(
-                                                              0xFF020711,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            // Update the checked value on tap
-                                                            option.checked =
-                                                                !option
-                                                                    .checked!;
-                                                            controller.update();
-                                                          },
-                                                          child: Radio(
-                                                            value:
-                                                                option.checked!,
-                                                            groupValue: true,
-                                                            onChanged:
-                                                                (bool? value) {
-                                                                  option.checked =
-                                                                      value!;
-                                                                  controller
-                                                                      .update();
-                                                                },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    option.price != 0.0
-                                                        ? Text(
-                                                            "+\$${option.price}",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                0xFF6F7E8D,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : SizedBox.shrink(),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                // Update the checked value on tap
+                                                option.checked = !option.checked!;
+                                                controller.update();
+                                              },
+                                              child: Radio(
+                                                value: option.checked!,
+                                                groupValue: true,
+                                                onChanged: (bool? value) {
+                                                  option.checked = value!;
+                                                  controller.update();
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        option.price != 0.0
+                                            ? Text(
+                                          "+\$${option.price}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Color(0xFF6F7E8D),
+                                          ),
+                                        )
+                                            : SizedBox.shrink(),
+
+                                        if (index < addOn.addOnOptions.length - 1)
+                                          Divider(color: Color(0xFFEAECED), thickness: 1),
+                                      ],
                                     ),
-                            ],
-                          );
-                        },
-                      ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
                     );
                   }),
+                  SizedBox(height: 10,)
                 ],
               ),
             ),
           ],
+        ),
+      ),
+
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+          child: GradientButton(
+            onPressed: () {  },
+            text: "Follow",
+            colors: [Color(0xFFD62828), Color(0xFFC21414)],
+            width: 195,
+            height: 44,
+            borderRadius: 12,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset("assets/images/ProductDetails/Cart.png"),
+                SizedBox(width: 10,),
+                Text(
+                  "Add 1 to Cart \$5.29",
+                  style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w500, color: Colors.white),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

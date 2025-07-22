@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:quopon/app/modules/dealDetail/views/deal_detail_view.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
+import '../../MyDeals/views/my_deals_view.dart';
+import '../../Profile/views/profile_view.dart';
+import '../../QRScanner/views/q_r_scanner_view.dart';
 import '../../deals/views/deals_view.dart';
 import '../../home/views/home_view.dart';
 
@@ -417,26 +420,50 @@ class _DealsViewState extends State<DealsView> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          if (index == 0) {
+          if (index == 2) {
+            // Navigate to scanner screen without changing selected index
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomeView()),
+              MaterialPageRoute(builder: (context) => const QRScannerView()),
             );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+
+            if (index == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeView()),
+              );
+            }
+
+            if (index == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyDealsView()),
+              );
+            }
+
+            if (index == 4) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileView()),
+              );
+            }
+
+            // Add more conditions if needed for other indexes
           }
         },
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/deals/Language.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Home.png'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/deals/PrivacyPolicy.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Deals Active.png'),
             label: 'Deals',
           ),
           BottomNavigationBarItem(
@@ -446,16 +473,16 @@ class _DealsViewState extends State<DealsView> {
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),
-              child: Image.asset('assets/images/Home/BottomNavigation/Notifications.png'),
+              child: Image.asset('assets/images/BottomNavigation/QR.png'),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/ChangePassword.png'),
+            icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
             label: 'My Deals',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/Icon-4.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
             label: 'Profile',
           ),
         ],

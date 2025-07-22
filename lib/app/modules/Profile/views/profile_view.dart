@@ -131,11 +131,11 @@ class ProfileView extends GetView<ProfileController> {
           unselectedItemColor: Colors.grey,
           items: [
             BottomNavigationBarItem(
-              icon: Image.asset('assets/images/Home/BottomNavigation/Language.png'),
+              icon: Image.asset('assets/images/BottomNavigation/Home.png'),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Image.asset('assets/images/Home/BottomNavigation/PrivacyPolicy.png'),
+              icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
               label: 'Deals',
             ),
             BottomNavigationBarItem(
@@ -145,16 +145,16 @@ class ProfileView extends GetView<ProfileController> {
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                child: Image.asset('assets/images/Home/BottomNavigation/Notifications.png'),
+                child: Image.asset('assets/images/BottomNavigation/QR.png'),
               ),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Image.asset('assets/images/Home/BottomNavigation/ChangePassword.png'),
+              icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
               label: 'My Deals',
             ),
             BottomNavigationBarItem(
-              icon: Image.asset('assets/images/Home/BottomNavigation/Icon-4.png'),
+              icon: Image.asset('assets/images/BottomNavigation/Profile Active.png'),
               label: 'Profile',
             ),
           ],

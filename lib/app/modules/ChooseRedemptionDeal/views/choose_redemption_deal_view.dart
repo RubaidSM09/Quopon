@@ -119,7 +119,7 @@ class _ChooseRedemptionDealViewState extends State<ChooseRedemptionDealView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'assets/images/MyDealsDetails/Pickup Language.png',
+                                    'assets/images/MyDealsDetails/Pickup Icon.png',
                                     height: 24,
                                     width: 24,
                                   ),
@@ -160,7 +160,7 @@ class _ChooseRedemptionDealViewState extends State<ChooseRedemptionDealView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'assets/images/MyDealsDetails/Delivery Language.png',
+                                    'assets/images/MyDealsDetails/Delivery Icon.png',
                                     height: 24,
                                     width: 24,
                                   ),

@@ -52,7 +52,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         // Location pin
                         Center(
                           child: Image.asset(
-                            'assets/images/Location/Mark Location Language.png',
+                            'assets/images/Location/Mark Location Icon.png',
                             color: Colors.red,
                             height: 40,
                             width: 40,

@@ -12,6 +12,8 @@ class VendorProfileView extends GetView<VendorProfileController> {
   const VendorProfileView({super.key});
   @override
   Widget build(BuildContext context) {
+    Get.put(VendorProfileController());
+
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
@@ -112,7 +114,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           onPressed: () {  },
                           text: "Follow",
                           colors: [Color(0xFFD62828), Color(0xFFC21414)],
-                          width: 195,
+                          width: 175,
                           height: 44,
                           borderRadius: 12,
                           child: Row(
@@ -132,13 +134,13 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           onPressed: () {  },
                           text: "Email",
                           colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                          width: 195,
+                          width: 175,
                           height: 44,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.asset("assets/images/login/Icon.png"),
+                              Image.asset("assets/images/login/Email.png"),
                               SizedBox(width: 10,),
                               Text(
                                 "Email",
@@ -235,39 +237,50 @@ class VendorProfileView extends GetView<VendorProfileController> {
                   ),
                   SizedBox(height: 6,),
                   Obx(() {
-                    if (controller.menu.isEmpty) {
+                    if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
-        
+
                     // Calculate height based on number of items
-                    double itemHeight = 110;
+                    double itemHeight = 114;
                     double totalHeight = itemHeight + 12;
-                    double boxHeight = totalHeight * controller.menu.length;
-        
+                    double boxHeight = totalHeight * controller.items.length;
+
                     return SizedBox(
                       height: boxHeight,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: controller.menu.length,
+                        itemCount: controller.items.length,
                         // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final menu = controller.menu[index];
+                          final items = controller.items[index];
                           return Container(
-                            width: 398,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                              child: ItemCard(
-                                title: 'Blonde Roast - Sunsera',
-                                price: 3.15,
-                                calory: 5,
-                                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
-                                image: 'assets/images/VendorProfile/Shake.png',
+                              width: 398,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12)
                               ),
-                            )
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => ProductDetailsView(
+                                      title: items.title,
+                                      price: items.price,
+                                      calory: items.calory,
+                                      description: items.description,
+                                      image: items.image,
+                                    ));
+                                  },
+                                  child: ItemCard(
+                                    title: items.title,
+                                    price: items.price,
+                                    calory: items.calory,
+                                    description: items.description,
+                                    image: items.image,
+                                  ),
+                                ),
+                              )
                           );
                         },
                       ),
@@ -281,23 +294,23 @@ class VendorProfileView extends GetView<VendorProfileController> {
                   ),
                   SizedBox(height: 6,),
                   Obx(() {
-                    if (controller.menu.isEmpty) {
+                    if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 110;
+                    double itemHeight = 114;
                     double totalHeight = itemHeight + 12;
-                    double boxHeight = totalHeight * controller.menu.length;
+                    double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
                       height: boxHeight,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: controller.menu.length,
+                        itemCount: controller.items.length,
                         // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final menu = controller.menu[index];
+                          final items = controller.items[index];
                           return Container(
                               width: 398,
                               decoration: BoxDecoration(
@@ -306,12 +319,23 @@ class VendorProfileView extends GetView<VendorProfileController> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: ItemCard(
-                                  title: 'Blonde Roast - Sunsera',
-                                  price: 3.15,
-                                  calory: 5,
-                                  description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
-                                  image: 'assets/images/VendorProfile/Shake.png',
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => ProductDetailsView(
+                                      title: items.title,
+                                      price: items.price,
+                                      calory: items.calory,
+                                      description: items.description,
+                                      image: items.image,
+                                    ));
+                                  },
+                                  child: ItemCard(
+                                    title: items.title,
+                                    price: items.price,
+                                    calory: items.calory,
+                                    description: items.description,
+                                    image: items.image,
+                                  ),
                                 ),
                               )
                           );
@@ -327,23 +351,23 @@ class VendorProfileView extends GetView<VendorProfileController> {
                   ),
                   SizedBox(height: 6,),
                   Obx(() {
-                    if (controller.menu.isEmpty) {
+                    if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 110;
+                    double itemHeight = 114;
                     double totalHeight = itemHeight + 12;
-                    double boxHeight = totalHeight * controller.menu.length;
+                    double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
                       height: boxHeight,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: controller.menu.length,
+                        itemCount: controller.items.length,
                         // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final menu = controller.menu[index];
+                          final items = controller.items[index];
                           return Container(
                               width: 398,
                               decoration: BoxDecoration(
@@ -352,12 +376,23 @@ class VendorProfileView extends GetView<VendorProfileController> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: ItemCard(
-                                  title: 'Blonde Roast - Sunsera',
-                                  price: 3.15,
-                                  calory: 5,
-                                  description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
-                                  image: 'assets/images/VendorProfile/Shake.png',
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => ProductDetailsView(
+                                      title: items.title,
+                                      price: items.price,
+                                      calory: items.calory,
+                                      description: items.description,
+                                      image: items.image,
+                                    ));
+                                  },
+                                  child: ItemCard(
+                                    title: items.title,
+                                    price: items.price,
+                                    calory: items.calory,
+                                    description: items.description,
+                                    image: items.image,
+                                  ),
                                 ),
                               )
                           );
@@ -378,7 +413,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 110;
+                    double itemHeight = 114;
                     double totalHeight = itemHeight + 12;
                     double boxHeight = totalHeight * controller.items.length;
 
@@ -435,8 +470,8 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 110;
-                    double totalHeight = itemHeight + 12;
+                    double itemHeight = 114;
+                    double totalHeight = itemHeight + 0;
                     double boxHeight = totalHeight * controller.menu.length;
 
                     return SizedBox(
@@ -479,8 +514,6 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       ),
                     );
                   }),
-
-                  SizedBox(height: 10),
                   // Align "Location" to left
                   Align(
                     alignment: Alignment.centerLeft,

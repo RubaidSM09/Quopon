@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import '../modules/Cart/bindings/cart_binding.dart';
+import '../modules/Cart/views/cart_view.dart';
+import '../modules/Checkout/bindings/checkout_binding.dart';
+import '../modules/Checkout/views/checkout_view.dart';
 import '../modules/ChooseRedemptionDeal/bindings/choose_redemption_deal_binding.dart';
 import '../modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
 import '../modules/MyDeals/bindings/my_deals_binding.dart';
@@ -38,7 +42,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.PRODUCT_DETAILS;
+  static const INITIAL = Routes.ONBOARDING;
 
   static final routes = [
     GetPage(
@@ -132,8 +136,25 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PRODUCT_DETAILS,
-      page: () => ProductDetailsView(title: 'Blonde Roast - Sunsera', price: 3.15, calory: 0, description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.', image: 'assets/images/VendorProfile/Shake.png',),
+      page: () => ProductDetailsView(
+        title: 'Blonde Roast - Sunsera',
+        price: 3.15,
+        calory: 0,
+        description:
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
+        image: 'assets/images/VendorProfile/Shake.png',
+      ),
       binding: ProductDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.CART,
+      page: () => const CartView(),
+      binding: CartBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECKOUT,
+      page: () => const CheckoutView(subTotal: 0.0,),
+      binding: CheckoutBinding(),
     ),
   ];
 }

@@ -427,7 +427,7 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
 
                     // Diamond icon
                     Image.asset(
-                        'assets/images/Home/Language.png',
+                        'assets/images/Home/Diamond.png',
                         height: 48,
                         width: 48,
                       ),

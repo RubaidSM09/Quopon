@@ -50,7 +50,7 @@ class _ProfileCompleteScreenState extends State<ProfileCompleteScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/images/CompleteProfile/Language.png',
+                    'assets/images/CompleteProfile/Cloud.png',
                     color: Colors.grey[400],
                     height: 30,
                     width: 30,

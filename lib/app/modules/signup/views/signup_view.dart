@@ -39,7 +39,7 @@ class _SignupViewState extends State<SignupView> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child:  Image.asset(
-                  'assets/images/login/Logo Icon (1).png',
+                  'assets/images/login/Logo Icon.png',
                   fit: BoxFit.cover,
                 )
               ),
@@ -76,7 +76,7 @@ class _SignupViewState extends State<SignupView> {
               CustomTextField(
                   headingText: 'Email Address',
                   fieldText: 'Enter email address',
-                  iconImagePath: 'assets/images/login/Language.png',
+                  iconImagePath: 'assets/images/login/Email.png',
                   controller: _emailController,
                   isRequired: true
               ),
@@ -87,7 +87,7 @@ class _SignupViewState extends State<SignupView> {
               CustomTextField(
                   headingText: 'Create Password',
                   fieldText: '••••••••••••',
-                  iconImagePath: 'assets/images/login/Icon (1).png',
+                  iconImagePath: 'assets/images/login/Password.png',
                   controller: _passwordController,
                   isRequired: true,
                   isPassword: true
@@ -99,7 +99,7 @@ class _SignupViewState extends State<SignupView> {
               CustomTextField(
                   headingText: 'Confirm Password',
                   fieldText: '••••••••••••',
-                  iconImagePath: 'assets/images/login/Icon (1).png',
+                  iconImagePath: 'assets/images/login/Password.png',
                   controller: _confirmPasswordController,
                   isRequired: true,
                   isPassword: true

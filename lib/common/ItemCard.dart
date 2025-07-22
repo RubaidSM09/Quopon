@@ -54,7 +54,7 @@ class ItemCard extends GetView {
                 ),
                 SizedBox(height: 5,),
                 SizedBox(
-                  width: 278,
+                  width: 250,
                   child: Text(
                     description,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),

@@ -18,7 +18,7 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
       appBar: AppBar(
         backgroundColor: Color(0xFFF9FBFC),
         title: Center(child: Text('Deal Details')),
-        actions: [Image.asset("assets/images/MyDealsDetails/Language.png")],
+        actions: [Image.asset("assets/images/MyDealsDetails/Upload.png")],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -26,15 +26,13 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
           children: [
             Stack(
               children: [
-                Container(
-                  width: 398,
-                  height: 220,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12)
-                  ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
-                    'assets/images/MyDealsDetails/StarBucks.png',
+                    'assets/images/MyDealsDetails/Starbucks.png',
                     fit: BoxFit.cover,
+                    width: 398,
+                    height: 220,
                   ),
                 ),
                 Positioned(
@@ -166,7 +164,7 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/MyDealsDetails/Pickup Language.png',
+                            'assets/images/MyDealsDetails/Pickup Icon.png',
                             height: 24,
                             width: 24,
                           ),
@@ -194,7 +192,7 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/MyDealsDetails/Delivery Language.png',
+                            'assets/images/MyDealsDetails/Delivery Icon.png',
                             height: 24,
                             width: 24,
                           ),

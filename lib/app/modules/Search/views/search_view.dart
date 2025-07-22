@@ -23,13 +23,18 @@ class _SearchViewState extends State<SearchView> {
       body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
               child: Row(
                 children: [
-                  Icon(Icons.arrow_back),
-                  SizedBox(width: 8),
-                  Text(
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: const Icon(Icons.arrow_back),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
                     "Search",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),

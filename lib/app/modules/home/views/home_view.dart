@@ -9,6 +9,7 @@ import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
+import '../../Cart/views/cart_view.dart';
 import '../../deals/views/deals_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -26,6 +27,10 @@ class _HomeViewState extends State<HomeView> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
+            Container(
+              color: Colors.white,
+              height: 1225,
+            ),
             // Background image (scrolls with content)
             Column(
               children: [
@@ -88,7 +93,9 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           IconButton(
                             icon: Image.asset('assets/images/Home/Cart.png'),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => CartView());
+                            },
                           ),
                         ],
                       ),
@@ -237,7 +244,7 @@ class _HomeViewState extends State<HomeView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Beyond Your Neighbourhood section',
+                            'Beyond Your Neighbourhood',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -270,10 +277,10 @@ class _HomeViewState extends State<HomeView> {
                             RestaurantCardBlur(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min',),
 
                             // Starbucks card
-                            RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Image-1.png', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                            RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
 
                             // City Grille card
-                            RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/Image-2.png', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                            RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
                           ],
                         ),
                       ),
@@ -306,17 +313,26 @@ class _HomeViewState extends State<HomeView> {
                       SizedBox(height: 12),
 
                       // Shop icons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildShopItem('7-Eleven', '10 min', 'assets/images/Home/Shops/image.png'),
-                          _buildShopItem('Speedway', '15 min', 'assets/images/Home/Shops/image-1.png'),
-                          _buildShopItem('Lowe\'s', '20 min', 'assets/images/Home/Shops/image-2.png'),
-                          _buildShopItem('Wawa', '10 min', 'assets/images/Home/Shops/image-3.png'),
-                          _buildShopItem('Pet Supp...', 'Closed', 'assets/images/Home/Shops/image-4.png'),
-                          _buildShopItem('Petco', 'Closed', 'assets/images/Home/Shops/image-5.png'),
-                          _buildShopItem('GNC', '11:00 AM', 'assets/images/Home/Shops/image-6.png'),
-                        ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildShopItem('7-Eleven', '10 min', 'assets/images/Home/Shops/image.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('Speedway', '15 min', 'assets/images/Home/Shops/image-1.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('Lowe\'s', '20 min', 'assets/images/Home/Shops/image-2.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('Wawa', '10 min', 'assets/images/Home/Shops/image-3.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('Pet Supp...', 'Closed', 'assets/images/Home/Shops/image-4.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('Petco', 'Closed', 'assets/images/Home/Shops/Petco.png'),
+                            SizedBox(width: 15,),
+                            _buildShopItem('GNC', '11:00 AM', 'assets/images/Home/Shops/GNC.png'),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 20),
 
@@ -359,10 +375,10 @@ class _HomeViewState extends State<HomeView> {
                             RestaurantCardBlur(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min',),
 
                             // Starbucks card
-                            RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Image-1.png', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                            RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
 
                             // City Grille card
-                            RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/Image-2.png', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                            RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
                           ],
                         ),
                       ),
@@ -418,11 +434,11 @@ class _HomeViewState extends State<HomeView> {
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/Language.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Home Active.png'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/PrivacyPolicy.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
             label: 'Deals',
           ),
           BottomNavigationBarItem(
@@ -432,16 +448,16 @@ class _HomeViewState extends State<HomeView> {
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),
-              child: Image.asset('assets/images/Home/BottomNavigation/Notifications.png'),
+              child: Image.asset('assets/images/BottomNavigation/QR.png'),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/ChangePassword.png'),
+            icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
             label: 'My Deals',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/Icon-4.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
             label: 'Profile',
           ),
         ],
@@ -495,7 +511,10 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildShopItem(String name, String time, String logo) {
     return Column(
       children: [
-        Image.asset(logo, height: 60, width: 60),
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: AssetImage(logo),
+        ),
         SizedBox(height: 6),
         Text(
           name,
