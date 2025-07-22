@@ -106,8 +106,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
 
                     double addOnHeight = 355;
                     double totalHeight = addOnHeight + 12;
-                    double boxHeight =
-                        totalHeight * controller.itemAddOns.length;
+                    double boxHeight = totalHeight * controller.itemAddOns.length;
 
                     return SizedBox(
                       height: boxHeight, // Adjust the height of this section
@@ -118,12 +117,11 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         itemBuilder: (context, index) {
                           final addOn = controller.itemAddOns[index];
                           double addOnHeight = 58;
-                          if(addOn.addOnOptions[index].price!=0.0){
-                            double addOnHeight = 0;
+                          if(addOn.addOnOptions[index].price==0.0){
+                            addOnHeight = 41;
                           }
                           double totalHeight = addOnHeight + 12;
-                          double boxHeight =
-                              totalHeight * addOn.addOnOptions.length;
+                          double boxHeight = totalHeight * addOn.addOnOptions.length;
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
