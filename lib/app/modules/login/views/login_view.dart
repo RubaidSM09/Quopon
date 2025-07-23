@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:quopon/app/modules/Review/views/review_view.dart';
 import 'package:quopon/common/custom_textField.dart';
 import 'package:quopon/common/red_button.dart';
 
@@ -111,7 +112,10 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(height: 12),
 
               // Login Button
-              RedButton(buttonText: 'Log In', onPressed: () => Get.offNamed('/home'),),
+              RedButton(buttonText: 'Log In', onPressed: () {
+                Get.offNamed('/home');
+                Get.dialog(ReviewView());
+              }),
 
               SizedBox(height: 16),
 

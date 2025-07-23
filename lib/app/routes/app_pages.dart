@@ -20,6 +20,8 @@ import '../modules/QRScanner/bindings/q_r_scanner_binding.dart';
 import '../modules/QRScanner/views/q_r_scanner_view.dart';
 import '../modules/QuoponPlus/bindings/quopon_plus_binding.dart';
 import '../modules/QuoponPlus/views/quopon_plus_view.dart';
+import '../modules/Review/bindings/review_binding.dart';
+import '../modules/Review/views/review_view.dart';
 import '../modules/Search/bindings/search_binding.dart';
 import '../modules/Search/views/search_view.dart';
 import '../modules/SupportFAQ/bindings/support_f_a_q_binding.dart';
@@ -132,7 +134,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
+      page: () => ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
@@ -178,6 +180,11 @@ class AppPages {
       name: _Paths.SUPPORT_F_A_Q,
       page: () => const SupportFAQView(),
       binding: SupportFAQBinding(),
+    ),
+    GetPage(
+      name: _Paths.REVIEW,
+      page: () => ReviewView(),
+      binding: ReviewBinding(),
     ),
   ];
 }

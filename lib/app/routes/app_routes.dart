@@ -24,6 +24,7 @@ abstract class Routes {
   static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
   static const QUOPON_PLUS = _Paths.QUOPON_PLUS;
   static const SUPPORT_F_A_Q = _Paths.SUPPORT_F_A_Q;
+  static const REVIEW = _Paths.REVIEW;
 }
 
 abstract class _Paths {
@@ -49,4 +50,5 @@ abstract class _Paths {
   static const ORDER_DETAILS = '/order-details';
   static const QUOPON_PLUS = '/quopon-plus';
   static const SUPPORT_F_A_Q = '/support-f-a-q';
+  static const REVIEW = '/review';
 }

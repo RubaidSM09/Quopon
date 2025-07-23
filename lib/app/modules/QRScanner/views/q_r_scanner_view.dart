@@ -4,6 +4,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_fail_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_success_view.dart';
 
+import '../../MyDeals/views/my_deals_view.dart';
+import '../../Profile/views/profile_view.dart';
 import '../../deals/views/deals_view.dart';
 import '../../home/views/home_view.dart';
 
@@ -153,15 +155,15 @@ class _QRScannerViewState extends State<QRScannerView> {
 
       // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFFFFFFFF),
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: (index) {
-          if (index == 0) {
+          if (index == 2) {
             // Navigate to scanner screen without changing selected index
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomeView()),
+              MaterialPageRoute(builder: (context) => const QRScannerView()),
             );
           } else {
             setState(() {
@@ -175,6 +177,20 @@ class _QRScannerViewState extends State<QRScannerView> {
               );
             }
 
+            if (index == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyDealsView()),
+              );
+            }
+
+            if (index == 4) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileView()),
+              );
+            }
+
             // Add more conditions if needed for other indexes
           }
         },
@@ -182,30 +198,30 @@ class _QRScannerViewState extends State<QRScannerView> {
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/deals/Language.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Home.png'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/deals/PrivacyPolicy.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
             label: 'Deals',
           ),
           BottomNavigationBarItem(
             icon: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),
-              child: Image.asset('assets/images/Home/BottomNavigation/Notifications.png'),
+              child: Image.asset('assets/images/BottomNavigation/QR.png'),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/ChangePassword.png'),
+            icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
             label: 'My Deals',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/Home/BottomNavigation/Icon-4.png'),
+            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
             label: 'Profile',
           ),
         ],

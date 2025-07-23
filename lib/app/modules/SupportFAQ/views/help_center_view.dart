@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/common/HelpCenterCard.dart';
 
+import 'get_in_touch_view.dart';
+
 class HelpCenterView extends GetView {
   const HelpCenterView({super.key});
   @override
@@ -38,7 +40,7 @@ class HelpCenterView extends GetView {
                     ),
                     GestureDetector(
                       onTap: () {
-
+                        Get.bottomSheet(GetInTouchView());
                       },
                       child: Container(
                         decoration: BoxDecoration(
