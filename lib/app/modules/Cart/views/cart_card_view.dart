@@ -73,7 +73,11 @@ class CartCardView extends GetView {
               ],
             )
           ],
-        )
+        ),
+        Text(
+          '\$${cart.price}',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
       ],
     );
   }

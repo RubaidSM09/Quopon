@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Checkout/views/checkout_delivery_view.dart';
 import 'package:quopon/app/modules/Checkout/views/checkout_pickup_view.dart';
+import 'package:quopon/app/modules/OrderDetails/views/order_details_view.dart';
 import '../../../../common/customTextButton.dart';
 import '../../Cart/controllers/cart_controller.dart';
 import '../controllers/checkout_controller.dart';
@@ -18,6 +19,8 @@ class CheckoutView extends GetView<CheckoutController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(CheckoutController());
+
     RxBool isDelivery = true.obs;
 
     return Scaffold(
@@ -38,7 +41,7 @@ class CheckoutView extends GetView<CheckoutController> {
                       child: Icon(Icons.arrow_back),
                     ),
                     Text(
-                      'Cart',
+                      'Checkout',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                     ),
                     SizedBox(),
@@ -131,7 +134,7 @@ class CheckoutView extends GetView<CheckoutController> {
           padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
           child: GradientButton(
             onPressed: () {
-
+              Get.to(OrderDetailsView());
             },
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],

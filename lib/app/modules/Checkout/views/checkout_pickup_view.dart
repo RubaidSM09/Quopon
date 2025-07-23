@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/Checkout/views/select_payment_method_view.dart';
 
 import '../../../../common/CheckoutCard.dart';
+import '../controllers/checkout_controller.dart';
 
 class CheckoutPickupView extends GetView {
   final double subTotal;
@@ -127,30 +129,60 @@ class CheckoutPickupView extends GetView {
                       ],
                     ),
                     SizedBox(height: 10,),
-                    Container(
-                      height: 48,
-                      width: 374,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(width: 1, color: Color(0xFFEAECED))
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Select Payment Method',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                    GestureDetector(
+                      onTap: () {
+                        showPaymentMethodDialog(context);
+                      },
+                      child: Obx(() {
+                        final method = Get.find<CheckoutController>().selectedPaymentMethod.value;
+                        final logo = Get.find<CheckoutController>().selectedPaymentMethodLogo.value;
+
+                        return Container(
+                          height: 48,
+                          width: 374,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  width: 1, color: Color(0xFFEAECED))
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                method.isEmpty ? Text(
+                                  'Select Payment Method',
+                                  style: TextStyle(fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF6F7E8D)),
+                                ) : Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFF5F7F8),
+                                          shape: BoxShape.circle
+                                      ),
+                                      child: ClipRRect(
+                                        child: Image.asset(logo),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(
+                                      method,
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                                    ),
+                                  ],
+                                ),
+                                method.isEmpty ? Icon(Icons.add, color: Color(0xFF6F7E8D),)
+                                    : Icon(Icons.refresh, color: Color(0xFF6F7E8D),),
+                              ],
                             ),
-                            IconButton(
-                              onPressed: () { },
-                              icon: Icon(Icons.add, color: Color(0xFF6F7E8D),),
-                            )
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),

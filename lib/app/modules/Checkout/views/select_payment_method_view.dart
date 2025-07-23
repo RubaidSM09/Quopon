@@ -4,6 +4,8 @@ import '../../../../common/PaymentCard.dart';
 import '../controllers/checkout_controller.dart';
 
 void showPaymentMethodDialog(BuildContext context) {
+  final controller = Get.find<CheckoutController>();
+  
   Get.bottomSheet(
     Container(
       height: 420,
@@ -33,45 +35,62 @@ void showPaymentMethodDialog(BuildContext context) {
           ),
           Divider(color: Color(0xFFEAECED), thickness: 1),
           Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  title: PaymentCard(logo: 'assets/images/Payment Method/Stripe.png', name: 'Stripe',),
-                  onTap: () {
-                    Get.find<CheckoutController>().updatePaymentMethod("Stripe");
-                    Get.back();  // Close the bottom sheet
-                  },
-                ),
-                ListTile(
-                  title: PaymentCard(logo: 'assets/images/Payment Method/iDeal.png', name: 'iDeal',),
-                  onTap: () {
-                    Get.find<CheckoutController>().updatePaymentMethod("iDeal");
-                    Get.back();  // Close the bottom sheet
-                  },
-                ),
-                ListTile(
-                  title: PaymentCard(logo: 'assets/images/Payment Method/Apple Pay.png', name: 'Apple Pay',),
-                  onTap: () {
-                    Get.find<CheckoutController>().updatePaymentMethod("Apple Pay");
-                    Get.back();  // Close the bottom sheet
-                  },
-                ),
-                ListTile(
-                  title: PaymentCard(logo: 'assets/images/Payment Method/Google Pay.png', name: 'Google Pay',),
-                  onTap: () {
-                    Get.find<CheckoutController>().updatePaymentMethod("Google Pay");
-                    Get.back();  // Close the bottom sheet
-                  },
-                ),
-                ListTile(
-                  title: PaymentCard(logo: 'assets/images/Payment Method/Paypal.png', name: 'Paypal',),
-                  onTap: () {
-                    Get.find<CheckoutController>().updatePaymentMethod("PayPal");
-                    Get.back();  // Close the bottom sheet
-                  },
-                ),
-              ],
-            ),
+            child: Obx(() {
+              return ListView(
+                children: [
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/Stripe.png',
+                      name: 'Stripe',
+                      isSelected: controller.selectedPaymentMethod.value == 'Stripe',
+                      onTap: () {
+                        controller.updatePaymentMethod('Stripe', 'assets/images/Payment Method/Stripe.png',);
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/iDeal.png',
+                      name: 'iDeal',
+                      isSelected: controller.selectedPaymentMethod.value == 'iDeal',
+                      onTap: () {
+                        controller.updatePaymentMethod('iDeal', 'assets/images/Payment Method/iDeal.png',);
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/Apple Pay.png',
+                      name: 'Apple Pay',
+                      isSelected: controller.selectedPaymentMethod.value == 'Apple Pay',
+                      onTap: () {
+                        controller.updatePaymentMethod('Apple Pay', 'assets/images/Payment Method/Apple Pay.png',);
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/Google Pay.png',
+                      name: 'Google Pay',
+                      isSelected: controller.selectedPaymentMethod.value == 'Google Pay',
+                      onTap: () {
+                        controller.updatePaymentMethod('Google Pay', 'assets/images/Payment Method/Google Pay.png',);
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/Paypal.png',
+                      name: 'Paypal',
+                      isSelected: controller.selectedPaymentMethod.value == 'Paypal',
+                      onTap: () {
+                        controller.updatePaymentMethod('Paypal', 'assets/images/Payment Method/Paypal.png',);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
         ],
       ),

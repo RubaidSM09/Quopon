@@ -8,11 +8,13 @@ class CheckoutCard extends GetView {
   final String title;
   final String subTitle;
   final String? suffixIcon;
+  final Color color;
 
   const CheckoutCard({
     required this.prefixIcon,
     required this.title,
     required this.subTitle,
+    this.color = Colors.black,
     this.suffixIcon,
     super.key
   });
@@ -32,7 +34,10 @@ class CheckoutCard extends GetView {
                 shape: BoxShape.circle
               ),
               child: ClipRRect(
-                child: Image.asset(prefixIcon),
+                child: Image.asset(
+                  prefixIcon,
+                  color: color,
+                ),
               ),
             ),
             SizedBox(width: 10,),

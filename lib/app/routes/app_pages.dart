@@ -10,14 +10,20 @@ import '../modules/MyDeals/bindings/my_deals_binding.dart';
 import '../modules/MyDeals/views/my_deals_view.dart';
 import '../modules/MyDealsDetails/bindings/my_deals_details_binding.dart';
 import '../modules/MyDealsDetails/views/my_deals_details_view.dart';
+import '../modules/OrderDetails/bindings/order_details_binding.dart';
+import '../modules/OrderDetails/views/order_details_view.dart';
 import '../modules/ProductDetails/bindings/product_details_binding.dart';
 import '../modules/ProductDetails/views/product_details_view.dart';
 import '../modules/Profile/bindings/profile_binding.dart';
 import '../modules/Profile/views/profile_view.dart';
 import '../modules/QRScanner/bindings/q_r_scanner_binding.dart';
 import '../modules/QRScanner/views/q_r_scanner_view.dart';
+import '../modules/QuoponPlus/bindings/quopon_plus_binding.dart';
+import '../modules/QuoponPlus/views/quopon_plus_view.dart';
 import '../modules/Search/bindings/search_binding.dart';
 import '../modules/Search/views/search_view.dart';
+import '../modules/SupportFAQ/bindings/support_f_a_q_binding.dart';
+import '../modules/SupportFAQ/views/support_f_a_q_view.dart';
 import '../modules/VendorProfile/bindings/vendor_profile_binding.dart';
 import '../modules/VendorProfile/views/vendor_profile_view.dart';
 import '../modules/dealDetail/bindings/deal_detail_binding.dart';
@@ -153,8 +159,25 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHECKOUT,
-      page: () => const CheckoutView(subTotal: 0.0,),
+      page: () => const CheckoutView(
+        subTotal: 0.0,
+      ),
       binding: CheckoutBinding(),
+    ),
+    GetPage(
+      name: _Paths.ORDER_DETAILS,
+      page: () => OrderDetailsView(),
+      binding: OrderDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.QUOPON_PLUS,
+      page: () => const QuoponPlusView(),
+      binding: QuoponPlusBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUPPORT_F_A_Q,
+      page: () => const SupportFAQView(),
+      binding: SupportFAQBinding(),
     ),
   ];
 }

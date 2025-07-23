@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 
 class CheckoutController extends GetxController {
-  var selectedPaymentMethod = 'None' .obs;
+  var selectedPaymentMethod = "" .obs;
+  var selectedPaymentMethodLogo = "" .obs;
 
-  void updatePaymentMethod(String method) {
+  void updatePaymentMethod(String method, String logo) {
     selectedPaymentMethod.value = method;
+    selectedPaymentMethodLogo.value = logo;
   }
 
   // final count = 0.obs;

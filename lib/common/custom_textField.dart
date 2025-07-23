@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomTextField extends StatefulWidget {
   final String headingText;
@@ -110,4 +111,156 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ],
     );
   }
+}
+
+class GetInTouchTextField extends StatefulWidget {
+  final String headingText;
+  final String fieldText;
+  final String iconImagePath;
+  final int maxLine;
+  final TextEditingController controller;
+  final bool isPassword;
+  final bool isRequired;
+
+  const GetInTouchTextField({
+    super.key,
+    required this.headingText,
+    required this.fieldText,
+    required this.iconImagePath,
+    required this.controller,
+    required this.isRequired,
+    this.maxLine = 1,
+    this.isPassword = false,
+  });
+
+  @override
+  State<GetInTouchTextField> createState() => _GetInTouchTextFieldState();
+}
+
+class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
+  late bool _isPasswordVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    _isPasswordVisible = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              widget.headingText,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[300] ?? Colors.grey),
+          ),
+          child: TextField(
+            maxLines: widget.maxLine,
+            controller: widget.controller,
+            obscureText: widget.isPassword && !_isPasswordVisible,
+            decoration: InputDecoration(
+              hintText: widget.isPassword ? '••••••••••••' : widget.fieldText,
+              hintStyle: TextStyle(color: Colors.grey[500]),
+              prefixIcon: widget.iconImagePath!='' ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    widget.iconImagePath,
+                    width: 24,
+                    height: 24,
+                  )
+              ) : null,
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                  color: Colors.grey[500],
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+                  : null,
+              border: InputBorder.none,
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomCategoryField extends GetView {
+  final String fieldName;
+  final String selectedLanguage;
+
+  const CustomCategoryField({
+    required this.fieldName,
+    this.selectedLanguage = 'Select',
+    super.key
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          fieldName,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButton<String>(
+            value: selectedLanguage,
+            isExpanded: true,
+            underline: Container(),
+            items: ['Select']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              // setState(() {
+              //   selectedLanguage = newValue!;
+              // });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
 }
