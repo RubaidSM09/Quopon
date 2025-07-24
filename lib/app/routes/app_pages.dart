@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/onboarding/views/onboarding_vendor_view.dart';
 
 import '../modules/Cart/bindings/cart_binding.dart';
 import '../modules/Cart/views/cart_view.dart';
@@ -68,7 +69,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => OnboardingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(

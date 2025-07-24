@@ -18,6 +18,8 @@ class GradientButton extends StatelessWidget {
   final bool isEnabled;
   final double elevation;
   final List<BoxShadow>? boxShadow;
+  final double borderWidth;
+  final Color borderColor;
 
   const GradientButton({
     super.key,
@@ -35,6 +37,8 @@ class GradientButton extends StatelessWidget {
     this.isEnabled = true,
     this.elevation = 4,
     this.boxShadow,
+    this.borderWidth = 1,
+    this.borderColor = const Color(0xFFF44646),
   });
 
   @override
@@ -51,6 +55,10 @@ class GradientButton extends StatelessWidget {
             blurRadius: elevation * 2,
           ),
         ],
+        border: Border.all(
+          width: borderWidth,
+          color: borderColor,
+        ),
       ),
       child: Material(
         borderRadius: BorderRadius.circular(borderRadius),

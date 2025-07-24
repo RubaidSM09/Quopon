@@ -96,6 +96,7 @@ flutter:
     - assets/images/MyReviews/
     - assets/images/Notifications/
     - assets/images/404/
+    - assets/images/Vendor/Onboarding/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
