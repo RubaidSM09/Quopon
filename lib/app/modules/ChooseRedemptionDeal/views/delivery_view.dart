@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/deal_card.dart';
-import 'choose_redemption_deal_view.dart';
+import '../../ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
 
 class DeliveryView extends GetView {
   final String dealImage;

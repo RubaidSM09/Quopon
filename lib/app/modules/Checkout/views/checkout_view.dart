@@ -5,7 +5,7 @@ import 'package:quopon/app/modules/Checkout/views/checkout_pickup_view.dart';
 import 'package:quopon/app/modules/OrderDetails/views/order_details_view.dart';
 import '../../../../common/customTextButton.dart';
 import '../../Cart/controllers/cart_controller.dart';
-import '../controllers/checkout_controller.dart';
+import '../../Checkout/controllers/checkout_controller.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
   final double subTotal;

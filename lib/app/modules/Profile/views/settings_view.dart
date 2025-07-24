@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../../common/profileCard.dart';
+import '../../../../../../common/profileCard.dart';
 
 class SettingsView extends GetView {
   const SettingsView({super.key});

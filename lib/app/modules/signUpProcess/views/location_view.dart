@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'food_preferences_view.dart';
+import '../../signUpProcess/views/food_preferences_view.dart';
 
 class LocationScreen extends StatefulWidget {
   final VoidCallback onNext;

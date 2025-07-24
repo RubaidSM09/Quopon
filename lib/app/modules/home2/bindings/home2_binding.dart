@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/home2_controller.dart';
+import '../../home2/controllers/home2_controller.dart';
 
 class Home2Binding extends Bindings {
   @override

@@ -93,6 +93,9 @@ flutter:
     - assets/images/QuoponPlus/
     - assets/images/SupportFAQ/
     - assets/images/Review/
+    - assets/images/MyReviews/
+    - assets/images/Notifications/
+    - assets/images/404/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

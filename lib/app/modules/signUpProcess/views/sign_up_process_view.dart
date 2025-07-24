@@ -5,8 +5,8 @@ import 'package:quopon/app/modules/signUpProcess/views/food_preferences_view.dar
 import 'package:quopon/app/modules/signUpProcess/views/location_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/profile_complete_view.dart';
 
-import '../../../../common/customTextButton.dart';
-import '../../../../common/red_button.dart';
+import '../../../../../common/customTextButton.dart';
+import '../../../../../common/red_button.dart';
 
 class SignUpProcessView extends StatefulWidget {
   const SignUpProcessView({super.key});

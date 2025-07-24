@@ -8,7 +8,7 @@ import '../../Profile/views/profile_view.dart';
 import '../../QRScanner/views/q_r_scanner_view.dart';
 import '../../deals/views/deals_view.dart';
 import '../../home/views/home_view.dart';
-import '../controllers/my_deals_controller.dart';
+import '../../MyDeals/controllers/my_deals_controller.dart';
 
 class MyDealsView extends StatefulWidget {
   const MyDealsView({super.key});

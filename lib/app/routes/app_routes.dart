@@ -25,6 +25,10 @@ abstract class Routes {
   static const QUOPON_PLUS = _Paths.QUOPON_PLUS;
   static const SUPPORT_F_A_Q = _Paths.SUPPORT_F_A_Q;
   static const REVIEW = _Paths.REVIEW;
+  static const MY_REVIEWS = _Paths.MY_REVIEWS;
+  static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
+  static const ERROR404 = _Paths.ERROR404;
+  static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
 }
 
 abstract class _Paths {
@@ -51,4 +55,8 @@ abstract class _Paths {
   static const QUOPON_PLUS = '/quopon-plus';
   static const SUPPORT_F_A_Q = '/support-f-a-q';
   static const REVIEW = '/review';
+  static const MY_REVIEWS = '/my-reviews';
+  static const NOTIFICATIONS = '/notifications';
+  static const ERROR404 = '/error404';
+  static const PRIVACY_POLICY = '/privacy-policy';
 }

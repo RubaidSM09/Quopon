@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:quopon/app/modules/MyDeals/views/my_deals_view.dart';
+import 'package:quopon/app/modules/Notifications/views/notifications_view.dart';
 import 'package:quopon/app/modules/Profile/views/profile_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
@@ -89,7 +90,9 @@ class _HomeViewState extends State<HomeView> {
                         children: [
                           IconButton(
                             icon: Image.asset('assets/images/Home/Notification.png'),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(NotificationsView());
+                            },
                           ),
                           IconButton(
                             icon: Image.asset('assets/images/Home/Cart.png'),

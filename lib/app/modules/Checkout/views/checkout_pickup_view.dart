@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Checkout/views/select_payment_method_view.dart';
 
-import '../../../../common/CheckoutCard.dart';
+import '../../../../../../common/CheckoutCard.dart';
 import '../controllers/checkout_controller.dart';
 
 class CheckoutPickupView extends GetView {

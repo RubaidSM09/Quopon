@@ -6,7 +6,6 @@ import 'package:quopon/common/restaurant_card.dart';
 import '../../MyDeals/views/my_deals_view.dart';
 import '../../Profile/views/profile_view.dart';
 import '../../QRScanner/views/q_r_scanner_view.dart';
-import '../../deals/views/deals_view.dart';
 import '../../home/views/home_view.dart';
 
 class DealsView extends StatefulWidget {

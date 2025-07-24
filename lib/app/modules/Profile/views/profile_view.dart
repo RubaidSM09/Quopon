@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/MyReviews/views/my_reviews_view.dart';
 import 'package:quopon/app/modules/Profile/views/follow_vendors_view.dart';
 import 'package:quopon/app/modules/Profile/views/settings_view.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
@@ -82,7 +83,11 @@ class ProfileView extends GetView<ProfileController> {
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FollowedVendors.png', title: 'Followed Vendors'),
                         ),
-                        ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'My Reviews'),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(MyReviewsView());
+                          },
+                          child: ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'My Reviews'),),
                         GestureDetector(
                           onTap: () {
                             Get.bottomSheet(QuoponPlusView());

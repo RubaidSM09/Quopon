@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/onboarding_controller.dart';
+import '../../onboarding/controllers/onboarding_controller.dart';
 import 'onboarding_page_view_view.dart';
 
 class OnboardingView extends GetView<OnboardingController> {

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:quopon/app/modules/OrderDetails/views/track_order_view.dart';
 import 'package:quopon/app/modules/OrderDetails/views/view_receipt_view.dart';
 
-import '../../../../common/customTextButton.dart';
+import '../../../../../../common/customTextButton.dart';
 import '../controllers/order_details_controller.dart';
 
 class OrderDetailsView extends GetView<OrderDetailsController> {

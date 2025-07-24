@@ -6,12 +6,20 @@ import '../modules/Checkout/bindings/checkout_binding.dart';
 import '../modules/Checkout/views/checkout_view.dart';
 import '../modules/ChooseRedemptionDeal/bindings/choose_redemption_deal_binding.dart';
 import '../modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
+import '../modules/Error404/bindings/error404_binding.dart';
+import '../modules/Error404/views/error404_view.dart';
 import '../modules/MyDeals/bindings/my_deals_binding.dart';
 import '../modules/MyDeals/views/my_deals_view.dart';
 import '../modules/MyDealsDetails/bindings/my_deals_details_binding.dart';
 import '../modules/MyDealsDetails/views/my_deals_details_view.dart';
+import '../modules/MyReviews/bindings/my_reviews_binding.dart';
+import '../modules/MyReviews/views/my_reviews_view.dart';
+import '../modules/Notifications/bindings/notifications_binding.dart';
+import '../modules/Notifications/views/notifications_view.dart';
 import '../modules/OrderDetails/bindings/order_details_binding.dart';
 import '../modules/OrderDetails/views/order_details_view.dart';
+import '../modules/PrivacyPolicy/bindings/privacy_policy_binding.dart';
+import '../modules/PrivacyPolicy/views/privacy_policy_view.dart';
 import '../modules/ProductDetails/bindings/product_details_binding.dart';
 import '../modules/ProductDetails/views/product_details_view.dart';
 import '../modules/Profile/bindings/profile_binding.dart';
@@ -185,6 +193,26 @@ class AppPages {
       name: _Paths.REVIEW,
       page: () => ReviewView(),
       binding: ReviewBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_REVIEWS,
+      page: () => const MyReviewsView(),
+      binding: MyReviewsBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.ERROR404,
+      page: () => const Error404View(),
+      binding: Error404Binding(),
+    ),
+    GetPage(
+      name: _Paths.PRIVACY_POLICY,
+      page: () => const PrivacyPolicyView(),
+      binding: PrivacyPolicyBinding(),
     ),
   ];
 }

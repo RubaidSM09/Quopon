@@ -3,10 +3,11 @@ import 'package:flutter/rendering.dart';
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Review/views/review_submit_view.dart';
+import 'package:quopon/common/PictureUploadField.dart';
 import 'package:quopon/common/custom_textField.dart';
 import 'package:quopon/common/red_button.dart';
 
-import '../controllers/review_controller.dart';
+import '../../Review/controllers/review_controller.dart';
 
 class ReviewView extends GetView<ReviewController> {
   final _messageController = TextEditingController();
@@ -18,10 +19,10 @@ class ReviewView extends GetView<ReviewController> {
 
     return Dialog(
       backgroundColor: Colors.white,
-      child: SingleChildScrollView(
-        child: Container(
-          height: 610,
-          padding: EdgeInsets.all(16),
+      child: Container(
+        height: 610,
+        padding: EdgeInsets.all(16),
+        child: SingleChildScrollView(
           child: Column(
             children: [
               Row(
@@ -40,11 +41,11 @@ class ReviewView extends GetView<ReviewController> {
                   ),
                 ],
               ),
-
+                
               Divider(thickness: 1, color: Color(0xFFEAECED),),
-
+                
               SizedBox(height: 20,),
-
+                
               Container(
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -94,9 +95,9 @@ class ReviewView extends GetView<ReviewController> {
                   ],
                 ),
               ),
-
+                
               SizedBox(height: 30,),
-
+                
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -194,20 +195,24 @@ class ReviewView extends GetView<ReviewController> {
                   ],
                 );
               }),
-
+                
               SizedBox(height: 20,),
-
+                
               GetInTouchTextField(
                 headingText: 'How was your experience?',
                 fieldText: 'Write here...',
                 iconImagePath: '',
                 controller: _messageController,
                 isRequired: false,
-                maxLine: 6,
+                maxLine: 4,
               ),
-
+                
+              SizedBox(height: 10,),
+                
+              PictureUploadField(),
+                
               SizedBox(height: 20,),
-
+                
               RedButton(buttonText: 'Submit', onPressed: () {
                 Get.back();
                 Get.dialog(ReviewSubmitView());

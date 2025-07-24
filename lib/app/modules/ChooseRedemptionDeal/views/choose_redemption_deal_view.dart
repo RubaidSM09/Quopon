@@ -3,8 +3,6 @@ import 'package:quopon/app/modules/ChooseRedemptionDeal/views/delivery_view.dart
 import 'package:quopon/app/modules/ChooseRedemptionDeal/views/pickup_view.dart';
 import 'package:quopon/app/modules/dealDetail/views/deal_detail_view.dart';
 
-import '../../../../common/red_button.dart';
-
 class ChooseRedemptionDealView extends StatefulWidget {
   final String dealImage;
   final String dealTitle;

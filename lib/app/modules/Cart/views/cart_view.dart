@@ -5,6 +5,7 @@ import 'package:quopon/app/modules/Cart/views/cart_card_view.dart';
 import 'package:quopon/app/modules/Checkout/views/checkout_view.dart';
 
 import '../../../../common/customTextButton.dart';
+import '../../Cart/controllers/cart_controller.dart';
 import '../controllers/cart_controller.dart';
 
 class CartView extends GetView<CartController> {

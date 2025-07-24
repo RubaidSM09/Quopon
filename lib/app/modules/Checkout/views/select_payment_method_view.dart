@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/PaymentCard.dart';
-import '../controllers/checkout_controller.dart';
+import '../../Checkout/controllers/checkout_controller.dart';
 
 void showPaymentMethodDialog(BuildContext context) {
   final controller = Get.find<CheckoutController>();
