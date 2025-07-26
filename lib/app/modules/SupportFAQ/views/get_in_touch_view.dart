@@ -77,7 +77,7 @@ class GetInTouchView extends GetView {
                 isRequired: false
             ),
             SizedBox(height: 15,),
-            CustomCategoryField(fieldName: 'Category',),
+            CustomCategoryField(fieldName: 'Category', isRequired: false,),
             SizedBox(height: 15,),
             GetInTouchTextField(
                 headingText: 'Message',

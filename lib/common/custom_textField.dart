@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+import '../app/modules/vendor_create_deal/controllers/vendor_create_deal_controller.dart';
 
 class CustomTextField extends StatefulWidget {
   final String headingText;
@@ -161,14 +164,23 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
                 color: Colors.black87,
               ),
             ),
+            widget.isRequired ? const
+            Text(
+              '*',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.red,
+              ),
+            ) : SizedBox.shrink(),
           ],
         ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: Color(0xFFF4F6F7),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey[300] ?? Colors.grey),
+            border: Border.all(color: Color(0xFFEAECED)),
           ),
           child: TextField(
             maxLines: widget.maxLine,
@@ -213,10 +225,12 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
 
 class CustomCategoryField extends GetView {
   final String fieldName;
+  final bool isRequired;
   final String selectedLanguage;
 
   const CustomCategoryField({
     required this.fieldName,
+    required this.isRequired,
     this.selectedLanguage = 'Select',
     super.key
   });
@@ -226,13 +240,22 @@ class CustomCategoryField extends GetView {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          fieldName,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
+        Row(
+          children: [
+            Text(
+              fieldName,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+            isRequired ?
+            Text(
+              '*',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
+            ) : SizedBox.shrink(),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -249,7 +272,10 @@ class CustomCategoryField extends GetView {
                 .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                ),
               );
             }).toList(),
             onChanged: (String? newValue) {
@@ -259,6 +285,89 @@ class CustomCategoryField extends GetView {
             },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class CustomDateFied extends GetView<VendorCreateDealController> {
+  final String heading;
+  final bool isRequired;
+  final String date;
+
+  final RxString startDate;
+
+  CustomDateFied({
+    required this.heading,
+    required this.isRequired,
+    this.date = '',
+    super.key
+  }) : startDate = date.obs;
+
+  Future<void> _selectStartDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    DateTime firstDate = DateTime(1900);
+    DateTime lastDate = DateTime(2100);
+
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    if (pickedDate != null) {
+      startDate.value = DateFormat('yyyy-MM-dd').format(pickedDate); // Format the date as needed
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              heading,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+            ),
+            isRequired ?
+            Text(
+              '*',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
+            ) : SizedBox.shrink(),
+          ],
+        ),
+        SizedBox(height: 5,),
+        Obx(() {
+          return GestureDetector(
+            onTap: () => _selectStartDate(context),
+            child: Container(
+              width: 183,
+              padding: EdgeInsets.only(
+                  left: 16, right: 16, top: 14, bottom: 14),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Color(0xFFEAECED))
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    startDate.value.isEmpty ? 'Select Date' : startDate.value,
+                    style: TextStyle(fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF6F7E8D)),
+                  ),
+                  SizedBox(width: 10,),
+                  Image.asset(
+                      'assets/images/CreateDeals/Calender.png')
+                ],
+              ),
+            ),
+          );
+        })
       ],
     );
   }

@@ -22,10 +22,17 @@ class _ProfileCardState extends State<ProfileCard> {
       children: [
         Row(
           children: [
-            Image.asset(
-              widget.icon,
+            Container(
               height: 40,
               width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFFFDF4F4)
+              ),
+              padding: EdgeInsets.all(8),
+              child: Image.asset(
+                widget.icon,
+              ),
             ),
             SizedBox(width: 15,),
             Text(

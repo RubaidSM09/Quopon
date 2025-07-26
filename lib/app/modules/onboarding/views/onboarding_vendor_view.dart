@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/login/views/login_vendor_view.dart';
+import 'package:quopon/app/modules/signup/views/signup_vendor_view.dart';
 import 'package:quopon/common/customTextButton.dart';
 
 import '../controllers/onboarding_vendor_controller.dart';
@@ -100,7 +102,7 @@ class OnboardingVendorView extends GetView {
                       GradientButton(
                         text: 'Create an Account',
                         onPressed: () {
-
+                          Get.to(SignupVendorView());
                         },
                         colors: [Color(0xFFD62828), Color(0xFFD62828)],
                         child: Row(
@@ -119,7 +121,7 @@ class OnboardingVendorView extends GetView {
                       GradientButton(
                         text: 'Log in an Account',
                         onPressed: () {
-
+                          Get.to(LoginVendorView());
                         },
                         borderColor: Color(0xFFFFFFFF),
                         colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],

@@ -39,6 +39,8 @@ dependencies:
   mobile_scanner: ^7.0.1
   dotted_line: ^3.2.3
   get_cli: ^1.9.1
+  fl_chart: ^1.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -97,6 +99,11 @@ flutter:
     - assets/images/Notifications/
     - assets/images/404/
     - assets/images/Vendor/Onboarding/
+    - assets/images/BusinessHour/
+    - assets/images/Vendor/Dashboard/
+    - assets/images/DealOptions/
+    - assets/images/DealPerformance/
+    - assets/images/CreateDeals/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

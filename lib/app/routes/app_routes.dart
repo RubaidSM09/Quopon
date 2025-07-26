@@ -29,6 +29,11 @@ abstract class Routes {
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const ERROR404 = _Paths.ERROR404;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
+  static const VENDOR_DASHBOARD = _Paths.VENDOR_DASHBOARD;
+  static const VENDOR_DEALS = _Paths.VENDOR_DEALS;
+  static const VENDOR_DEAL_PERFORMANCE = _Paths.VENDOR_DEAL_PERFORMANCE;
+  static const VENDOR_CREATE_DEAL = _Paths.VENDOR_CREATE_DEAL;
+  static const VENDOR_EDIT_DEAL = _Paths.VENDOR_EDIT_DEAL;
 }
 
 abstract class _Paths {
@@ -59,4 +64,9 @@ abstract class _Paths {
   static const NOTIFICATIONS = '/notifications';
   static const ERROR404 = '/error404';
   static const PRIVACY_POLICY = '/privacy-policy';
+  static const VENDOR_DASHBOARD = '/vendor-dashboard';
+  static const VENDOR_DEALS = '/vendor-deals';
+  static const VENDOR_DEAL_PERFORMANCE = '/vendor-deal-performance';
+  static const VENDOR_CREATE_DEAL = '/vendor-create-deal';
+  static const VENDOR_EDIT_DEAL = '/vendor-edit-deal';
 }

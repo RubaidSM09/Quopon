@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/onboarding/views/onboarding_vendor_view.dart';
 
 import '../modules/Cart/bindings/cart_binding.dart';
 import '../modules/Cart/views/cart_view.dart';
@@ -48,11 +47,22 @@ import '../modules/home2/views/home2_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
+import '../modules/onboarding/views/onboarding_vendor_view.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/signUpProcess/bindings/sign_up_process_binding.dart';
 import '../modules/signUpProcess/views/sign_up_process_view.dart';
 import '../modules/signup/bindings/signup_binding.dart';
 import '../modules/signup/views/signup_view.dart';
+import '../modules/vendor_create_deal/bindings/vendor_create_deal_binding.dart';
+import '../modules/vendor_create_deal/views/vendor_create_deal_view.dart';
+import '../modules/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
+import '../modules/vendor_dashboard/views/vendor_dashboard_view.dart';
+import '../modules/vendor_deal_performance/bindings/vendor_deal_performance_binding.dart';
+import '../modules/vendor_deal_performance/views/vendor_deal_performance_view.dart';
+import '../modules/vendor_deals/bindings/vendor_deals_binding.dart';
+import '../modules/vendor_deals/views/vendor_deals_view.dart';
+import '../modules/vendor_edit_deal/bindings/vendor_edit_deal_binding.dart';
+import '../modules/vendor_edit_deal/views/vendor_edit_deal_view.dart';
 
 part 'app_routes.dart';
 
@@ -214,6 +224,31 @@ class AppPages {
       name: _Paths.PRIVACY_POLICY,
       page: () => const PrivacyPolicyView(),
       binding: PrivacyPolicyBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_DASHBOARD,
+      page: () => const VendorDashboardView(),
+      binding: VendorDashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_DEALS,
+      page: () => const VendorDealsView(),
+      binding: VendorDealsBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_DEAL_PERFORMANCE,
+      page: () => const VendorDealPerformanceView(),
+      binding: VendorDealPerformanceBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_CREATE_DEAL,
+      page: () => VendorCreateDealView(),
+      binding: VendorCreateDealBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_EDIT_DEAL,
+      page: () => VendorEditDealView(),
+      binding: VendorEditDealBinding(),
     ),
   ];
 }

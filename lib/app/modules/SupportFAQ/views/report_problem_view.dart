@@ -38,7 +38,7 @@ class ReportProblemView extends GetView {
               ),
               Divider(thickness: 1, color: Color(0xFFEAECED),),
               SizedBox(height: 20,),
-              CustomCategoryField(fieldName: 'Select Category'),
+              CustomCategoryField(fieldName: 'Select Category', isRequired: false,),
               SizedBox(height: 20,),
               GetInTouchTextField(
                 headingText: 'Describe your issue',
