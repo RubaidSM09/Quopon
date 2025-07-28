@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/MyReviews/controllers/my_reviews_controller.dart';
+import 'package:quopon/app/modules/vendor_side_profile/views/review_reply_view.dart';
 
 class MyReviewsCardView extends GetView<MyReviewsController> {
   final String image;
@@ -10,6 +11,8 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
   final Review review;
   final VendorFeedback feedback;
   final int rating;
+  final bool isVendor;
+  final bool isPending;
 
   const MyReviewsCardView({
     required this.image,
@@ -18,6 +21,8 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
     this.review = const Review(review: '', reviewer: '', time: ''),
     this.feedback = const VendorFeedback(image: '', title: '', feedback: '', time: ''),
     required this.rating,
+    this.isVendor = false,
+    this.isPending = false,
     super.key
   });
   @override
@@ -31,7 +36,7 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
       ),
       child: Column(
         children: [
-          Row(
+          !isVendor ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -82,13 +87,13 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
                 ),
               )
             ],
-          ),
+          ) : SizedBox.shrink(),
 
-          SizedBox(height: 5,),
+          !isVendor ? SizedBox(height: 5,) : SizedBox.shrink(),
 
-          Divider(thickness: 1, color: Color(0xFFEAECED),),
+          !isVendor ? Divider(thickness: 1, color: Color(0xFFEAECED),) : SizedBox.shrink(),
 
-          SizedBox(height: 5,),
+          !isVendor ? SizedBox(height: 5,) : SizedBox.shrink(),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,7 +162,7 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
             ],
             ),
 
-              Row(
+              !isVendor ? Row(
                 children: [
                   Image.asset(
                     'assets/images/MyReviews/Edit.png'
@@ -168,7 +173,11 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
                   )
                 ],
-              )
+              ) :
+              Text(
+                '${review.time} ago',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+              ),
             ],
           ),
 
@@ -190,10 +199,25 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
                     'by ${review.reviewer}',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF020711)),
                   ),
-                  Text(
+                  !isVendor ? Text(
                     '${review.time} ago',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
-                  ),
+                  ) :
+                  isPending ? GestureDetector(
+                    onTap: () {
+                      Get.dialog(ReviewReplyView());
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset('assets/images/Profile/Vendors/Reply.png',),
+                        SizedBox(width: 10,),
+                        Text(
+                          'Reply',
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFFD62828)),
+                        )
+                      ],
+                    ),
+                  ) : SizedBox.shrink(),
                 ],
               ) : SizedBox.shrink(),
 

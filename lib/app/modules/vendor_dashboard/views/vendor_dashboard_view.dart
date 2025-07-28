@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/dashboard_view.dart';
 import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
+import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
 import 'package:quopon/common/deal_card.dart';
 import 'package:quopon/common/my_deals_card.dart';
 
@@ -228,7 +229,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
           }
 
           if (index == 3) {
-
+            Get.to(VendorMenuView());
           }
           if (index == 4) {
 

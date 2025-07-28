@@ -44,12 +44,20 @@ class EditProfileField extends GetView<ProfileController> {
             hintText: hintText,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(width: 1, color: Color(0xFFEAECED)),
+              borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
         ),
-        SizedBox(height: 10,)
+        SizedBox(height: 20,)
       ],
     );
   }

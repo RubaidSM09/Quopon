@@ -53,6 +53,8 @@ import '../modules/signUpProcess/bindings/sign_up_process_binding.dart';
 import '../modules/signUpProcess/views/sign_up_process_view.dart';
 import '../modules/signup/bindings/signup_binding.dart';
 import '../modules/signup/views/signup_view.dart';
+import '../modules/vendor_add_menu/bindings/vendor_add_menu_binding.dart';
+import '../modules/vendor_add_menu/views/vendor_add_menu_view.dart';
 import '../modules/vendor_create_deal/bindings/vendor_create_deal_binding.dart';
 import '../modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import '../modules/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
@@ -63,6 +65,10 @@ import '../modules/vendor_deals/bindings/vendor_deals_binding.dart';
 import '../modules/vendor_deals/views/vendor_deals_view.dart';
 import '../modules/vendor_edit_deal/bindings/vendor_edit_deal_binding.dart';
 import '../modules/vendor_edit_deal/views/vendor_edit_deal_view.dart';
+import '../modules/vendor_menu/bindings/vendor_menu_binding.dart';
+import '../modules/vendor_menu/views/vendor_menu_view.dart';
+import '../modules/vendor_side_profile/bindings/vendor_side_profile_binding.dart';
+import '../modules/vendor_side_profile/views/vendor_side_profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -158,7 +164,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => const VendorProfileView(),
+      page: () => VendorProfileView(),
       binding: VendorProfileBinding(),
     ),
     GetPage(
@@ -249,6 +255,21 @@ class AppPages {
       name: _Paths.VENDOR_EDIT_DEAL,
       page: () => VendorEditDealView(),
       binding: VendorEditDealBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_MENU,
+      page: () => const VendorMenuView(),
+      binding: VendorMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_ADD_MENU,
+      page: () => VendorAddMenuView(),
+      binding: VendorAddMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_SIDE_PROFILE,
+      page: () => const VendorSideProfileView(),
+      binding: VendorSideProfileBinding(),
     ),
   ];
 }

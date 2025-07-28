@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
+import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
 
 import '../../../../common/my_deals_card.dart';
 import '../../vendor_create_deal/views/vendor_create_deal_view.dart';
+import '../../vendor_menu/views/vendor_menu_view.dart';
 import '../controllers/vendor_deals_controller.dart';
 
 class VendorDealsView extends GetView<VendorDealsController> {
@@ -184,12 +186,12 @@ class VendorDealsView extends GetView<VendorDealsController> {
             Get.to(VendorCreateDealView());
           }
 
-          if (index == 1) {
-            Get.to(VendorDealsView());
+          if (index == 0) {
+            Get.to(VendorDashboardView());
           }
 
           if (index == 3) {
-
+            Get.to(VendorMenuView());
           }
           if (index == 4) {
 

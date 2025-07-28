@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:quopon/app/modules/Review/views/review_view.dart';
 import 'package:quopon/app/modules/signup/views/signup_vendor_view.dart';
+import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
 import 'package:quopon/common/custom_textField.dart';
 import 'package:quopon/common/red_button.dart';
 
@@ -111,8 +112,7 @@ class LoginVendorView extends GetView<LoginVendorController> {
 
               // Login Button
               RedButton(buttonText: 'Log In', onPressed: () {
-                Get.offNamed('/home');
-                Get.dialog(ReviewView());
+                Get.to(VendorDashboardView());
               }),
 
               SizedBox(height: 16),

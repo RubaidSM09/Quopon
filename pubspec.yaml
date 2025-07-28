@@ -104,6 +104,8 @@ flutter:
     - assets/images/DealOptions/
     - assets/images/DealPerformance/
     - assets/images/CreateDeals/
+    - assets/images/Menu/
+    - assets/images/Profile/Vendors/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

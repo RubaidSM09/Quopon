@@ -226,12 +226,14 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
 class CustomCategoryField extends GetView {
   final String fieldName;
   final bool isRequired;
-  final String selectedLanguage;
+  final String selectedCategory;
+  final List<String> categories;
 
   const CustomCategoryField({
     required this.fieldName,
     required this.isRequired,
-    this.selectedLanguage = 'Select',
+    this.selectedCategory = 'Select',
+    this.categories = const ['Select'],
     super.key
   });
 
@@ -265,10 +267,10 @@ class CustomCategoryField extends GetView {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
-            value: selectedLanguage,
+            value: selectedCategory,
             isExpanded: true,
             underline: Container(),
-            items: ['Select']
+            items: categories
                 .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,

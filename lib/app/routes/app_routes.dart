@@ -34,6 +34,9 @@ abstract class Routes {
   static const VENDOR_DEAL_PERFORMANCE = _Paths.VENDOR_DEAL_PERFORMANCE;
   static const VENDOR_CREATE_DEAL = _Paths.VENDOR_CREATE_DEAL;
   static const VENDOR_EDIT_DEAL = _Paths.VENDOR_EDIT_DEAL;
+  static const VENDOR_MENU = _Paths.VENDOR_MENU;
+  static const VENDOR_ADD_MENU = _Paths.VENDOR_ADD_MENU;
+  static const VENDOR_SIDE_PROFILE = _Paths.VENDOR_SIDE_PROFILE;
 }
 
 abstract class _Paths {
@@ -69,4 +72,7 @@ abstract class _Paths {
   static const VENDOR_DEAL_PERFORMANCE = '/vendor-deal-performance';
   static const VENDOR_CREATE_DEAL = '/vendor-create-deal';
   static const VENDOR_EDIT_DEAL = '/vendor-edit-deal';
+  static const VENDOR_MENU = '/vendor-menu';
+  static const VENDOR_ADD_MENU = '/vendor-add-menu';
+  static const VENDOR_SIDE_PROFILE = '/vendor-side-profile';
 }
