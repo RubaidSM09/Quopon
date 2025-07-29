@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
+import 'package:quopon/app/modules/signup/controllers/signup_controller.dart';
 import 'package:quopon/common/red_button.dart';
 
+import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
 
-class SignupView extends StatefulWidget {
-  @override
-  _SignupViewState createState() => _SignupViewState();
-}
-
-class _SignupViewState extends State<SignupView> {
+class SignupView extends GetView<SignupController> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -25,52 +23,54 @@ class _SignupViewState extends State<SignupView> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: EdgeInsets.only(top: 92.h, left: 16.w, right: 16.w),  // Use ScreenUtil for padding
           child: Column(
             children: [
-              SizedBox(height: 60),
-
               // Logo
               Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Color(0xFFDC143C),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child:  Image.asset(
-                  'assets/images/login/Logo Icon.png',
-                  fit: BoxFit.cover,
-                )
+                  padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [Color(0xFFD62828), Color(0xFFC21414)]),
+                      borderRadius: BorderRadius.circular(16.r), // Use ScreenUtil for border radius
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.transparent,
+                      ),
+                      boxShadow: [BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)]
+                  ),
+                  child: Image.asset(
+                    'assets/images/login/Logo Icon.png',
+                    fit: BoxFit.cover,
+                  )
               ),
 
-              SizedBox(height: 32),
+              SizedBox(height: 32.h),  // Use ScreenUtil for height spacing
 
               // Title
               Text(
                 'Create Your Qoupon Account',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 28.sp,  // Use ScreenUtil for font size
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Color(0xFF020711),
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
 
               // Subtitle
               Text(
                 'Join Qoupon to discover local deals, redeem offers\ninstantly, and unlock exclusive savings.',
                 style: TextStyle(
-                  fontSize: 13.8,
-                  color: Colors.grey[600],
-                  height: 1.4,
+                  fontSize: 16.sp,  // Use ScreenUtil for font size
+                  color: Color(0xFF6F7E8D),
+                  fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              SizedBox(height: 24),
+              SizedBox(height: 24.h),  // Use ScreenUtil for height spacing
 
               // Email Field
               CustomTextField(
@@ -81,7 +81,7 @@ class _SignupViewState extends State<SignupView> {
                   isRequired: true
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
 
               // Create Password Field
               CustomTextField(
@@ -93,7 +93,7 @@ class _SignupViewState extends State<SignupView> {
                   isPassword: true
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
 
               // Confirm Password Field
               CustomTextField(
@@ -105,7 +105,7 @@ class _SignupViewState extends State<SignupView> {
                   isPassword: true
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
 
               // Referral Code Field
               CustomTextField(
@@ -116,16 +116,27 @@ class _SignupViewState extends State<SignupView> {
                   isRequired: false
               ),
 
-              SizedBox(height: 32),
+              SizedBox(height: 32.h),  // Use ScreenUtil for height spacing
 
               // Create Account Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: RedButton(buttonText: "Create Account", onPressed: () => Get.offNamed('/sign-up-process'),)
+              GradientButton(
+                text: 'Create Account',
+                onPressed: () {
+                  Get.to(SignUpProcessView());
+                },
+                colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+                boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+                child: Text(
+                  'Create Account',
+                  style: TextStyle(
+                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
 
               // Already have account
               Row(
@@ -134,8 +145,9 @@ class _SignupViewState extends State<SignupView> {
                   Text(
                     "Already have an account? ",
                     style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 16,
+                        color: Color(0xFF6F7E8D),
+                        fontSize: 14.sp,  // Use ScreenUtil for font size
+                        fontWeight: FontWeight.w500
                     ),
                   ),
                   TextButton(
@@ -144,7 +156,7 @@ class _SignupViewState extends State<SignupView> {
                       'Sign In',
                       style: TextStyle(
                         color: Color(0xFFDC143C),
-                        fontSize: 16,
+                        fontSize: 14.sp,  // Use ScreenUtil for font size
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -152,11 +164,11 @@ class _SignupViewState extends State<SignupView> {
                 ],
               ),
 
-              SizedBox(height: 16),
+              SizedBox(height: 16.h),  // Use ScreenUtil for height spacing
 
               // Terms and Privacy Policy
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),  // Use ScreenUtil for padding
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -164,8 +176,8 @@ class _SignupViewState extends State<SignupView> {
                       TextSpan(
                         text: 'By creating an account, you agree to our ',
                         style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
+                          color: Color(0xFF6F7E8D),
+                          fontSize: 14.sp,  // Use ScreenUtil for font size
                           height: 1.4,
                         ),
                       ),
@@ -173,7 +185,7 @@ class _SignupViewState extends State<SignupView> {
                         text: 'Terms of Use',
                         style: TextStyle(
                           color: Color(0xFFDC143C),
-                          fontSize: 14,
+                          fontSize: 14.sp,  // Use ScreenUtil for font size
                           fontWeight: FontWeight.w500,
                           height: 1.4,
                         ),
@@ -181,8 +193,8 @@ class _SignupViewState extends State<SignupView> {
                       TextSpan(
                         text: ' and ',
                         style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
+                          color: Color(0xFF6F7E8D),
+                          fontSize: 14.sp,  // Use ScreenUtil for font size
                           height: 1.4,
                         ),
                       ),
@@ -190,7 +202,7 @@ class _SignupViewState extends State<SignupView> {
                         text: 'Privacy Policy',
                         style: TextStyle(
                           color: Color(0xFFDC143C),
-                          fontSize: 14,
+                          fontSize: 14.sp,  // Use ScreenUtil for font size
                           fontWeight: FontWeight.w500,
                           height: 1.4,
                         ),
@@ -200,20 +212,11 @@ class _SignupViewState extends State<SignupView> {
                 ),
               ),
 
-              SizedBox(height: 16),
+              SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
             ],
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    _referralCodeController.dispose();
-    super.dispose();
   }
 }

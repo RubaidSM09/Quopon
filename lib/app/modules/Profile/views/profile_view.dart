@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/MyReviews/views/my_reviews_view.dart';
 import 'package:quopon/app/modules/Profile/views/follow_vendors_view.dart';
 import 'package:quopon/app/modules/Profile/views/settings_view.dart';
@@ -19,55 +20,55 @@ class ProfileView extends GetView<ProfileController> {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 20.h), // Use ScreenUtil for spacing
                 Center(
                   child: Text(
                     "Profile",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp), // Use ScreenUtil for font size
                   ),
-                )
+                ),
               ],
             ),
             CircleAvatar(
-              radius: 40,
+              radius: 40.r, // Use ScreenUtil for radius
               backgroundImage: AssetImage("assets/images/Profile/ProfilePic.jpg"),
             ),
             Column(
               children: [
                 Text(
                   "Tanjiro Kamado",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp), // Use ScreenUtil for font size
                 ),
                 Text(
                   "tanjirokamado@email.com",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // Use ScreenUtil for font size
                 ),
               ],
             ),
             Column(
               children: [
                 Container(
-                  height: 278,
-                  width: 398,
+                  height: 278.h, // Use ScreenUtil for height
+                  width: 398.w, // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "User Profile",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp), // Use ScreenUtil for font size
                         ),
                         // Edit Profile card with Get.to() for navigation
                         GestureDetector(
@@ -87,7 +88,8 @@ class ProfileView extends GetView<ProfileController> {
                           onTap: () {
                             Get.to(MyReviewsView());
                           },
-                          child: ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'My Reviews'),),
+                          child: ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'My Reviews'),
+                        ),
                         GestureDetector(
                           onTap: () {
                             Get.bottomSheet(QuoponPlusView());
@@ -98,23 +100,23 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h), // Use ScreenUtil for spacing
                 Container(
-                  height: 222,
-                  width: 398,
+                  height: 222.h, // Use ScreenUtil for height
+                  width: 398.w, // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Security Settings",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp), // Use ScreenUtil for font size
                         ),
                         GestureDetector(
                           onTap: () {
@@ -132,9 +134,9 @@ class ProfileView extends GetView<ProfileController> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -157,7 +159,7 @@ class ProfileView extends GetView<ProfileController> {
             ),
             BottomNavigationBarItem(
               icon: Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.w), // Use ScreenUtil for padding
                 decoration: const BoxDecoration(
                   color: Colors.red,
                   shape: BoxShape.circle,

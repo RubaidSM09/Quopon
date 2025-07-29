@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:quopon/app/modules/signUpProcess/views/food_preferences_view.dart';
@@ -107,12 +108,24 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
             textStyle: TextStyle(color: Color(0xFF020711)),
             onPressed: () => _handleSkip(),
             colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
+            borderColor: [Colors.white, Color(0xFFEEF0F3)],
+            boxShadow: [BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
           ),
           SizedBox(height: 20),
           // Next/Finish Button
-          RedButton(
-            buttonText: _getButtonText(),
+          GradientButton(
+            text: _getButtonText(),
             onPressed: () => _handleNext(),
+            colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+            boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+            child: Text(
+              _getButtonText(),
+              style: TextStyle(
+                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),

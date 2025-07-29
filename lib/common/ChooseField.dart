@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 import '../app/modules/Profile/controllers/city_controller.dart';
 import '../app/modules/Profile/controllers/country_controller.dart';
@@ -18,19 +19,19 @@ class ChooseCountryField extends GetView<CountryController> {
           children: [
             Text(
               "Country",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp), // Use ScreenUtil for font size
             ),
             SizedBox(),
           ],
         ),
-        SizedBox(height: 8,),
+        SizedBox(height: 8.h), // Use ScreenUtil for spacing
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
             border: Border.all(color: Colors.grey.shade200),
             color: Colors.white,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w), // Use ScreenUtil for padding
           child: Obx(() {
             return DropdownButtonFormField<String>(
               value: countryController.selectedCountry.value,
@@ -40,7 +41,7 @@ class ChooseCountryField extends GetView<CountryController> {
                 border: InputBorder.none,
               ),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp, // Use ScreenUtil for font size
                 color: Colors.grey[700],
               ),
               items: countryController.countries.map((String country) {
@@ -50,7 +51,6 @@ class ChooseCountryField extends GetView<CountryController> {
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                // Update the selected country using GetX's controller
                 if (newValue != null) {
                   countryController.setSelectedCountry(newValue);
                 }
@@ -58,7 +58,7 @@ class ChooseCountryField extends GetView<CountryController> {
             );
           }),
         ),
-        SizedBox(height: 10,)
+        SizedBox(height: 10.h), // Use ScreenUtil for spacing
       ],
     );
   }
@@ -78,19 +78,19 @@ class ChooseCityField extends GetView<CityController> {
           children: [
             Text(
               "City",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp), // Use ScreenUtil for font size
             ),
             SizedBox(),
           ],
         ),
-        SizedBox(height: 8,),
+        SizedBox(height: 8.h), // Use ScreenUtil for spacing
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
             border: Border.all(color: Colors.grey.shade200),
             color: Colors.white,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w), // Use ScreenUtil for padding
           child: Obx(() {
             return DropdownButtonFormField<String>(
               value: cityController.selectedCity.value,
@@ -100,7 +100,7 @@ class ChooseCityField extends GetView<CityController> {
                 border: InputBorder.none,
               ),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp, // Use ScreenUtil for font size
                 color: Colors.grey[700],
               ),
               items: cityController.cities.map((String country) {
@@ -110,7 +110,6 @@ class ChooseCityField extends GetView<CityController> {
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                // Update the selected country using GetX's controller
                 if (newValue != null) {
                   cityController.setSelectedCountry(newValue);
                 }
@@ -118,7 +117,7 @@ class ChooseCityField extends GetView<CityController> {
             );
           }),
         ),
-        SizedBox(height: 10,)
+        SizedBox(height: 10.h), // Use ScreenUtil for spacing
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -44,58 +45,60 @@ class _CustomTextFieldState extends State<CustomTextField> {
           children: [
             Text(
               widget.headingText,
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: 14.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: Color(0xFF020711),
               ),
             ),
-            widget.isRequired ? const
-            Text(
+            widget.isRequired
+                ? Text(
               '*',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
-                color: Colors.red,
+                color: Color(0xFFD62828),
               ),
-            ) :
-            Text(
+            )
+                : Text(
               ' (Optional)',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w400,
                 color: Colors.grey[600],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey[300] ?? Colors.grey),
+            color: Color(0xFFF4F6F7),
+            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+            border: Border.all(color: Color(0xFFEAECED)),
           ),
           child: TextField(
             controller: widget.controller,
             obscureText: widget.isPassword && !_isPasswordVisible,
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Color(0xFFF4F6F7),
               hintText: widget.isPassword ? '••••••••••••' : widget.fieldText,
-              hintStyle: TextStyle(color: Colors.grey[500]),
-              prefixIcon: widget.iconImagePath!='' ? Padding(
-                padding: const EdgeInsets.all(8.0),
+              hintStyle: TextStyle(color: Color(0xFF8F9EAD), fontWeight: FontWeight.w400, fontSize: 14.sp),
+              prefixIcon: widget.iconImagePath != ''
+                  ? Padding(
+                padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
                 child: Image.asset(
                   widget.iconImagePath,
-                  width: 24,
-                  height: 24,
-                )
-              ) : null,
+                  width: 24.w,  // Use ScreenUtil for width
+                  height: 24.h,  // Use ScreenUtil for height
+                ),
+              )
+                  : null,
               suffixIcon: widget.isPassword
                   ? IconButton(
                 icon: Icon(
-                  _isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off,
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                   color: Colors.grey[500],
                 ),
                 onPressed: () {
@@ -106,8 +109,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               )
                   : null,
               border: InputBorder.none,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),  // Use ScreenUtil for padding
             ),
           ),
         ),
@@ -158,28 +160,29 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
           children: [
             Text(
               widget.headingText,
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: 16.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
                 color: Colors.black87,
               ),
             ),
-            widget.isRequired ? const
-            Text(
+            widget.isRequired
+                ? Text(
               '*',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
                 color: Colors.red,
               ),
-            ) : SizedBox.shrink(),
+            )
+                : SizedBox.shrink(),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
         Container(
           decoration: BoxDecoration(
             color: Color(0xFFF4F6F7),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
             border: Border.all(color: Color(0xFFEAECED)),
           ),
           child: TextField(
@@ -188,21 +191,25 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
             obscureText: widget.isPassword && !_isPasswordVisible,
             decoration: InputDecoration(
               hintText: widget.isPassword ? '••••••••••••' : widget.fieldText,
-              hintStyle: TextStyle(color: Colors.grey[500]),
-              prefixIcon: widget.iconImagePath!='' ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    widget.iconImagePath,
-                    width: 24,
-                    height: 24,
-                  )
-              ) : null,
+              hintStyle: TextStyle(
+                color: Color(0xFF8F9EAD),
+                fontWeight: FontWeight.w400,
+                fontSize: 14.sp,
+              ),
+              prefixIcon: widget.iconImagePath != ''
+                  ? Padding(
+                padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+                child: Image.asset(
+                  widget.iconImagePath,
+                  width: 24.w,  // Use ScreenUtil for width
+                  height: 24.h,  // Use ScreenUtil for height
+                ),
+              )
+                  : null,
               suffixIcon: widget.isPassword
                   ? IconButton(
                 icon: Icon(
-                  _isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off,
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                   color: Colors.grey[500],
                 ),
                 onPressed: () {
@@ -213,8 +220,7 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
               )
                   : null,
               border: InputBorder.none,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),  // Use ScreenUtil for padding
             ),
           ),
         ),
@@ -234,7 +240,7 @@ class CustomCategoryField extends GetView {
     required this.isRequired,
     this.selectedCategory = 'Select',
     this.categories = const ['Select'],
-    super.key
+    super.key,
   });
 
   @override
@@ -247,24 +253,29 @@ class CustomCategoryField extends GetView {
             Text(
               fieldName,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
-            isRequired ?
-            Text(
+            isRequired
+                ? Text(
               '*',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
-            ) : SizedBox.shrink(),
+              style: TextStyle(
+                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontWeight: FontWeight.w500,
+                color: Color(0xFFD62828),
+              ),
+            )
+                : SizedBox.shrink(),
           ],
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),  // Use ScreenUtil for padding
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),  // Use ScreenUtil for radius
           ),
           child: DropdownButton<String>(
             value: selectedCategory,
@@ -276,7 +287,7 @@ class CustomCategoryField extends GetView {
                 value: value,
                 child: Text(
                   value,
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
                 ),
               );
             }).toList(),
@@ -303,7 +314,7 @@ class CustomDateFied extends GetView<VendorCreateDealController> {
     required this.heading,
     required this.isRequired,
     this.date = '',
-    super.key
+    super.key,
   }) : startDate = date.obs;
 
   Future<void> _selectStartDate(BuildContext context) async {
@@ -332,39 +343,36 @@ class CustomDateFied extends GetView<VendorCreateDealController> {
           children: [
             Text(
               heading,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
             ),
-            isRequired ?
-            Text(
+            isRequired
+                ? Text(
               '*',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
-            ) : SizedBox.shrink(),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Color(0xFFD62828)),
+            )
+                : SizedBox.shrink(),
           ],
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5.h),
         Obx(() {
           return GestureDetector(
             onTap: () => _selectStartDate(context),
             child: Container(
-              width: 183,
-              padding: EdgeInsets.only(
-                  left: 16, right: 16, top: 14, bottom: 14),
+              width: 183.w,  // Use ScreenUtil for width
+              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 14.h, bottom: 14.h),  // Use ScreenUtil for padding
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
                   border: Border.all(color: Color(0xFFEAECED))
               ),
               child: Row(
                 children: [
                   Text(
                     startDate.value.isEmpty ? 'Select Date' : startDate.value,
-                    style: TextStyle(fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF6F7E8D)),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                   ),
-                  SizedBox(width: 10,),
-                  Image.asset(
-                      'assets/images/CreateDeals/Calender.png')
+                  SizedBox(width: 10.w),
+                  Image.asset('assets/images/CreateDeals/Calender.png')
                 ],
               ),
             ),
@@ -373,5 +381,4 @@ class CustomDateFied extends GetView<VendorCreateDealController> {
       ],
     );
   }
-
 }

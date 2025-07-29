@@ -160,7 +160,6 @@ class EditBusinessProfileView extends GetView {
             Get.to(VendorSideProfileView());
           },
           colors: [Color(0xFFD62828), Color(0xFFC21414)],
-          borderColor: Color(0xFFF44646),
         ),
       ),
     );

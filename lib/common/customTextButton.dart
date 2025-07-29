@@ -19,7 +19,7 @@ class GradientButton extends StatelessWidget {
   final double elevation;
   final List<BoxShadow>? boxShadow;
   final double borderWidth;
-  final Color borderColor;
+  final List<Color> borderColor;
 
   const GradientButton({
     super.key,
@@ -38,7 +38,7 @@ class GradientButton extends StatelessWidget {
     this.elevation = 4,
     this.boxShadow,
     this.borderWidth = 1,
-    this.borderColor = const Color(0xFFF44646),
+    this.borderColor = const [Color(0xFFF44646), Color(0xFFC21414)],
   });
 
   @override
@@ -55,10 +55,6 @@ class GradientButton extends StatelessWidget {
             blurRadius: elevation * 2,
           ),
         ],
-        border: Border.all(
-          width: borderWidth,
-          color: borderColor,
-        ),
       ),
       child: Material(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -76,18 +72,50 @@ class GradientButton extends StatelessWidget {
           child: InkWell(
             onTap: isEnabled ? onPressed : null,
             borderRadius: BorderRadius.circular(borderRadius),
-            child: Container(
-              padding: padding,
-              child: Center(
-                child: child ?? Text(
-                  text,
-                  style: textStyle ?? TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+            child: Stack(
+              children: [
+                // Apply gradient border effect using ShaderMask
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(borderRadius),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: borderWidth,
+                            color: Colors.transparent, // Transparent to show gradient
+                          ),
+                        ),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) {
+                            return LinearGradient(
+                              colors: borderColor,
+                              begin: begin,
+                              end: end,
+                            ).createShader(bounds);
+                          },
+                          child: Container(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                // Center content
+                Container(
+                  padding: padding,
+                  child: Center(
+                    child: child ?? Text(
+                      text,
+                      style: textStyle ?? TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

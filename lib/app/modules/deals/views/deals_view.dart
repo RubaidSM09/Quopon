@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/app/modules/dealDetail/views/deal_detail_view.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
@@ -25,12 +26,7 @@ class _DealsViewState extends State<DealsView> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: /*Container(
-            height: 20,
-            width: 20,
-            color: Colors.white,
-          )*/
-          DealDetailView(
+          child: DealDetailView(
             dealImage: dealImage,
             dealTitle: dealTitle,
             dealDescription: dealDescription,
@@ -55,7 +51,7 @@ class _DealsViewState extends State<DealsView> {
               children: [
                 // ========== ✅ Transparent Custom AppBar (inside Stack) ==========
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),  // Use ScreenUtil for padding
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -66,19 +62,19 @@ class _DealsViewState extends State<DealsView> {
                           Text(
                             'Deliver to',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 12.sp,  // Use ScreenUtil for font size
                               color: Colors.grey[600],
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Row(
                             children: [
-                              Image.asset('assets/images/Home/Location.png', height: 16, width: 16, color: Colors.black),
-                              SizedBox(width: 4),
+                              Image.asset('assets/images/Home/Location.png', height: 16.h, width: 16.w, color: Colors.black),
+                              SizedBox(width: 4.w),
                               Text(
                                 'Elizabeth City',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,  // Use ScreenUtil for font size
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -106,16 +102,16 @@ class _DealsViewState extends State<DealsView> {
 
                 // ========== ✅ Actual Content ==========
                 Padding(
-                  padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  padding: EdgeInsets.fromLTRB(16.w, 0.h, 16.w, 16.h),  // Use ScreenUtil for padding
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Search bar
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),  // Use ScreenUtil for padding
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.1),
@@ -140,7 +136,7 @@ class _DealsViewState extends State<DealsView> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.h),  // Use ScreenUtil for height spacing
 
                       // Filter options
                       SingleChildScrollView(
@@ -148,29 +144,29 @@ class _DealsViewState extends State<DealsView> {
                         child: Row(
                           children: [
                             _buildFilterChip('Food & Drink'),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
                             _buildFilterChip('Shopping'),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
                             _buildFilterChip('Leisure activities'),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
                             _buildFilterChip('Under 30 mins'),
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.h),  // Use ScreenUtil for height spacing
 
                       // Banner
                       Center(
                         child: Container(
-                          width: 398,
-                          height: 170,
+                          width: 398.w,  // Use ScreenUtil for width
+                          height: 170.h,  // Use ScreenUtil for height
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
                           ),
                           child: Image.asset('assets/images/deals/Banner.png'),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.h),  // Use ScreenUtil for height spacing
 
                       // Offers Near You section
                       Row(
@@ -179,7 +175,7 @@ class _DealsViewState extends State<DealsView> {
                           Text(
                             'Offers Near You',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,  // Use ScreenUtil for font size
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -201,8 +197,8 @@ class _DealsViewState extends State<DealsView> {
                       GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,  // Number of items per row
-                          mainAxisSpacing: 0,  // Space between rows
-                          crossAxisSpacing: 0,  // Space between columns
+                          mainAxisSpacing: 0.h,  // Space between rows
+                          crossAxisSpacing: 0.w,  // Space between columns
                           childAspectRatio: 0.825,  // Control card aspect ratio
                         ),
                         itemCount: 8,  // Number of items in the grid
@@ -214,13 +210,13 @@ class _DealsViewState extends State<DealsView> {
                               return GestureDetector(
                                 onTap: () {
                                   _showDealDetails(
-                                    context,
-                                    'assets/images/deals/Pizza.jpg',
-                                    '20% Discount',
-                                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                    '11:59 PM, May 31',
-                                    'Pizzeria Bella Italia',
-                                    'assets/images/deals/details/Starbucks_Logo.png'
+                                      context,
+                                      'assets/images/deals/Pizza.jpg',
+                                      '20% Discount',
+                                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                                      '11:59 PM, May 31',
+                                      'Pizzeria Bella Italia',
+                                      'assets/images/deals/details/Starbucks_Logo.png'
                                   );
                                 },
                                 child: RestaurantCard(
@@ -234,177 +230,13 @@ class _DealsViewState extends State<DealsView> {
                                   deliveryTime: '10 min',
                                 ),
                               );
-                            case 1:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                    context,
-                                    'assets/images/Home/Restaurants/Image.png',
-                                    'Unlock with Quopon+',
-                                    'Get full access to exclusive deals, early releases, and premium perks.',
-                                    '11:59 PM, May 31',
-                                    'Qoupon+',
-                                    'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCardBlur(
-                                  restaurantImg: 'assets/images/Home/Restaurants/Image.png',
-                                  restaurantName: 'Sonic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '16 mi',
-                                  rating: '4.5',
-                                  reviewCount: '12',
-                                  deliveryTime: '45 min',
-                                ),
-                              );
-                            case 2:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/Home/Restaurants/Image.png',
-                                      'Unlock with Quopon+',
-                                      'Get full access to exclusive deals, early releases, and premium perks.',
-                                      '11:59 PM, May 31',
-                                      'Qoupon+',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCardBlur(
-                                  restaurantImg: 'assets/images/Home/Restaurants/Image.png',
-                                  restaurantName: 'Sonic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '16 mi',
-                                  rating: '4.5',
-                                  reviewCount: '12',
-                                  deliveryTime: '45 min',
-                                ),
-                              );
-                            case 3:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/deals/Fashion.jpg',
-                                      '\$10 OFF Discount',
-                                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                      '11:59 PM, May 31',
-                                      'Fashion Store Chic',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCard(
-                                  discountTxt: '\$10 OFF Discount',
-                                  restaurantImg: 'assets/images/deals/Fashion.jpg',
-                                  restaurantName: 'Fashion Store Chic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '12 mi',
-                                  rating: '4.2',
-                                  reviewCount: '500+',
-                                  deliveryTime: '10 min',
-                                ),
-                              );
-                            case 4:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/deals/BigMac.jpg',
-                                      '\$10 OFF Discount',
-                                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                      '11:59 PM, May 31',
-                                      'Fashion Store Chic',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCard(
-                                  discountTxt: '\$10 OFF Discount',
-                                  restaurantImg: 'assets/images/deals/BigMac.jpg',
-                                  restaurantName: 'Fashion Store Chic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '12 mi',
-                                  rating: '4.2',
-                                  reviewCount: '500+',
-                                  deliveryTime: '10 min',
-                                ),
-                              );
-                            case 5:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/deals/BigMac.jpg',
-                                      '\$10 OFF Discount',
-                                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                      '11:59 PM, May 31',
-                                      'Fashion Store Chic',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCard(
-                                  discountTxt: '\$10 OFF Discount',
-                                  restaurantImg: 'assets/images/deals/BigMac.jpg',
-                                  restaurantName: 'Fashion Store Chic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '12 mi',
-                                  rating: '4.2',
-                                  reviewCount: '500+',
-                                  deliveryTime: '10 min',
-                                ),
-                              );
-                            case 6:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/Home/Restaurants/Image.png',
-                                      'Unlock with Quopon+',
-                                      'Get full access to exclusive deals, early releases, and premium perks.',
-                                      '11:59 PM, May 31',
-                                      'Qoupon+',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCardBlur(
-                                  restaurantImg: 'assets/images/deals/Fashion.jpg',
-                                  restaurantName: 'Fashion Store Chic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '12 mi',
-                                  rating: '4.2',
-                                  reviewCount: '500+',
-                                  deliveryTime: '10 min',
-                                ),
-                              );
-                            case 7:
-                              return GestureDetector(
-                                onTap: () {
-                                  _showDealDetails(
-                                      context,
-                                      'assets/images/deals/Fashion.jpg',
-                                      '\$10 OFF Discount',
-                                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                      '11:59 PM, May 31',
-                                      'Fashion Store Chic',
-                                      'assets/images/deals/details/Starbucks_Logo.png'
-                                  );
-                                },
-                                child: RestaurantCard(
-                                  discountTxt: '\$10 OFF Discount',
-                                  restaurantImg: 'assets/images/deals/Fashion.jpg',
-                                  restaurantName: 'Fashion Store Chic',
-                                  deliveryFee: 'US\$0 Delivery Free',
-                                  distance: '12 mi',
-                                  rating: '4.2',
-                                  reviewCount: '500+',
-                                  deliveryTime: '10 min',
-                                ),
-                              );
+                          // Add more cases as needed for other items
                             default:
                               return Container(); // Handle unexpected cases
                           }
                         },
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.h),  // Use ScreenUtil for height spacing
                     ],
                   ),
                 ),
@@ -467,7 +299,7 @@ class _DealsViewState extends State<DealsView> {
           ),
           BottomNavigationBarItem(
             icon: Container(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.h),
               decoration: BoxDecoration(
                 color: Colors.red,
                 shape: BoxShape.circle,
@@ -491,10 +323,10 @@ class _DealsViewState extends State<DealsView> {
 
   Widget _buildFilterChip(String label) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),  // Use ScreenUtil for padding
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),  // Use ScreenUtil for radius
         border: Border.all(color: Colors.grey[300]!),
       ),
       child: Row(
@@ -503,7 +335,7 @@ class _DealsViewState extends State<DealsView> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,  // Use ScreenUtil for font size
               color: Colors.grey[700],
               fontWeight: FontWeight.w500,
             ),
@@ -512,443 +344,4 @@ class _DealsViewState extends State<DealsView> {
       ),
     );
   }
-}
-
-
-Widget _buildFilterChip(String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ]
-      )
-    );
-  }
-
-  Widget _buildShopItem(String name, String time, String logo) {
-    return Column(
-      children: [
-        Image.asset(logo, height: 60, width: 60),
-        SizedBox(height: 6),
-        Text(
-          name,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Text(
-          time,
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
-  }
-
-Widget _buildRestaurantCard({
-  required String image,
-  required String name,
-  required String discount,
-  required String rating,
-  required String reviewCount,
-  required String deliveryFee,
-  required String distance,
-  required String deliveryTime,
-}) {
-  return Container(
-    width: 195,
-    height: 206,
-    // margin: EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 8,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Coffee image with red promo badge and heart icon
-        Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  height: 120,
-                  width: 179,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(image),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            // Red promo badge if any
-            discount.isEmpty
-                ? Container()
-                : Positioned(
-              top: 16,
-              left: 12,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5.5),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  discount,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            // Heart icon
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.25),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
-        // Restaurant details
-        Padding(
-          padding: EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Restaurant name
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 4),
-              // Delivery fee and distance
-              Row(
-                children: [
-                  Text(
-                    deliveryFee,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    distance,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 4),
-              // Rating and delivery time
-              Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.orange,
-                    size: 14,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    '$rating ($reviewCount)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    deliveryTime,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildRestaurantCardBlur({
-  required String image,
-  required String name,
-  required String discount,
-  required String rating,
-  required String reviewCount,
-  required String deliveryFee,
-  required String distance,
-  required String deliveryTime,
-}) {
-  return Container(
-    width: 220,
-    margin: EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 8,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Coffee image with red promo badge and heart icon
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
-                    ),
-                    child: Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(image),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // Heart icon
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.25),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Restaurant details
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Restaurant name
-                  Text(
-                    name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  // Delivery fee and distance
-                  Row(
-                    children: [
-                      Text(
-                        deliveryFee,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        distance,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  // Rating and delivery time
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 14,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        '$rating ($reviewCount)',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        deliveryTime,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        // Blur overlay with Qoupon+ Exclusive design
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            child: Container(
-              width: 220.0,
-              height: 215.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white.withOpacity(0.8),
-                    Colors.grey.shade100.withOpacity(0.9),
-                  ],
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Qoupon+ Exclusive badge
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Qoupon+ Exclusive',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  // Diamond icon
-                  Image.asset(
-                    'assets/images/Home/Language.png',
-                    height: 48,
-                    width: 48,
-                  ),
-                  SizedBox(height: 8),
-                  // Main title
-                  Text(
-                    'Unlock with Qoupon+',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  // Subtitle
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Get full access to exclusive deals,\nearly releases, and premium perks.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[600],
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }

@@ -105,6 +105,7 @@ class OnboardingVendorView extends GetView {
                           Get.to(SignupVendorView());
                         },
                         colors: [Color(0xFFD62828), Color(0xFFD62828)],
+                        borderColor: [Color(0xFFF44646), Color(0xFFC21414)],
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -123,8 +124,9 @@ class OnboardingVendorView extends GetView {
                         onPressed: () {
                           Get.to(LoginVendorView());
                         },
-                        borderColor: Color(0xFFFFFFFF),
+                        // borderColor: Color(0xFFFFFFFF),
                         colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
+                        borderColor: [Color(0xFFF44646), Color(0xFFC21414)],
                         child: Text(
                           'Log in an Account',
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(0xFF020711)),

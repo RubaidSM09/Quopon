@@ -415,7 +415,6 @@ class VendorDealPerformanceView
                 text: "Edit Deal",
                 colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
                 borderRadius: 12,
-                borderColor: Color(0xFFEEF0F3),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

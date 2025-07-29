@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+
 import 'package:quopon/app/modules/MyReviews/views/my_reviews_card_view.dart';
 import 'package:quopon/common/Filter.dart';
 
@@ -8,13 +9,14 @@ import '../controllers/my_reviews_controller.dart';
 
 class MyReviewsView extends GetView<MyReviewsController> {
   const MyReviewsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // Use ScreenUtil for padding
           child: Column(
             children: [
               Row(
@@ -29,19 +31,24 @@ class MyReviewsView extends GetView<MyReviewsController> {
                   ),
                   Text(
                     'My Reviews',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                    style: TextStyle(
+                        fontSize: 20.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF020711)
+                    ),
                   ),
                   SizedBox(),
                 ],
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h), // Use ScreenUtil for height
 
+              // Search bar
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
@@ -55,7 +62,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
                   children: [
                     Expanded(
                       child: TextField(
-                        readOnly: true, // <<— prevent actual editing and avoid focus issues
+                        readOnly: true,
                         decoration: InputDecoration(
                           hintText: 'Search review',
                           hintStyle: TextStyle(color: Colors.grey[500]),
@@ -68,25 +75,27 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 ),
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h), // Use ScreenUtil for height
 
+              // Filters row
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    FilterCard(filterName: 'Latest',),
-                    SizedBox(width: 10,),
+                    FilterCard(filterName: 'Latest'),
+                    SizedBox(width: 10.w),
                     FilterCard(filterName: 'All Ratings'),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10.w),
                     FilterCard(filterName: 'Highest Rated'),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10.w),
                     FilterCard(filterName: 'Reply Status'),
                   ],
                 ),
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h), // Use ScreenUtil for height
 
+              // Reviews
               MyReviewsCardView(
                 image: 'assets/images/Review/Iced Matcha Latte.jpg',
                 title: 'Iced Matcha Latte',
@@ -99,7 +108,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 rating: 4,
               ),
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10.h), // Use ScreenUtil for height
 
               MyReviewsCardView(
                 image: 'assets/images/Review/Iced Matcha Latte.jpg',
@@ -119,7 +128,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 rating: 4,
               ),
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10.h), // Use ScreenUtil for height
 
               MyReviewsCardView(
                 image: 'assets/images/Review/Iced Matcha Latte.jpg',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../controllers/onboarding_controller.dart';
 
@@ -20,7 +21,7 @@ class OnboardingPageViewView extends GetView<OnboardingController> {
         // Main Content
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 580, 20, 100),
+            padding: EdgeInsets.fromLTRB(20.w, 616.h, 20.w, 100.h), // Use ScreenUtil for padding
             child: Column(
               children: [
                 // Title and Description
@@ -30,21 +31,21 @@ class OnboardingPageViewView extends GetView<OnboardingController> {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: TextStyle(
+                          fontSize: 24.sp, // Use ScreenUtil for font size
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
-                          height: 1.2,
+                          height: 1.2.h,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12.h), // Use ScreenUtil for height spacing
                       Text(
                         description,
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp, // Use ScreenUtil for font size
                           color: Colors.grey,
-                          height: 1.4,
+                          height: 1.4.h,
                         ),
                         textAlign: TextAlign.center,
                       ),

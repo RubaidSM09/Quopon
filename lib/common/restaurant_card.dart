@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
 
@@ -35,160 +36,157 @@ class RestaurantCard extends StatefulWidget {
 class _RestaurantCardState extends State<RestaurantCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 220,
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Coffee image with red promo badge and heart icon
-          Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: Container(
+        height: 206.h,  // Use ScreenUtil for height
+        width: 220.w,   // Use ScreenUtil for width
+        padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(15),
+              blurRadius: 16,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Coffee image with red promo badge and heart icon
+            Stack(
+              children: [
+                ClipRRect(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
+                    topLeft: Radius.circular(12.r),
+                    topRight: Radius.circular(12.r),
+                    bottomLeft: Radius.circular(12.r),
+                    bottomRight: Radius.circular(12.r),
                   ),
                   child: Container(
-                    height: widget.height,
-                    width: double.infinity,
+                    height: 120.h,  // Use ScreenUtil for height
+                    width: 204.w,   // Use ScreenUtil for width
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                            widget.restaurantImg
-                        ),
+                        image: AssetImage(widget.restaurantImg),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Red promo badge
-              ?widget.discountTxt == '' ? null : Positioned(
-                top: 16,
-                left: 12,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5.5),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(12),
+                // Red promo badge
+                widget.discountTxt == '' ? SizedBox.shrink() : Positioned(
+                  top: 16.h,
+                  left: 12.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.5.h),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      widget.discountTxt,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,  // Use ScreenUtil for font size
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    widget.discountTxt,
-                    style: TextStyle(
+                ),
+                // Heart icon
+                Positioned(
+                  top: 12.h,
+                  right: 12.w,
+                  child: Container(
+                    width: 32.w,
+                    height: 32.h,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.25),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.favorite_border,
                       color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                      size: 18.sp,
                     ),
                   ),
-                ),
-              ),
-              // Heart icon
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          // Restaurant details
-          Padding(
-            padding: EdgeInsets.fromLTRB(12,0,12,12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Restaurant name
-                Text(
-                  widget.restaurantName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 4),
-
-                // Delivery fee and distance
-                Row(
-                  children: [
-                    Text(
-                      widget.deliveryFee,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      widget.distance,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-
-                // Rating and delivery time
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.orange,
-                      size: 14,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      '${widget.rating} (${widget.reviewCount})',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      widget.deliveryTime,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+
+            // Restaurant details
+            SizedBox(
+              height: 62,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Restaurant name
+                  Text(
+                    widget.restaurantName,
+                    style: TextStyle(
+                      fontSize: 16.sp,  // Use ScreenUtil for font size
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  // Delivery fee and distance
+                  Row(
+                    children: [
+                      Text(
+                        widget.deliveryFee,
+                        style: TextStyle(
+                          fontSize: 12.sp,  // Use ScreenUtil for font size
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                      Text(
+                        widget.distance,
+                        style: TextStyle(
+                          fontSize: 12.sp,  // Use ScreenUtil for font size
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Rating and delivery time
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.orange,
+                        size: 14.sp,  // Use ScreenUtil for icon size
+                      ),
+                      SizedBox(width: 4.w),  // Use ScreenUtil for width spacing
+                      Text(
+                        '${widget.rating} (${widget.reviewCount})',
+                        style: TextStyle(
+                          fontSize: 12.sp,  // Use ScreenUtil for font size
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                      Text(
+                        widget.deliveryTime,
+                        style: TextStyle(
+                          fontSize: 12.sp,  // Use ScreenUtil for font size
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -226,23 +224,23 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
         Get.bottomSheet(QuoponPlusView());
       },
       child: Container(
-        width: 220,
-        margin: EdgeInsets.all(8),
+        width: 220.w,  // Use ScreenUtil for width
+        height: 206.h,  // Use ScreenUtil for height
+        margin: EdgeInsets.all(8.w),  // Use ScreenUtil for margin
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: Offset(0, 2),
+              color: Colors.black.withAlpha(15),
+              blurRadius: 16,
             ),
           ],
         ),
         child: Stack(
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Coffee image with red promo badge and heart icon
@@ -252,52 +250,30 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12),
+                          topLeft: Radius.circular(12.r),
+                          topRight: Radius.circular(12.r),
+                          bottomLeft: Radius.circular(12.r),
+                          bottomRight: Radius.circular(12.r),
                         ),
                         child: Container(
-                          height: 120,
-                          width: double.infinity,
+                          height: 120.h,  // Use ScreenUtil for height
+                          width: 204.w,   // Use ScreenUtil for width
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(
-                                  widget.restaurantImg
-                              ),
+                              image: AssetImage(widget.restaurantImg),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    // Red promo badge
-                    /*Positioned(
-                      top: 16,
-                      left: 12,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          'Spend \$15, Save \$3',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),*/
                     // Heart icon
                     Positioned(
-                      top: 12,
-                      right: 12,
+                      top: 12.h,
+                      right: 12.w,
                       child: Container(
-                        width: 32,
-                        height: 32,
+                        width: 32.w,
+                        height: 32.h,
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.25),
                           shape: BoxShape.circle,
@@ -305,7 +281,7 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
                         child: Icon(
                           Icons.favorite_border,
                           color: Colors.white,
-                          size: 18,
+                          size: 18.sp,
                         ),
                       ),
                     ),
@@ -313,85 +289,83 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
                 ),
 
                 // Restaurant details
-                Padding(
-                  padding: EdgeInsets.fromLTRB(12,0,12,12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Restaurant name
-                      Text(
-                        widget.restaurantName,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Restaurant name
+                    Text(
+                      widget.restaurantName,
+                      style: TextStyle(
+                        fontSize: 16.sp,  // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),  // Use ScreenUtil for height spacing
+
+                    // Delivery fee and distance
+                    Row(
+                      children: [
+                        Text(
+                          widget.deliveryFee,
+                          style: TextStyle(
+                            fontSize: 12.sp,  // Use ScreenUtil for font size
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4),
+                        SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                        Text(
+                          widget.distance,
+                          style: TextStyle(
+                            fontSize: 12.sp,  // Use ScreenUtil for font size
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.h),  // Use ScreenUtil for height spacing
 
-                      // Delivery fee and distance
-                      Row(
-                        children: [
-                          Text(
-                            widget.deliveryFee,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
+                    // Rating and delivery time
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.orange,
+                          size: 14.sp,  // Use ScreenUtil for icon size
+                        ),
+                        SizedBox(width: 4.w),  // Use ScreenUtil for width spacing
+                        Text(
+                          '${widget.rating} (${widget.reviewCount})',
+                          style: TextStyle(
+                            fontSize: 12.sp,  // Use ScreenUtil for font size
+                            color: Colors.grey[600],
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            widget.distance,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
+                        ),
+                        SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                        Text(
+                          widget.deliveryTime,
+                          style: TextStyle(
+                            fontSize: 12.sp,  // Use ScreenUtil for font size
+                            color: Colors.grey[600],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 4),
-
-                      // Rating and delivery time
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.orange,
-                            size: 14,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            '${widget.rating} (${widget.reviewCount})',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            widget.deliveryTime,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
+
             // Blur overlay with Qoupon+ Exclusive design
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                 child: Container(
-                  width: 220.0,
-                  height: 215.0,
+                  width: 220.0.w,  // Use ScreenUtil for width
+                  height: 206.0.h,  // Use ScreenUtil for height
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -406,21 +380,21 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
                     children: [
                       // Qoupon+ Exclusive badge
                       Padding(
-                        padding: const EdgeInsets.only(left: 12.0),
+                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),  // Use ScreenUtil for padding
                               decoration: BoxDecoration(
                                 color: Colors.red,
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.r),  // Use ScreenUtil for border radius
                               ),
                               child: Text(
                                 'Qoupon+ Exclusive',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,  // Use ScreenUtil for font size
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -428,37 +402,36 @@ class _RestaurantCardBlurState extends State<RestaurantCardBlur> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 50),
+                      SizedBox(height: 41.h),  // Use ScreenUtil for height spacing
 
                       // Diamond icon
                       Image.asset(
-                          'assets/images/Home/Diamond.png',
-                          height: 48,
-                          width: 48,
-                        ),
-                      SizedBox(height: 8),
+                        'assets/images/Home/Diamond.png',
+                        height: 48.h,  // Use ScreenUtil for height
+                        width: 48.w,   // Use ScreenUtil for width
+                      ),
+                      SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
 
                       // Main title
                       Text(
                         'Unlock with Qoupon+',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          fontSize: 14.sp,  // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF020711),
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.h),  // Use ScreenUtil for height spacing
 
                       // Subtitle
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),  // Use ScreenUtil for padding
                         child: Text(
                           'Get full access to exclusive deals,early releases, and premium perks.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[600],
-                            height: 1.4,
+                            fontSize: 12.sp,  // Use ScreenUtil for font size
+                            color: Color(0xFF6F7E8D),
                           ),
                         ),
                       ),
@@ -491,11 +464,11 @@ class ActiveDealCard extends GetView {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 220,
-      margin: EdgeInsets.all(8),
+      width: 220.w,  // Use ScreenUtil for width
+      margin: EdgeInsets.all(8.w),  // Use ScreenUtil for margin
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -515,19 +488,17 @@ class ActiveDealCard extends GetView {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
+                    topLeft: Radius.circular(12.r),  // Use ScreenUtil for radius
+                    topRight: Radius.circular(12.r),  // Use ScreenUtil for radius
+                    bottomLeft: Radius.circular(12.r),  // Use ScreenUtil for radius
+                    bottomRight: Radius.circular(12.r),  // Use ScreenUtil for radius
                   ),
                   child: Container(
-                    height: 120,
+                    height: 120.h,  // Use ScreenUtil for height
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                            dealImg
-                        ),
+                        image: AssetImage(dealImg),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -537,11 +508,11 @@ class ActiveDealCard extends GetView {
 
               // Heart icon
               Positioned(
-                top: 12,
-                right: 12,
+                top: 12.h,
+                right: 12.w,
                 child: Container(
-                  width: 32,
-                  height: 32,
+                  width: 32.w,
+                  height: 32.h,
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.25),
                     shape: BoxShape.circle,
@@ -549,7 +520,7 @@ class ActiveDealCard extends GetView {
                   child: Icon(
                     Icons.favorite_border,
                     color: Colors.white,
-                    size: 18,
+                    size: 18.sp,  // Use ScreenUtil for size
                   ),
                 ),
               ),
@@ -558,7 +529,7 @@ class ActiveDealCard extends GetView {
 
           // Deal details
           Padding(
-            padding: EdgeInsets.fromLTRB(12,0,12,12),
+            padding: EdgeInsets.fromLTRB(12.w, 0.h, 12.w, 12.h),  // Use ScreenUtil for padding
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -566,26 +537,26 @@ class ActiveDealCard extends GetView {
                 Text(
                   dealTitle,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,  // Use ScreenUtil for font size
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 4.h),  // Use ScreenUtil for height spacing
 
                 // Description
                 Text(
                   dealDescription,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,  // Use ScreenUtil for font size
                     color: Colors.grey[600],
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 4.h),  // Use ScreenUtil for height spacing
 
                 // Rating and delivery time
                 Row(
@@ -593,7 +564,7 @@ class ActiveDealCard extends GetView {
                     Text(
                       'Valid Until: ',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
                         fontWeight: FontWeight.w500,
                         color: Color(0xFFD62828),
                       ),
@@ -601,7 +572,7 @@ class ActiveDealCard extends GetView {
                     Text(
                       dealValidity,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
                         fontWeight: FontWeight.w500,
                         color: Colors.grey[500],
                       ),
@@ -615,5 +586,4 @@ class ActiveDealCard extends GetView {
       ),
     );
   }
-
 }
