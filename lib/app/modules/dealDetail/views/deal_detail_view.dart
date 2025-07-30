@@ -1,7 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:quopon/app/modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
 import 'package:quopon/common/red_button.dart';
+
+import '../../../../common/customTextButton.dart';
+import '../../home/views/home_view.dart';
 
 class DealDetailView extends StatelessWidget {
   final String dealImage;
@@ -33,14 +39,10 @@ class DealDetailView extends StatelessWidget {
           child: GestureDetector(
             onTap: () {}, // Prevent dismiss on card tap
             child: Container(
-              /*height: 400,
-              width: 350,*/
-              width: 398,
-              height: 522,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(left: 8.w, right: 8.w, top: 8.h, bottom: 20.h),
               decoration: BoxDecoration(
                 color: Color(0xFFF9FBFC),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -49,177 +51,189 @@ class DealDetailView extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Close button (top-right)
-                  Stack(
-                    children: [
-                      // Deal Image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          dealImage, // Image of the deal
-                          width: double.infinity,
-                          height: 220,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      Align(
-                      alignment: Alignment.topRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);  // Close popup
-                        },
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black.withAlpha(128),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ]
-                  ),
-
-                  SizedBox(height: 12),
-
-                  // Deal Title
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Close button (top-right)
+                    Stack(
                       children: [
-                        Text(
-                          dealTitle,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                        // Deal Image
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Image.asset(
+                            dealImage, // Image of the deal
+                            width: double.infinity,
+                            height: 220.h,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(height: 8),
-
-                        // Deal Description
-                        Text(
-                          dealDescription,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        SizedBox(height: 12),
-
-                        // Deal Store Name and Validity
-                        Container(
-                          color: Colors.white,
-                          height: 76,
-                          width: 366,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.asset(brandLogo, height: 44, width: 44,),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          dealStoreName,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Valid Until: ',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xFFD62828),
-                                              ),
-                                            ),
-                                            Text(
-                                              dealValidity,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey[500],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                
+                        Positioned(
+                          top: 12.h,
+                          right: 12.w,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: Container(
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black.withAlpha(128),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 20.sp,
                                 ),
-                                Container(
-                                  width: 63,
-                                  height: 22,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Color(0xFFD62828)
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '50% OFF',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ],
+                      ]
                     ),
-                  ),
-                  // SizedBox(height: 6),
-
-                  // Activate Deal Button
-                  RedButton(buttonText: 'Activate Deal', onPressed: () {
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            backgroundColor: Colors.transparent,
-                            child: ChooseRedemptionDealView(dealImage: dealImage, dealTitle: dealTitle, dealDescription: dealDescription, dealValidity: dealValidity, dealStoreName: dealStoreName, brandLogo: brandLogo)
-                          );
-                        },
-                    );
-                  }),
-                ],
+                
+                    SizedBox(height: 12.h),
+                
+                    // Deal Title
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            dealTitle,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                
+                          // Deal Description
+                          Text(
+                            dealDescription,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                
+                          // Deal Store Name and Validity
+                          Container(
+                            color: Colors.white,
+                            height: 76.h,
+                            width: 366.w,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Image.asset(brandLogo, height: 44.h, width: 44.w,),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            dealStoreName,
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Valid Until: ',
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color(0xFFD62828),
+                                                ),
+                                              ),
+                                              Text(
+                                                dealValidity,
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey[500],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: 63.w,
+                                    height: 22.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Color(0xFFD62828)
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '50% OFF',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // SizedBox(height: 6),
+                
+                    // Activate Deal Button
+                    GradientButton(
+                      text: 'Activate Deal',
+                      onPressed: () {
+                        Get.dialog(
+                            Dialog(
+                                backgroundColor: Colors.transparent,
+                                child: ChooseRedemptionDealView(dealImage: dealImage, dealTitle: dealTitle, dealDescription: dealDescription, dealValidity: dealValidity, dealStoreName: dealStoreName, brandLogo: brandLogo)
+                            )
+                        );
+                      },
+                      colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+                      boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+                      child: Text(
+                        'Activate Deal',
+                        style: TextStyle(
+                          fontSize: 16.sp,  // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

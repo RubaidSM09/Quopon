@@ -113,7 +113,6 @@ class _MyDealsViewState extends State<MyDealsView> {
               'Total Deals: 23',
               style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
             ),
-            SizedBox(height: 20.h), // Use ScreenUtil for height spacing
 
             /// ✅ Scrollable section starts here
             Expanded(

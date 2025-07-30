@@ -36,157 +36,147 @@ class RestaurantCard extends StatefulWidget {
 class _RestaurantCardState extends State<RestaurantCard> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6.0),
-      child: Container(
-        height: 206.h,  // Use ScreenUtil for height
-        width: 220.w,   // Use ScreenUtil for width
-        padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(15),
-              blurRadius: 16,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Coffee image with red promo badge and heart icon
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12.r),
-                    topRight: Radius.circular(12.r),
-                    bottomLeft: Radius.circular(12.r),
-                    bottomRight: Radius.circular(12.r),
-                  ),
-                  child: Container(
-                    height: 120.h,  // Use ScreenUtil for height
-                    width: 204.w,   // Use ScreenUtil for width
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(widget.restaurantImg),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+    return Container(
+      height: 206.h,  // Use ScreenUtil for height
+      width: 195.w,   // Use ScreenUtil for width
+      padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 16.r,
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Coffee image with red promo badge and heart icon
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.asset(
+                  widget.restaurantImg,
+                  height: 120.h,
                 ),
-                // Red promo badge
-                widget.discountTxt == '' ? SizedBox.shrink() : Positioned(
-                  top: 16.h,
-                  left: 12.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.5.h),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text(
-                      widget.discountTxt,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,  // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+              ),
+              // Red promo badge
+              widget.discountTxt == '' ? SizedBox.shrink() : Positioned(
+                top: 13.h,
+                left: 8.w,
+                child: Container(
+                  padding: EdgeInsets.all(6.w),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFD62828),
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
-                ),
-                // Heart icon
-                Positioned(
-                  top: 12.h,
-                  right: 12.w,
-                  child: Container(
-                    width: 32.w,
-                    height: 32.h,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.25),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
+                  child: Text(
+                    widget.discountTxt,
+                    style: TextStyle(
                       color: Colors.white,
-                      size: 18.sp,
+                      fontSize: 10.sp,  // Use ScreenUtil for font size
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
+                ),
+              ),
+              // Heart icon
+              Positioned(
+                top: 8.h,
+                left: 137.w,
+                child: Container(
+                  width: 34.w,
+                  height: 34.h,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.25),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.favorite_border,
+                    color: Colors.white,
+                    size: 18.sp,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // Restaurant details
+          SizedBox(
+            height: 62.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Restaurant name
+                Text(
+                  widget.restaurantName,
+                  style: TextStyle(
+                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF020711),
+                  ),
+                ),
+
+                // Delivery fee and distance
+                Row(
+                  children: [
+                    Text(
+                      widget.deliveryFee,
+                      style: TextStyle(
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
+                        color: Color(0xFF6F7E8D),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                    Icon(Icons.circle, size: 8.sp, color: Color(0xFFCAD9E8),),
+                    SizedBox(width: 8.w),
+                    Text(
+                      widget.distance,
+                      style: TextStyle(
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
+                        color: Color(0xFF6F7E8D),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Rating and delivery time
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 14.sp,  // Use ScreenUtil for icon size
+                    ),
+                    SizedBox(width: 4.w),  // Use ScreenUtil for width spacing
+                    Text(
+                      '${widget.rating} (${widget.reviewCount})',
+                      style: TextStyle(
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
+                        color: Color(0xFF6F7E8D),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
+                    Icon(Icons.circle, size: 8.sp, color: Color(0xFFCAD9E8),),
+                    SizedBox(width: 8.w),
+                    Text(
+                      widget.deliveryTime,
+                      style: TextStyle(
+                        fontSize: 12.sp,  // Use ScreenUtil for font size
+                        color: Color(0xFF6F7E8D),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-
-            // Restaurant details
-            SizedBox(
-              height: 62,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Restaurant name
-                  Text(
-                    widget.restaurantName,
-                    style: TextStyle(
-                      fontSize: 16.sp,  // Use ScreenUtil for font size
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-
-                  // Delivery fee and distance
-                  Row(
-                    children: [
-                      Text(
-                        widget.deliveryFee,
-                        style: TextStyle(
-                          fontSize: 12.sp,  // Use ScreenUtil for font size
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
-                      Text(
-                        widget.distance,
-                        style: TextStyle(
-                          fontSize: 12.sp,  // Use ScreenUtil for font size
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Rating and delivery time
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 14.sp,  // Use ScreenUtil for icon size
-                      ),
-                      SizedBox(width: 4.w),  // Use ScreenUtil for width spacing
-                      Text(
-                        '${widget.rating} (${widget.reviewCount})',
-                        style: TextStyle(
-                          fontSize: 12.sp,  // Use ScreenUtil for font size
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      SizedBox(width: 8.w),  // Use ScreenUtil for width spacing
-                      Text(
-                        widget.deliveryTime,
-                        style: TextStyle(
-                          fontSize: 12.sp,  // Use ScreenUtil for font size
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

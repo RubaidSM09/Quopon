@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUti
 
 class FilterCard extends GetView {
   final String filterName;
+  final bool isSortable;
 
   const FilterCard({
     required this.filterName,
+    this.isSortable = true,
     super.key
   });
 
@@ -22,7 +24,7 @@ class FilterCard extends GetView {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100.r), // Use ScreenUtil for border radius
           color: Colors.white,
-          boxShadow: [BoxShadow(blurRadius: 12, color: Colors.black.withAlpha(15))]
+          boxShadow: [BoxShadow(blurRadius: 12.r, color: Colors.black.withAlpha(15))]
       ),
       child: Row(
         children: [
@@ -34,8 +36,8 @@ class FilterCard extends GetView {
                 color: Color(0xFF6F7E8D)
             ),
           ),
-          SizedBox(width: 2.5.w), // Use ScreenUtil for width
-          Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),)
+          isSortable ? SizedBox(width: 2.5.w) : SizedBox.shrink(), // Use ScreenUtil for width
+          isSortable ? Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),) : SizedBox.shrink(),
         ],
       ),
     );
