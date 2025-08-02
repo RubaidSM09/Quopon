@@ -1,5 +1,7 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_fail_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_success_view.dart';
@@ -28,12 +30,7 @@ class _QRScannerViewState extends State<QRScannerView> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: /*Container(
-            height: 20,
-            width: 20,
-            color: Colors.white,
-          )*/
-          QRSuccessView(dealTitle: dealTitle, dealStoreName: dealStoreName, brandLogo: brandLogo, time: time),
+          child: QRSuccessView(dealTitle: dealTitle, dealStoreName: dealStoreName, brandLogo: brandLogo, time: time),
         );
       },
     );
@@ -86,21 +83,21 @@ class _QRScannerViewState extends State<QRScannerView> {
 
           // Header bar
           Positioned(
-            top: 40,
-            left: 16,
-            right: 16,
+            top: 40.h,
+            left: 16.w,
+            right: 16.w,
             child: Row(
               children: [
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.arrow_back, color: Colors.white),
                 ),
-                const SizedBox(width: 12),
-                const Text(
+                SizedBox(width: 12.w),
+                Text(
                   "Scan QR Code",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 )
@@ -111,18 +108,18 @@ class _QRScannerViewState extends State<QRScannerView> {
           // QR Scan overlay box and label
           Center(
             child: Container(
-              width: 200,
-              height: 200,
+              width: 200.w,
+              height: 200.h,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.white, width: 2.w),
+                borderRadius: BorderRadius.circular(8.r),
               ),
             ),
           ),
 
           // Bottom action buttons (Flash & Camera flip)
           Positioned(
-            bottom: 100,
+            bottom: 100.h,
             left: 0,
             right: 0,
             child: Row(
@@ -132,97 +129,23 @@ class _QRScannerViewState extends State<QRScannerView> {
                   onTap: () => _scannerController.toggleTorch(),
                   child: _actionButton(Icons.flash_on),
                 ),
-                const SizedBox(width: 32),
+                SizedBox(width: 32.w),
                 GestureDetector(
                   onTap: () => _scannerController.switchCamera(),
                   child: _actionButton(Icons.cameraswitch),
                 ),
-                const SizedBox(width: 32),
+                SizedBox(width: 32.w),
                 GestureDetector(
                   onTap: () => _showQRSuccess(context, '50% Off Any Grande Beverage', 'Starbucks', 'assets/images/deals/details/Starbucks_Logo.png', '01:05 AM'),
                   child: _actionButton(Icons.flash_on),
                 ),
-                const SizedBox(width: 32),
+                SizedBox(width: 32.w),
                 GestureDetector(
                   onTap: () => _showQRFail(context),
                   child: _actionButton(Icons.cameraswitch),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-
-      // Bottom Navigation Bar
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (index == 2) {
-            // Navigate to scanner screen without changing selected index
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const QRScannerView()),
-            );
-          } else {
-            setState(() {
-              _selectedIndex = index;
-            });
-
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DealsView()),
-              );
-            }
-
-            if (index == 3) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyDealsView()),
-              );
-            }
-
-            if (index == 4) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileView()),
-              );
-            }
-
-            // Add more conditions if needed for other indexes
-          }
-        },
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Home.png'),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
-            label: 'Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset('assets/images/BottomNavigation/QR.png'),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
-            label: 'My Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
-            label: 'Profile',
           ),
         ],
       ),
@@ -235,7 +158,7 @@ class _QRScannerViewState extends State<QRScannerView> {
         color: Colors.black.withOpacity(0.3),
         shape: BoxShape.circle,
       ),
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
       child: Icon(icon, color: Colors.white),
     );
   }

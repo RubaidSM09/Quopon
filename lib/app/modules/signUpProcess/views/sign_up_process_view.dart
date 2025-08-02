@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:quopon/app/modules/landing/views/landing_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/food_preferences_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/location_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/profile_complete_view.dart';
 
 import '../../../../../common/customTextButton.dart';
-import '../../../../../common/red_button.dart';
 
 class SignUpProcessView extends StatefulWidget {
   const SignUpProcessView({super.key});
@@ -29,35 +28,41 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
           children: [
             // Progress Bar
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(20.h), // Apply ScreenUtil to padding
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      height: 4,
+                      height: 4.h, // Apply ScreenUtil to height
                       decoration: BoxDecoration(
-                        color: _currentPage >= 0 ? Color(0xFFD62828) : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
+                        color: _currentPage >= 0
+                            ? Color(0xFFD62828)
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2.r), // Apply ScreenUtil to border radius
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 8.w), // Apply ScreenUtil to width
                   Expanded(
                     child: Container(
-                      height: 4,
+                      height: 4.h, // Apply ScreenUtil to height
                       decoration: BoxDecoration(
-                        color: _currentPage >= 1 ? Color(0xFFD62828) : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
+                        color: _currentPage >= 1
+                            ? Color(0xFFD62828)
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2.r), // Apply ScreenUtil to border radius
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 8.w), // Apply ScreenUtil to width
                   Expanded(
                     child: Container(
-                      height: 4,
+                      height: 4.h, // Apply ScreenUtil to height
                       decoration: BoxDecoration(
-                        color: _currentPage >= 2 ? Color(0xFFD62828) : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
+                        color: _currentPage >= 2
+                            ? Color(0xFFD62828)
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2.r), // Apply ScreenUtil to border radius
                       ),
                     ),
                   ),
@@ -99,7 +104,7 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
 
   Widget _buildBottomButtons() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.h), // Apply ScreenUtil to padding
       child: Column(
         children: [
           // Skip Button
@@ -111,7 +116,7 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
             borderColor: [Colors.white, Color(0xFFEEF0F3)],
             boxShadow: [BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 20.h), // Apply ScreenUtil to height
           // Next/Finish Button
           GradientButton(
             text: _getButtonText(),
@@ -121,7 +126,7 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
             child: Text(
               _getButtonText(),
               style: TextStyle(
-                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontSize: 16.sp, // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
@@ -162,8 +167,7 @@ class _SignUpProcessViewState extends State<SignUpProcessView> {
 
   void _finishOnboarding() {
     // Navigate to main app or handle completion
-    // print('Onboarding completed');
-    Get.offNamed('/home');
+    Get.to(LandingView());
     // Example: Navigate to home screen
     // Navigator.pushReplacementNamed(context, '/home');
   }

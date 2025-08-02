@@ -9,6 +9,7 @@ import 'package:quopon/app/modules/Notifications/views/notifications_view.dart';
 import 'package:quopon/app/modules/Profile/views/profile_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
+import 'package:quopon/common/Filter.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
 import '../../Cart/views/cart_view.dart';
@@ -39,7 +40,7 @@ class _HomeViewState extends State<HomeView> {
 
             // Main content with padding
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 60.h),  // Use ScreenUtil for padding
+              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 60.h, bottom: 16.w),  // Use ScreenUtil for padding
               child: Column(
                 children: [
                   SizedBox(
@@ -225,13 +226,13 @@ class _HomeViewState extends State<HomeView> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            _buildFilterChip(Icons.store, 'Pick-up'),
+                            FilterCard(filterName: 'Pick-up', isSortable: false, filterIcon: 'assets/images/Home/Filters/Pick Up.svg',),
                             SizedBox(width: 8.w),
-                            _buildFilterChip(Icons.local_offer, 'Offers'),
+                            FilterCard(filterName: 'Offers', isSortable: false, filterIcon: 'assets/images/Home/Filters/Offers.svg',),
                             SizedBox(width: 8.w),
-                            _buildFilterChip(Icons.delivery_dining, 'Delivery Fee'),
+                            FilterCard(filterName: 'Delivery Fee', filterIcon: 'assets/images/Home/Filters/Delivery Fee.svg',),
                             SizedBox(width: 8.w),
-                            _buildFilterChip(Icons.access_time, 'Under 30 min'),
+                            FilterCard(filterName: 'Under 30 min', isSortable: false, filterIcon: 'assets/images/Home/Filters/Under 30 Min.svg',),
                           ],
                         ),
                       ),
@@ -272,16 +273,22 @@ class _HomeViewState extends State<HomeView> {
                             child: Row(
                               children: [
                                 // Sonic card
-                                RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Domino\'s', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.0', reviewCount: '65', deliveryTime: '20 min',),
+                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Domino\'s', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.0', reviewCount: '65', deliveryTime: '20 min', isPremium: false,),
+
+                                SizedBox(width: 12.w,),
 
                                 // Coupon section
-                                RestaurantCardBlur(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min',),
+                                HomeRestaurantCard(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min', isPremium: true,),
+
+                                SizedBox(width: 12.w,),
 
                                 // Starbucks card
-                                RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                                HomeRestaurantCard(/*discountTxt: 'Spend \$15, Save \$3', */restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
+
+                                SizedBox(width: 12.w,),
 
                                 // City Grille card
-                                RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
                               ],
                             ),
                           ),
@@ -379,16 +386,22 @@ class _HomeViewState extends State<HomeView> {
                             child: Row(
                               children: [
                                 // Sonic card
-                                RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min',),
+                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Domino\'s', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.0', reviewCount: '65', deliveryTime: '20 min', isPremium: false,),
+
+                                SizedBox(width: 12.w,),
 
                                 // Coupon section
-                                RestaurantCardBlur(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min',),
+                                HomeRestaurantCard(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min', isPremium: true,),
+
+                                SizedBox(width: 12.w,),
 
                                 // Starbucks card
-                                RestaurantCard(discountTxt: 'Spend \$15, Save \$3', restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                                HomeRestaurantCard(/*discountTxt: 'Spend \$15, Save \$3', */restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
+
+                                SizedBox(width: 12.w,),
 
                                 // City Grille card
-                                RestaurantCard(discountTxt: '', restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min',),
+                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
                               ],
                             ),
                           ),
@@ -401,78 +414,6 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (index == 2) {
-            // Navigate to scanner screen without changing selected index
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const QRScannerView()),
-            );
-          } else {
-            setState(() {
-              _selectedIndex = index;
-            });
-
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DealsView()),
-              );
-            }
-
-            if (index == 3) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyDealsView()),
-              );
-            }
-
-            if (index == 4) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileView()),
-              );
-            }
-
-            // Add more conditions if needed for other indexes
-          }
-        },
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Home Active.png'),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
-            label: 'Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset('assets/images/BottomNavigation/QR.png'),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
-            label: 'My Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

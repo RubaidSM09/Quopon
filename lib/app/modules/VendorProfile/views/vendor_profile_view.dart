@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/ProductDetails/views/product_details_view.dart';
 import 'package:quopon/common/ItemCard.dart';
 import 'package:quopon/common/customTextButton.dart';
 import 'package:quopon/common/restaurant_card.dart';
-
 import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
   const VendorProfileView({super.key});
+
   @override
   Widget build(BuildContext context) {
     Get.put(VendorProfileController());
@@ -20,12 +20,12 @@ class VendorProfileView extends GetView<VendorProfileController> {
         child: Column(
           children: [
             Container(
-              height: 264,
+              height: 264.h, // ScreenUtil applied
               decoration: BoxDecoration(
-                color: Color(0xFFF6E7D8)
+                color: Color(0xFFF6E7D8),
               ),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -37,126 +37,116 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(Icons.arrow_back),
+                          child: Icon(Icons.arrow_back, size: 24.sp), // ScreenUtil applied
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              radius: 30,
+                              radius: 30.h, // ScreenUtil applied
                               backgroundImage: AssetImage('assets/images/deals/details/Starbucks_Logo.png'),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10.h), // ScreenUtil applied
                             Text(
                               'Starbucks',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                             ),
-                            SizedBox(height: 2.5,),
+                            SizedBox(height: 2.5.h), // ScreenUtil applied
                             Row(
                               children: [
                                 Text(
                                   'Café',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(width: 5.w), // ScreenUtil applied
                                 CircleAvatar(
                                   backgroundColor: Color(0xFF6F7E8D),
-                                  radius: 3,
+                                  radius: 3.h, // ScreenUtil applied
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(width: 5.w), // ScreenUtil applied
                                 Text(
                                   'Downtown',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(width: 5.w), // ScreenUtil applied
                                 CircleAvatar(
                                   backgroundColor: Color(0xFF6F7E8D),
-                                  radius: 3,
+                                  radius: 3.h, // ScreenUtil applied
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(width: 5.w), // ScreenUtil applied
                                 Row(
                                   children: [
                                     Icon(
                                       Icons.star,
                                       color: Colors.orange,
-                                      size: 14,
+                                      size: 14.sp, // ScreenUtil applied
                                     ),
-                                    SizedBox(width: 3),
+                                    SizedBox(width: 3.w), // ScreenUtil applied
                                     Text(
-                                      '4.7 ',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xFF020711),
-                                      ),
+                                      '4.7',
+                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF020711)),
                                     ),
                                     Text(
                                       '(917)',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xFF6F7E8D),
-                                      ),
+                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                     ),
                                   ],
                                 ),
                               ],
-                            )
+                            ),
                           ],
                         ),
-                        Image.asset("assets/images/MyDealsDetails/Upload.png"),
+                        Image.asset("assets/images/MyDealsDetails/Upload.png", width: 40.w, height: 40.h), // ScreenUtil applied
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GradientButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           text: "Follow",
                           colors: [Color(0xFFD62828), Color(0xFFC21414)],
-                          width: 175,
-                          height: 44,
-                          borderRadius: 12,
+                          width: 175.w, // ScreenUtil applied
+                          borderRadius: 12.r, // ScreenUtil applied
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset("assets/images/VendorProfile/Follow.png"),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 10.w), // ScreenUtil applied
                               Text(
                                 "Follow",
-                                style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w500, color: Colors.white),
-                              )
+                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
+                              ),
                             ],
                           ),
                         ),
                         GradientButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           text: "Email",
                           colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                          width: 175,
-                          height: 44,
+                          width: 175.w, // ScreenUtil applied
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset("assets/images/login/Email.png"),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 10.w), // ScreenUtil applied
                               Text(
                                 "Email",
-                                style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
-                              )
+                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                              ),
                             ],
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w), // ScreenUtil applied
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -165,7 +155,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     children: [
                       Text(
                         "Active Deals",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Color(0xFF020711)),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),
                       ),
                     ],
                   ),
@@ -173,9 +163,9 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     if (controller.activeDeals.isEmpty) {
                       return const Text("No active deals available.");
                     }
-        
+
                     return SizedBox(
-                      height: 246,
+                      height: 253.h, // ScreenUtil applied
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: controller.activeDeals.length,
@@ -191,37 +181,37 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       ),
                     );
                   }),
-        
-                  SizedBox(height: 10,),
+
+                  SizedBox(height: 10.h), // ScreenUtil applied
                   Text(
                     "Menu",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
                     if (controller.menu.isEmpty) {
                       return const Text("No active deals available.");
                     }
-        
+
                     return SizedBox(
-                      height: 32,
+                      height: 32.h, // ScreenUtil applied
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: controller.menu.length,
-                        separatorBuilder: (context, index) => const SizedBox(width: 8),
+                        separatorBuilder: (context, index) => SizedBox(width: 8.w), // ScreenUtil applied
                         itemBuilder: (context, index) {
                           final menu = controller.menu[index];
                           return Container(
-                            width: 92,
-                            height: 32,
+                            width: 92.w, // ScreenUtil applied
+                            height: 32.h, // ScreenUtil applied
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(100.r), // ScreenUtil applied
                             ),
                             child: Center(
                               child: Text(
                                 menu,
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
                               ),
                             ),
                           );
@@ -229,21 +219,21 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       ),
                     );
                   }),
-        
-                  SizedBox(height: 20,),
+
+                  SizedBox(height: 20.h), // ScreenUtil applied
                   Text(
                     "Hot Coffee",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
                     if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 114;
-                    double totalHeight = itemHeight + 12;
+                    double itemHeight = 114.h; // ScreenUtil applied
+                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
                     double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
@@ -251,56 +241,55 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: controller.items.length,
-                        // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
                           final items = controller.items[index];
                           return Container(
-                              width: 398,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => ProductDetailsView(
-                                      title: items.title,
-                                      price: items.price,
-                                      calory: items.calory,
-                                      description: items.description,
-                                      image: items.image,
-                                    ));
-                                  },
-                                  child: ItemCard(
+                            width: 398.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProductDetailsView(
                                     title: items.title,
                                     price: items.price,
                                     calory: items.calory,
                                     description: items.description,
                                     image: items.image,
-                                  ),
+                                  ));
+                                },
+                                child: ItemCard(
+                                  title: items.title,
+                                  price: items.price,
+                                  calory: items.calory,
+                                  description: items.description,
+                                  image: items.image,
                                 ),
-                              )
+                              ),
+                            ),
                           );
                         },
                       ),
                     );
                   }),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h), // ScreenUtil applied
                   Text(
                     "Cold Coffee",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
                     if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 114;
-                    double totalHeight = itemHeight + 12;
+                    double itemHeight = 114.h; // ScreenUtil applied
+                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
                     double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
@@ -308,56 +297,55 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: controller.items.length,
-                        // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
                           final items = controller.items[index];
                           return Container(
-                              width: 398,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => ProductDetailsView(
-                                      title: items.title,
-                                      price: items.price,
-                                      calory: items.calory,
-                                      description: items.description,
-                                      image: items.image,
-                                    ));
-                                  },
-                                  child: ItemCard(
+                            width: 398.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProductDetailsView(
                                     title: items.title,
                                     price: items.price,
                                     calory: items.calory,
                                     description: items.description,
                                     image: items.image,
-                                  ),
+                                  ));
+                                },
+                                child: ItemCard(
+                                  title: items.title,
+                                  price: items.price,
+                                  calory: items.calory,
+                                  description: items.description,
+                                  image: items.image,
                                 ),
-                              )
+                              ),
+                            ),
                           );
                         },
                       ),
                     );
                   }),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h), // ScreenUtil applied
                   Text(
                     "Hot Tea",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
                     if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 114;
-                    double totalHeight = itemHeight + 12;
+                    double itemHeight = 114.h; // ScreenUtil applied
+                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
                     double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
@@ -365,56 +353,55 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: controller.items.length,
-                        // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
                           final items = controller.items[index];
                           return Container(
-                              width: 398,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => ProductDetailsView(
-                                      title: items.title,
-                                      price: items.price,
-                                      calory: items.calory,
-                                      description: items.description,
-                                      image: items.image,
-                                    ));
-                                  },
-                                  child: ItemCard(
+                            width: 398.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProductDetailsView(
                                     title: items.title,
                                     price: items.price,
                                     calory: items.calory,
                                     description: items.description,
                                     image: items.image,
-                                  ),
+                                  ));
+                                },
+                                child: ItemCard(
+                                  title: items.title,
+                                  price: items.price,
+                                  calory: items.calory,
+                                  description: items.description,
+                                  image: items.image,
                                 ),
-                              )
+                              ),
+                            ),
                           );
                         },
                       ),
                     );
                   }),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h), // ScreenUtil applied
                   Text(
                     "Cold Tea",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
                     if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 114;
-                    double totalHeight = itemHeight + 12;
+                    double itemHeight = 114.h; // ScreenUtil applied
+                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
                     double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
@@ -422,98 +409,98 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: controller.items.length,
-                        // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
                           final items = controller.items[index];
                           return Container(
-                              width: 398,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => ProductDetailsView(
-                                      title: items.title,
-                                      price: items.price,
-                                      calory: items.calory,
-                                      description: items.description,
-                                      image: items.image,
-                                    ));
-                                  },
-                                  child: ItemCard(
+                            width: 398.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProductDetailsView(
                                     title: items.title,
                                     price: items.price,
                                     calory: items.calory,
                                     description: items.description,
                                     image: items.image,
-                                  ),
+                                  ));
+                                },
+                                child: ItemCard(
+                                  title: items.title,
+                                  price: items.price,
+                                  calory: items.calory,
+                                  description: items.description,
+                                  image: items.image,
                                 ),
-                              )
+                              ),
+                            ),
                           );
                         },
                       ),
                     );
                   }),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h), // ScreenUtil applied
                   Text(
                     "Refreshers",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6,),
+                  SizedBox(height: 6.h), // ScreenUtil applied
                   Obx(() {
-                    if (controller.menu.isEmpty) {
+                    if (controller.items.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
                     // Calculate height based on number of items
-                    double itemHeight = 114;
-                    double totalHeight = itemHeight + 0;
-                    double boxHeight = totalHeight * controller.menu.length;
+                    double itemHeight = 114.h; // ScreenUtil applied
+                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
+                    double boxHeight = totalHeight * controller.items.length;
 
                     return SizedBox(
                       height: boxHeight,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: controller.items.length,
-                        // separatorBuilder: (context, index) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
                           final items = controller.items[index];
                           return Container(
-                              width: 398,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => ProductDetailsView(
-                                      title: items.title,
-                                      price: items.price,
-                                      calory: items.calory,
-                                      description: items.description,
-                                      image: items.image,
-                                    ));
-                                  },
-                                  child: ItemCard(
+                            width: 398.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProductDetailsView(
                                     title: items.title,
                                     price: items.price,
                                     calory: items.calory,
                                     description: items.description,
                                     image: items.image,
-                                  ),
+                                  ));
+                                },
+                                child: ItemCard(
+                                  title: items.title,
+                                  price: items.price,
+                                  calory: items.calory,
+                                  description: items.description,
+                                  image: items.image,
                                 ),
-                              )
+                              ),
+                            ),
                           );
                         },
                       ),
                     );
                   }),
+
+
                   // Align "Location" to left
                   Align(
                     alignment: Alignment.centerLeft,
@@ -541,7 +528,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

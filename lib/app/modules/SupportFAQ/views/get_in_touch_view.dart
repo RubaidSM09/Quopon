@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
-import '../../../../common/red_button.dart';
 
 class GetInTouchView extends GetView {
   final _fullNameController = TextEditingController();

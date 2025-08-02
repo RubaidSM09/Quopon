@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUti
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_benifits_view.dart';
-import 'package:quopon/common/red_button.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../controllers/quopon_plus_controller.dart';
@@ -66,7 +65,8 @@ class QuoponPlusView extends GetView<QuoponPlusController> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
-                    color: Color(0xFFF9FBFC)
+                    color: Color(0xFFF9FBFC),
+                  border: Border.all(color: Color(0xFFEFF1F2))
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h), // Use ScreenUtil for padding
                 child: Column(

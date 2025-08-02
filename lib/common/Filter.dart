@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class FilterCard extends GetView {
   final String filterName;
   final bool isSortable;
+  final String filterIcon;
 
   const FilterCard({
     required this.filterName,
     this.isSortable = true,
+    this.filterIcon = '',
     super.key
   });
 
@@ -28,6 +31,10 @@ class FilterCard extends GetView {
       ),
       child: Row(
         children: [
+          filterIcon != '' ? SvgPicture.asset(
+            filterIcon
+          ) : SizedBox.shrink(),
+          filterIcon != '' ? SizedBox(width: 8.w,) : SizedBox.shrink(),
           Text(
             filterName,
             style: TextStyle(
@@ -36,7 +43,7 @@ class FilterCard extends GetView {
                 color: Color(0xFF6F7E8D)
             ),
           ),
-          isSortable ? SizedBox(width: 2.5.w) : SizedBox.shrink(), // Use ScreenUtil for width
+          isSortable ? SizedBox(width: 12.w) : SizedBox.shrink(), // Use ScreenUtil for width
           isSortable ? Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),) : SizedBox.shrink(),
         ],
       ),

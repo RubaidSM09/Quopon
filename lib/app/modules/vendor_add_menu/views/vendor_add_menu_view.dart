@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
 
 import '../../../../common/PictureUploadField.dart';
@@ -17,29 +17,12 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
 
   VendorAddMenuView({super.key});
 
-  Future<void> _selectStartDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
-    DateTime firstDate = DateTime(1900);
-    DateTime lastDate = DateTime(2100);
-
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-    );
-
-    if (pickedDate != null) {
-      startDate.value = DateFormat('yyyy-MM-dd').format(pickedDate); // Format the date as needed
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+        padding: EdgeInsets.fromLTRB(16.r, 32.h, 16.r, 16.h),  // Use ScreenUtil for padding
         child: Column(
           children: [
             Row(
@@ -49,13 +32,13 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
                   onTap: () {
                     Get.back();
                   },
-                  child: Icon(Icons.arrow_back),
+                  child: Icon(Icons.arrow_back, size: 24.sp),  // Use ScreenUtil for icon size
                 ),
                 Text(
                   'Add Menu Item',
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 18,
+                      fontSize: 18.sp,  // Use ScreenUtil for font size
                       color: Color(0xFF020711)
                   ),
                 ),
@@ -63,11 +46,11 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               ],
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
-            PictureUploadField(height: 220, width: 398,),
+            PictureUploadField(height: 220.h, width: 398.w),  // Use ScreenUtil for height and width
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
             GetInTouchTextField(
               headingText: 'Title',
@@ -77,7 +60,7 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               isRequired: true,
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
             GetInTouchTextField(
               headingText: 'Description',
@@ -88,7 +71,7 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               maxLine: 6,
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
             CustomCategoryField(
               fieldName: 'Category',
@@ -97,7 +80,7 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               categories: ['Breakfast', 'Lunch', 'Dinner'],
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
             GetInTouchTextField(
               headingText: 'Description',
@@ -107,7 +90,7 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               isRequired: true,
             ),
 
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
             CustomCategoryField(
               fieldName: 'Choose Modifier Groups',
@@ -118,8 +101,8 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
       ),
 
       bottomNavigationBar: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 32),
-        height: 106,
+        padding: EdgeInsets.only(left: 16.r, right: 16.r, top: 16.h, bottom: 32.h),  // Use ScreenUtil for padding
+        height: 106.h,  // Use ScreenUtil for height
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]

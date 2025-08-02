@@ -126,8 +126,6 @@ class SupportFAQView extends GetView<SupportFAQController> {
             },
             text: "Follow",
             colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-            width: 195.w,
-            height: 44.h,
             borderRadius: 12.r,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

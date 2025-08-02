@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/app/modules/Search/views/search_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
 
@@ -11,6 +11,7 @@ import '../controllers/vendor_deals_controller.dart';
 
 class VendorDealsView extends GetView<VendorDealsController> {
   const VendorDealsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 1;
@@ -19,7 +20,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),  // Use ScreenUtil for padding
           child: Column(
             children: [
               Row(
@@ -31,27 +32,46 @@ class VendorDealsView extends GetView<VendorDealsController> {
                     children: [
                       Text(
                         'Active Deals',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(0xFF020711)),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                       ),
                       Text(
                         'Manage your currently active deals.',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),  // Use ScreenUtil for font size
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
-                    ),
-                    child: Image.asset('assets/images/Home/Notification.png'),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(VendorCreateDealView());
+                          },
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      SizedBox(width: 12.w,),
+                      Container(
+                        padding: EdgeInsets.all(8.r),  // Use ScreenUtil for padding
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
+                        ),
+                        child: Image.asset('assets/images/Home/Notification.png'),
+                      ),
+                    ],
                   )
                 ],
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h),
 
               // Search bar
               GestureDetector(
@@ -59,16 +79,16 @@ class VendorDealsView extends GetView<VendorDealsController> {
                   Get.to(SearchView());
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),  // Use ScreenUtil for padding
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.1),
                         spreadRadius: 1,
                         blurRadius: 5,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -76,7 +96,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                     children: [
                       Expanded(
                         child: TextField(
-                          readOnly: true, // <<— prevent actual editing and avoid focus issues
+                          readOnly: true, // Prevent actual editing and avoid focus issues
                           decoration: InputDecoration(
                             hintText: 'Search food, store, deals...',
                             hintStyle: TextStyle(color: Colors.grey[500]),
@@ -90,8 +110,9 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 ),
               ),
 
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),
 
+              // Vendor Deal Cards
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -100,7 +121,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -109,7 +130,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -118,7 +139,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -127,7 +148,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -136,7 +157,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -145,7 +166,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -154,7 +175,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -163,7 +184,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -175,52 +196,6 @@ class VendorDealsView extends GetView<VendorDealsController> {
             ],
           ),
         ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (index == 2) {
-            Get.to(VendorCreateDealView());
-          }
-
-          if (index == 0) {
-            Get.to(VendorDashboardView());
-          }
-
-          if (index == 3) {
-            Get.to(VendorMenuView());
-          }
-          if (index == 4) {
-
-          }
-        },
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Dashboard.png'),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Deals Active.png'),
-            label: 'Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Create Deal.png'),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Menu.png'),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

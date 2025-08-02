@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/Cart/controllers/cart_controller.dart';
 
 class CartCardView extends GetView {
@@ -10,6 +10,7 @@ class CartCardView extends GetView {
     required this.cart,
     super.key
   });
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -20,20 +21,20 @@ class CartCardView extends GetView {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
               child: Image.asset(
                 cart.image!,
-                width: 62,
-                height: 62,
+                width: 62.w, // ScreenUtil applied
+                height: 62.h, // ScreenUtil applied
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 10.w), // ScreenUtil applied
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   cart.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp), // ScreenUtil applied
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,11 +45,11 @@ class CartCardView extends GetView {
                       children: [
                         Text(
                           'Select ${option.selectTitle}: ',
-                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(0xFF6F7E8D)),
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                         ),
                         Text(
                           option.selectOptions.join(", "),
-                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(0xFF6F7E8D)),
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                         ),
                       ],
                     );
@@ -58,15 +59,15 @@ class CartCardView extends GetView {
                   children: [
                     IconButton(
                       onPressed: () { },
-                      icon: Image.asset('assets/images/Cart/Delete.png'),
+                      icon: Image.asset('assets/images/Cart/Delete.png', width: 24.w, height: 24.h), // ScreenUtil applied
                     ),
                     Text(
                       '0${cart.quantity}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
                     ),
                     IconButton(
                       onPressed: () { },
-                      icon: Image.asset('assets/images/Cart/Add.png'),
+                      icon: Image.asset('assets/images/Cart/Add.png', width: 24.w, height: 24.h), // ScreenUtil applied
                     ),
                   ],
                 )
@@ -76,7 +77,7 @@ class CartCardView extends GetView {
         ),
         Text(
           '\$${cart.price}',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
         ),
       ],
     );

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 
 class VendorCard extends GetView {
@@ -17,14 +15,14 @@ class VendorCard extends GetView {
     required this.dealStoreName,
     required this.dealType,
     required this.activeDeals,
-    super.key
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10,),
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,18 +34,20 @@ class VendorCard extends GetView {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                   ),
-                  child: Image.asset(brandLogo, ),
+                  child: Image.asset(
+                    brandLogo,
+                    width: 40.w, // responsive size for brand logo
+                    height: 40.h,
+                  ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       dealStoreName,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -57,24 +57,24 @@ class VendorCard extends GetView {
                         Text(
                           dealType,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             color: Color(0xFFD62828),
                           ),
                         ),
-                        SizedBox(width: 8,),
+                        SizedBox(width: 8.w),
                         Container(
-                          height: 5,
-                          width: 5,
+                          height: 5.h,
+                          width: 5.w,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Color(0xFFCAD9E8)
+                            color: Color(0xFFCAD9E8),
                           ),
                         ),
-                        SizedBox(width: 8,),
+                        SizedBox(width: 8.w),
                         Text(
                           "$activeDeals Active Deals",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             color: Colors.grey[500],
                           ),
                         ),
@@ -85,31 +85,31 @@ class VendorCard extends GetView {
               ],
             ),
             GestureDetector(
-                onTap: () {
-                  Get.to(() => VendorProfileView());
-                },
-                child: Container(
-                  width: 93,
-                  height: 32,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Color(0xFFD62828)
-                  ),
-                  child: Center(
-                    child: Text(
-                      'View Profile',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        fontWeight: FontWeight.w500
-                      ),
+              onTap: () {
+                Get.to(() => VendorProfileView());
+              },
+              child: Container(
+                width: 93.w,
+                height: 32.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.r),
+                  color: Color(0xFFD62828),
+                ),
+                child: Center(
+                  child: Text(
+                    'View Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
+            ),
           ],
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5.h),
         Divider(
           color: Color(0xFFF0F2F3),
           thickness: 2,
@@ -117,5 +117,4 @@ class VendorCard extends GetView {
       ],
     );
   }
-
 }

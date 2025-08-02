@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import '../../../../common/PaymentCard.dart';
 import '../../Checkout/controllers/checkout_controller.dart';
 
 void showPaymentMethodDialog(BuildContext context) {
   final controller = Get.find<CheckoutController>();
-  
+
   Get.bottomSheet(
     Container(
-      height: 420,
+      height: 420.h, // ScreenUtil applied
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(topRight: Radius.circular(16), topLeft: Radius.circular(16),)
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), topLeft: Radius.circular(16.r),) // ScreenUtil applied
       ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
+            padding: EdgeInsets.only(top: 8.h, left: 16.w, right: 16.w), // ScreenUtil applied
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Select Payment Method',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold), // ScreenUtil applied
                 ),
                 IconButton(
                   onPressed: () {
@@ -38,6 +39,16 @@ void showPaymentMethodDialog(BuildContext context) {
             child: Obx(() {
               return ListView(
                 children: [
+                  ListTile(
+                    title: PaymentCard(
+                      logo: 'assets/images/Payment Method/Cash.png',
+                      name: 'Cash',
+                      isSelected: controller.selectedPaymentMethod.value == 'Cash',
+                      onTap: () {
+                        controller.updatePaymentMethod('Cash', 'assets/images/Payment Method/Cash.png',);
+                      },
+                    ),
+                  ),
                   ListTile(
                     title: PaymentCard(
                       logo: 'assets/images/Payment Method/Stripe.png',

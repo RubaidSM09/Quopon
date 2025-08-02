@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Review/views/review_view.dart';
 import 'package:quopon/app/modules/home/views/home_view.dart';
+import 'package:quopon/app/modules/landing/views/landing_view.dart';
 import 'package:quopon/app/modules/login/controllers/login_controller.dart';
 import 'package:quopon/common/customTextButton.dart';
 import 'package:quopon/common/custom_textField.dart';
-import 'package:quopon/common/red_button.dart';
 
 class LoginView extends GetView<LoginController> {
   final _emailController = TextEditingController();
@@ -114,7 +115,8 @@ class LoginView extends GetView<LoginController> {
             GradientButton(
               text: 'Log In',
               onPressed: () {
-                Get.to(HomeView());
+                Get.to(LandingView());
+                Get.dialog(ReviewView());
               },
               colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
               boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
@@ -163,16 +165,7 @@ class LoginView extends GetView<LoginController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 20.w,
-                    height: 20.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/login/Google.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+                  SvgPicture.asset('assets/images/login/Google Icon.svg'),
                   SizedBox(width: 12.w),
                   Text(
                     'Continue With Google',
@@ -200,15 +193,8 @@ class LoginView extends GetView<LoginController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 20.w,
-                    height: 20.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/login/Apple.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                  SvgPicture.asset(
+                    'assets/images/login/Apple Icon.svg',
                   ),
                   SizedBox(width: 12.w),
                   Text(

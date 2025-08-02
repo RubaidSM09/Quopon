@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/vendor_side_profile/controllers/my_followers_controller.dart';
 import 'package:quopon/common/FollowersCard.dart';
 
 class MyFollowersView extends GetView {
   const MyFollowersView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final MyFollowersController controller = Get.put(MyFollowersController());
@@ -13,13 +14,13 @@ class MyFollowersView extends GetView {
     return Scaffold(
         backgroundColor: Color(0xFFF9FBFC),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Column(
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),  // Use ScreenUtil for height
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -31,15 +32,14 @@ class MyFollowersView extends GetView {
                       ),
                       Text(
                         "Follow Vendors",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),  // Use ScreenUtil for font size
                       ),
                       SizedBox(),
                     ],
                   )
                 ],
               ),
-
-              SizedBox(height: 25,),
+              SizedBox(height: 25.h),  // Use ScreenUtil for height
 
               // Search bar
               Container(
@@ -73,8 +73,7 @@ class MyFollowersView extends GetView {
                 ),
               ),
 
-              // SizedBox(height: 20),
-
+              // Followers List
               Expanded(
                 child: Obx(() {
                   if (controller.followerList.isEmpty) {
@@ -94,7 +93,7 @@ class MyFollowersView extends GetView {
                     },
                   );
                 }),
-              )
+              ),
             ],
           ),
         )

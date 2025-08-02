@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/dashboard_view.dart';
@@ -7,6 +6,7 @@ import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
 import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
 import 'package:quopon/common/deal_card.dart';
 import 'package:quopon/common/my_deals_card.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 import '../controllers/vendor_dashboard_controller.dart';
 
@@ -20,7 +20,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),  // Use ScreenUtil for padding
           child: Column(
             children: [
               Row(
@@ -29,51 +29,70 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: 20,
+                        radius: 20.r,  // Use ScreenUtil for radius
                         backgroundImage: AssetImage('assets/images/Vendor/Dashboard/Starbucks.png'),
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 10.w),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Hi, Good Evening!',
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(0xFF020711)),
+                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                           ),
                           Text(
                             'Starbucks',
-                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xFF6F7E8D)),
+                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),  // Use ScreenUtil for font size
                           ),
                         ],
                       )
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
-                    ),
-                    child: Image.asset('assets/images/Home/Notification.png'),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(VendorCreateDealView());
+                          },
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      SizedBox(width: 12.w,),
+                      Container(
+                        padding: EdgeInsets.all(8.r),  // Use ScreenUtil for padding
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
+                        ),
+                        child: Image.asset('assets/images/Home/Notification.png'),
+                      ),
+                    ],
                   )
                 ],
               ),
 
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),
 
               Row(
                 children: [
                   Text(
                     'Dashboard',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                   ),
                   SizedBox.shrink()
                 ],
               ),
 
-              SizedBox(height: 5,),
+              SizedBox(height: 5.h),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,7 +105,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                         isImproved: true,
                         change: 12.8,
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10.h),
                       DashboardView(
                         title: 'Redemption Rate (%)',
                         count: 39,
@@ -104,7 +123,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                         isImproved: false,
                         change: 12.8,
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10.h),
                       DashboardView(
                         title: 'Pushes Sent',
                         count: 2872,
@@ -116,19 +135,19 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 ],
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h),
 
               Row(
                 children: [
                   Text(
                     'Push History',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Color(0xFF020711)),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                   ),
                   SizedBox.shrink(),
                 ],
               ),
 
-              SizedBox(height: 5,),
+              SizedBox(height: 5.h),
 
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
@@ -138,7 +157,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -147,7 +166,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -156,7 +175,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -165,7 +184,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -174,7 +193,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -183,7 +202,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -192,7 +211,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -201,7 +220,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),
               VendorDealCard(
                 image: 'assets/images/MyDeals/StarBucks.png',
                 title: '50% Off Any Grande Beverage',
@@ -213,52 +232,6 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
             ],
           ),
         ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (index == 2) {
-            Get.to(VendorCreateDealView());
-          }
-
-          if (index == 1) {
-            Get.to(VendorDealsView());
-          }
-
-          if (index == 3) {
-            Get.to(VendorMenuView());
-          }
-          if (index == 4) {
-
-          }
-        },
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Dashboard Active.png'),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
-            label: 'Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Create Deal.png'),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Menu.png'),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

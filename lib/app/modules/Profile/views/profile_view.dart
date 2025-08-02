@@ -140,45 +140,6 @@ class ProfileView extends GetView<ProfileController> {
           ],
         ),
       ),
-      bottomNavigationBar: Obx(() {
-        return BottomNavigationBar(
-          backgroundColor: const Color(0xFFFFFFFF),
-          type: BottomNavigationBarType.fixed,
-          currentIndex: controller.selectedIndex.value,
-          onTap: controller.onItemTapped,
-          selectedItemColor: Colors.red,
-          unselectedItemColor: Colors.grey,
-          items: [
-            BottomNavigationBarItem(
-              icon: Image.asset('assets/images/BottomNavigation/Home.png'),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
-              label: 'Deals',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: EdgeInsets.all(8.w), // Use ScreenUtil for padding
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset('assets/images/BottomNavigation/QR.png'),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset('assets/images/BottomNavigation/My Deals.png'),
-              label: 'My Deals',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset('assets/images/BottomNavigation/Profile Active.png'),
-              label: 'Profile',
-            ),
-          ],
-        );
-      }),
     );
   }
 }

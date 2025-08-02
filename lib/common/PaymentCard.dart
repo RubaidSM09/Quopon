@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class PaymentCard extends GetView {
   final String logo;
@@ -25,8 +26,8 @@ class PaymentCard extends GetView {
           Row(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 40.w, // Apply ScreenUtil to width
+                height: 40.h, // Apply ScreenUtil to height
                 decoration: BoxDecoration(
                     color: Color(0xFFF5F7F8),
                     shape: BoxShape.circle
@@ -35,10 +36,14 @@ class PaymentCard extends GetView {
                   child: Image.asset(logo),
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(width: 10.w), // Apply ScreenUtil to width
               Text(
                 name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                style: TextStyle(
+                    fontSize: 16.sp, // Apply ScreenUtil to fontSize
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF020711)
+                ),
               ),
             ],
           ),
@@ -52,5 +57,4 @@ class PaymentCard extends GetView {
       ),
     );
   }
-
 }

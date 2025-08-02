@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class ItemCard extends GetView {
   final String title;
@@ -31,33 +32,49 @@ class ItemCard extends GetView {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                  style: TextStyle(
+                    fontSize: 16.sp, // Apply ScreenUtil to fontSize
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF020711),
+                  ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(height: 5.h), // Apply ScreenUtil to height
                 Row(
                   children: [
                     Text(
                       "\$$price",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                      style: TextStyle(
+                        fontSize: 12.sp, // Apply ScreenUtil to fontSize
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF020711),
+                      ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10.w), // Apply ScreenUtil to width
                     CircleAvatar(
-                      radius: 2.5,
+                      radius: 2.5.sp, // Apply ScreenUtil to radius
                       backgroundColor: Color(0xFFCAD9E8),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10.w), // Apply ScreenUtil to width
                     Text(
                       "$calory Cal",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                      style: TextStyle(
+                        fontSize: 12.sp, // Apply ScreenUtil to fontSize
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF6F7E8D),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5,),
+                SizedBox(height: 5.h), // Apply ScreenUtil to height
                 SizedBox(
-                  width: 250,
+                  width: 250.w, // Apply ScreenUtil to width
                   child: Text(
                     description,
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                    style: TextStyle(
+                      fontSize: 12.sp, // Apply ScreenUtil to fontSize
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF6F7E8D),
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -67,19 +84,19 @@ class ItemCard extends GetView {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.sp), // Apply ScreenUtil to borderRadius
                   child: Image.asset(
                     image!,
-                    width: 84,
-                    height: 84,
+                    width: 84.w, // Apply ScreenUtil to width
+                    height: 84.h, // Apply ScreenUtil to height
                     fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
-                  bottom: 5,
-                  right: 5,
+                  bottom: 5.h, // Apply ScreenUtil to height
+                  right: 5.w, // Apply ScreenUtil to width
                   child: CircleAvatar(
-                    radius: 16,
+                    radius: 16.sp, // Apply ScreenUtil to radius
                     backgroundColor: Color(0x87000000),
                     child: Center(
                       child: Icon(
@@ -93,13 +110,12 @@ class ItemCard extends GetView {
             )
           ],
         ),
-        SizedBox(height: 10,),
+        SizedBox(height: 10.h), // Apply ScreenUtil to height
         Divider(
           color: Color(0xFFEAECED),
-          thickness: 1,
+          thickness: 1.sp, // Apply ScreenUtil to thickness
         ),
       ],
     );
   }
-
 }

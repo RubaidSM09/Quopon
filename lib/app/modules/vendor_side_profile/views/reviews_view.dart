@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
@@ -16,7 +17,7 @@ class ReviewsView extends GetView {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
           child: Column(
             children: [
               Row(
@@ -31,21 +32,21 @@ class ReviewsView extends GetView {
                   ),
                   Text(
                     'Reviews',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                   ),
                   SizedBox(),
                 ],
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h,),
               
               Obx(() {
                 return Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(4),
+                      padding: EdgeInsets.all(4.w),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                           color: Color(0xFFF1F3F4)
                       ),
                       child: Row(
@@ -58,17 +59,17 @@ class ReviewsView extends GetView {
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 12),
+                              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 12.h, bottom: 12.h),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(8.r),
                                 color: isPending.value ? Color(0xFFF1F3F4) : Color(0xFFD62828),
                               ),
                               child: SizedBox(
-                                width: 161,
+                                width: 161.w,
                                 child: Center(
                                   child: Text(
                                     'Approved Replies (134)',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isPending.value ? Color(0xFF6F7E8D) : Color(0xFFFFFFFF)),
+                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isPending.value ? Color(0xFF6F7E8D) : Color(0xFFFFFFFF)),
                                   ),
                                 ),
                               ),
@@ -81,17 +82,17 @@ class ReviewsView extends GetView {
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 12),
+                              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 12.h, bottom: 12.h),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: !isPending.value ? Color(0xFFF1F3F4) : Color(0xFFD62828)
                               ),
                               child: SizedBox(
-                                width: 161,
+                                width: 161.w,
                                 child: Center(
                                   child: Text(
                                     'Pending Reviews (89)',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: !isPending.value ? Color(0xFF6F7E8D) : Color(0xFFFFFFFF)),
+                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: !isPending.value ? Color(0xFF6F7E8D) : Color(0xFFFFFFFF)),
                                   ),
                                 ),
                               ),
@@ -101,24 +102,24 @@ class ReviewsView extends GetView {
                       ),
                     ),
 
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20.h,),
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
                           FilterCard(filterName: 'Latest',),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10.w,),
                           FilterCard(filterName: 'All Ratings'),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10.w,),
                           FilterCard(filterName: 'Highest Rated'),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10.w,),
                           FilterCard(filterName: 'Reply Status'),
                         ],
                       ),
                     ),
 
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20.h,),
 
                     isPending.value ? Column(
                       children: [
@@ -157,7 +158,7 @@ class ReviewsView extends GetView {
                           rating: 4,
                           isVendor: true,
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10.h,),
                         MyReviewsCardView(
                           image: 'assets/images/Review/Iced Matcha Latte.jpg',
                           title: 'Iced Matcha Latte',
@@ -176,7 +177,7 @@ class ReviewsView extends GetView {
                           rating: 4,
                           isVendor: true,
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10.h,),
                         MyReviewsCardView(
                           image: 'assets/images/Review/Iced Matcha Latte.jpg',
                           title: 'Iced Matcha Latte',
@@ -203,11 +204,11 @@ class ReviewsView extends GetView {
 
 
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10.h,),
 
 
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10.h,),
             ],
           ),
         ),

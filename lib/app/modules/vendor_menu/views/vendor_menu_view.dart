@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 import 'package:quopon/app/modules/vendor_add_menu/views/vendor_add_menu_view.dart';
 import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
@@ -22,7 +22,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),  // Use ScreenUtil for padding
           child: Column(
             children: [
               Row(
@@ -34,16 +34,16 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     children: [
                       Text(
                         'Manage Your Menu',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Color(0xFF020711)),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                       ),
                       Text(
                         'Keep your menu updated and organized for your customers.',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 11, color: Color(0xFF6F7E8D)),
+                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 11.sp, color: Color(0xFF6F7E8D)),  // Use ScreenUtil for font size
                       ),
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
@@ -59,7 +59,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                 ],
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20.h),  // Use ScreenUtil for height
 
               // Search bar
               GestureDetector(
@@ -98,7 +98,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                 ),
               ),
 
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
 
               Row(
                 children: [
@@ -106,36 +106,36 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     'Breakfast',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 14.sp,  // Use ScreenUtil for font size
                       color: Color(0xFF020711),
                     ),
                   ),
                   SizedBox.shrink(),
                 ],
               ),
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
 
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
 
               Row(
                 children: [
@@ -143,36 +143,36 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     'Lunch',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 14.sp,  // Use ScreenUtil for font size
                       color: Color(0xFF020711),
                     ),
                   ),
                   SizedBox.shrink(),
                 ],
               ),
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
 
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
 
               Row(
                 children: [
@@ -180,83 +180,37 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     'Dinner',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 14.sp,  // Use ScreenUtil for font size
                       color: Color(0xFF020711),
                     ),
                   ),
                   SizedBox.shrink(),
                 ],
               ),
-              SizedBox(height: 15,),
+              SizedBox(height: 15.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
-              SizedBox(height: 7.5,),
+              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
               MenuCardView(
                 image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
                 title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
                 price: 5.29,
               ),
             ],
           ),
         ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (index == 2) {
-            Get.to(VendorCreateDealView());
-          }
-
-          if (index == 0) {
-            Get.to(VendorDashboardView());
-          }
-
-          if (index == 1) {
-            Get.to(VendorDealsView());
-          }
-          if (index == 4) {
-            Get.to(VendorSideProfileView());
-          }
-        },
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Dashboard.png'),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Deals.png'),
-            label: 'Deals',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Create Deal.png'),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Menu Active.png'),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/BottomNavigation/Profile.png'),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUt
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 import 'package:quopon/app/modules/signup/controllers/signup_controller.dart';
-import 'package:quopon/common/red_button.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';

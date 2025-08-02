@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/app/modules/vendor_create_deal/views/send_push_notifications_view.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import 'package:quopon/common/customTextButton.dart';
@@ -13,30 +13,38 @@ class DealPublishView extends GetView {
         backgroundColor: Color(0xFFFFFFFF),
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.r), // Use ScreenUtil for padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Image.asset(
                   'assets/images/CreateDeals/Deal Publish.gif',
-                  height: 80,
-                  width: 80,
+                  height: 80.h,  // Use ScreenUtil for height
+                  width: 80.w,   // Use ScreenUtil for width
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h), // Use ScreenUtil for spacing
                 Column(
                   children: [
                     Text(
                       'Deal Published Successfully',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                      style: TextStyle(
+                          fontSize: 20.sp,  // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF020711)
+                      ),
                     ),
                     Text(
                       'Your deal is now live on Qoupon. You can now notify your followers or manage the deal anytime.',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                      style: TextStyle(
+                          fontSize: 16.sp,  // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF6F7E8D)
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h), // Use ScreenUtil for spacing
                 GradientButton(
                   text: 'Send Push Notification',
                   onPressed: () {
@@ -45,7 +53,7 @@ class DealPublishView extends GetView {
                   },
                   colors: [Color(0xFFD62828), Color(0xFFC21414)],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10.h), // Use ScreenUtil for spacing
                 GradientButton(
                   text: 'Skip for Now',
                   onPressed: () {
@@ -55,7 +63,11 @@ class DealPublishView extends GetView {
                   boxShadow: [BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
                   child: Text(
                     'Skip for Now',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                    style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF020711)
+                    ),
                   ),
                 ),
               ],

@@ -44,6 +44,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/home2/bindings/home2_binding.dart';
 import '../modules/home2/views/home2_view.dart';
+import '../modules/landing/bindings/landing_binding.dart';
+import '../modules/landing/views/landing_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
@@ -85,7 +87,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => OnboardingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -270,6 +272,11 @@ class AppPages {
       name: _Paths.VENDOR_SIDE_PROFILE,
       page: () => const VendorSideProfileView(),
       binding: VendorSideProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANDING,
+      page: () => const LandingView(),
+      binding: LandingBinding(),
     ),
   ];
 }

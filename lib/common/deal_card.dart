@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class DealCard extends StatefulWidget {
   final String brandLogo;
   final String dealStoreName;
   final String dealValidity;
-
 
   const DealCard({
     super.key,
@@ -22,20 +22,20 @@ class _DealCardState extends State<DealCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), 
-              offset: Offset(4, 4), 
-              blurRadius: 10,
-              spreadRadius: 0,
-            ),
-          ]
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.sp), // Apply ScreenUtil to borderRadius
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            offset: Offset(4.w, 4.h), // Apply ScreenUtil to offset for responsive positioning
+            blurRadius: 10.sp,
+            spreadRadius: 0,
+          ),
+        ],
       ),
-      height: 76,
+      height: 76.h, // Apply ScreenUtil to height
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.sp), // Apply ScreenUtil to padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,18 +47,16 @@ class _DealCardState extends State<DealCard> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                   ),
-                  child: Image.asset(widget.brandLogo, ),
+                  child: Image.asset(widget.brandLogo),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10.w), // Apply ScreenUtil to SizedBox width
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.dealStoreName,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp, // Apply ScreenUtil to font size
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -68,14 +66,14 @@ class _DealCardState extends State<DealCard> {
                         Text(
                           'Valid Until: ',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.sp, // Apply ScreenUtil to font size
                             color: Color(0xFFD62828),
                           ),
                         ),
                         Text(
                           widget.dealValidity,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.sp, // Apply ScreenUtil to font size
                             color: Colors.grey[500],
                           ),
                         ),
@@ -86,18 +84,18 @@ class _DealCardState extends State<DealCard> {
               ],
             ),
             Container(
-              width: 63,
-              height: 22,
+              width: 63.w, // Apply ScreenUtil to width
+              height: 22.h, // Apply ScreenUtil to height
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: Color(0xFFD62828)
+                borderRadius: BorderRadius.circular(6.sp), // Apply ScreenUtil to borderRadius
+                color: Color(0xFFD62828),
               ),
               child: Center(
                 child: Text(
                   '50% OFF',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12
+                    color: Colors.white,
+                    fontSize: 12.sp, // Apply ScreenUtil to font size
                   ),
                 ),
               ),

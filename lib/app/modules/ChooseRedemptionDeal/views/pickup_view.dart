@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
@@ -28,100 +29,181 @@ class PickupView extends GetView {
       onTap: () {
         Navigator.pop(context);  // Close the detail view on tapping outside
       },
-      child: Scaffold(
+      child: Dialog(
         backgroundColor: Colors.black.withOpacity(0.0),
-        body: Center(
+        child: Center(
           child: GestureDetector(
             onTap: () {},
             child: Container(
-              width: 398,
-              height: 532,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
                 color: Color(0xFFFFFFFF),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
+                    blurRadius: 8.r,
                     offset: Offset(0, 4),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox.shrink(),
+                        Text(
+                          "QR Code is Ready",
+                          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+                        ),
+                        GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                    backgroundColor: Colors.transparent,
-                                    child: ChooseRedemptionDealView(dealImage: dealImage, dealTitle: dealTitle, dealDescription: dealDescription, dealValidity: dealValidity, dealStoreName: dealStoreName, brandLogo: brandLogo)
-                                );
-                              },
-                            );
                           },
-                          child: Icon(Icons.arrow_back)
-                      ),
-                      Center(
-                          child: Text(
-                            "Pickup",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                          )
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                          child: Icon(Icons.close, size: 24,)
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Divider(
-                    color: Color(0xFFEAECED),
-                    thickness: 1,
-                  ),
-                  SizedBox(height: 5,),
-                  Column(
-                    children: [
-                      Text(
-                        "QR Code is Ready",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Color(0xFF020711)),
-                      ),
-                      SizedBox(height: 5,),
-                      Text(
-                        "Show this QR code at the Starbucks counter to redeem your deal.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Color(0xFF6F7E8D)),
-                      ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 240,
-                        width: 240,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12)
+                            child: Icon(Icons.close, size: 24.r,)
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 16.h,),
+                    Divider(
+                      color: Color(0xFFEAECED),
+                      thickness: 1,
+                    ),
+                    SizedBox(height: 16.h,),
+                    Column(
+                      children: [
+                        Text(
+                          "Show this QR at the counter. If it doesn’t scan, use the 6-digit code below.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp, color: Color(0xFF6F7E8D)),
                         ),
-                        child: Image.asset(
-                          "assets/images/Pickup/QR Code.png",
-                          fit: BoxFit.cover,
+                        SizedBox(height: 24.h,),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.r)
+                          ),
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/images/Pickup/QR Code.png",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                  DealCard(
-                    brandLogo: brandLogo,
-                    dealStoreName: dealStoreName,
-                    dealValidity: dealValidity,
-                  ),
-                ],
+                        SizedBox(height: 24.h,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                color: Color(0xFFF9FBFC),
+                                border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '8',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFF9FBFC),
+                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '2',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFF9FBFC),
+                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '0',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFF9FBFC),
+                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '1',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFF9FBFC),
+                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '7',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              height: 51.h,
+                              width: 51.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFF9FBFC),
+                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '5',
+                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 24.h,),
+                        DealCard(
+                          brandLogo: brandLogo,
+                          dealStoreName: dealStoreName,
+                          dealValidity: dealValidity,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )
             ),
           ),

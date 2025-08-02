@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/Notifications/views/notifications_card_view.dart';
 import 'package:quopon/app/modules/Notifications/views/notifications_settings_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 import '../../Notifications/controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
   const NotificationsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +17,7 @@ class NotificationsView extends GetView<NotificationsController> {
         title: Center(
           child: Text(
             'Notifications',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
           ),
         ),
         actions: [
@@ -28,20 +29,19 @@ class NotificationsView extends GetView<NotificationsController> {
           ),
         ],
       ),
-
       backgroundColor: Color(0xFFF9FBFC),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // TODAY Section
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w), // ScreenUtil applied
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'TODAY',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                   ),
                   SizedBox.shrink()
                 ],
@@ -64,16 +64,15 @@ class NotificationsView extends GetView<NotificationsController> {
               description: '🔥 Save 25% on all noodle bowls this weekend only. HURRY UP',
             ),
 
-
-
+            // YESTERDAY Section
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w), // ScreenUtil applied
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'YESTERDAY',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                   ),
                   SizedBox.shrink()
                 ],
@@ -112,16 +111,15 @@ class NotificationsView extends GetView<NotificationsController> {
               description: '🔥 Save 25% on all noodle bowls this weekend only. HURRY UP',
             ),
 
-
-
+            // Date Section
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w), // ScreenUtil applied
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Jun 9, 2024',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                   ),
                   SizedBox.shrink()
                 ],
@@ -145,7 +143,7 @@ class NotificationsView extends GetView<NotificationsController> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

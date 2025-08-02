@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:quopon/common/customTextButton.dart';
-import 'package:quopon/common/red_button.dart';
 
 class FoodPreferencesScreen extends StatefulWidget {
   final VoidCallback onNext;

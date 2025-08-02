@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/Checkout/views/select_payment_method_view.dart';
 
 import '../../../../../../common/CheckoutCard.dart';
@@ -20,27 +20,27 @@ class CheckoutPickupView extends GetView {
     return Column(
       children: [
         Container(
-          width: 398,
+          width: 398.w, // ScreenUtil applied
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12)
+              borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
           ),
           child: Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.w), // ScreenUtil applied
             child: Column(
               children: [
                 SizedBox(
-                  width: 398,
-                  height: 140,
+                  width: 398.w, // ScreenUtil applied
+                  height: 140.h, // ScreenUtil applied
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                     child: Image.asset(
                       mapLocationImg,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10.h), // ScreenUtil applied
 
                 CheckoutCard(prefixIcon: 'assets/images/Checkout/Address.png', title: 'Starbucks', subTitle: 'Leidsestraat 101, 1017 NZ Amsterdam',),
                 Divider(color: Color(0xFFEAECED), thickness: 1),
@@ -51,61 +51,61 @@ class CheckoutPickupView extends GetView {
                 CheckoutCard(prefixIcon: 'assets/images/Checkout/Deals.png', title: 'Use Deal', subTitle: 'No deal selected', suffixIcon: 'assets/images/Checkout/UseDeal.png',),
                 Divider(color: Color(0xFFEAECED), thickness: 1),
 
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h), // ScreenUtil applied
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                        height: 72,
-                        width: 175,
+                        height: 72.h, // ScreenUtil applied
+                        width: 175.w, // ScreenUtil applied
                         decoration:BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                             border: BoxBorder.all(
                               color: Color(0xFFD62828),
-                              width: 1.6,
+                              width: 1.6.w, // ScreenUtil applied
                             )
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+                          padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Standard',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
                               ),
                               Text(
                                 '10 - 20 mins',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                               ),
                             ],
                           ),
                         )
                     ),
                     Container(
-                        height: 72,
-                        width: 175,
+                        height: 72.h, // ScreenUtil applied
+                        width: 175.w, // ScreenUtil applied
                         decoration:BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                             border: BoxBorder.all(
                               color: Color(0xFFEAECED),
-                              width: 1.6,
+                              width: 1.6.w, // ScreenUtil applied
                             )
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+                          padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Schedule',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
                               ),
                               Text(
                                 'Select',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                               ),
                             ],
                           ),
@@ -113,9 +113,9 @@ class CheckoutPickupView extends GetView {
                     )
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h), // ScreenUtil applied
                 Divider(color: Color(0xFFEAECED), thickness: 1),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h), // ScreenUtil applied
 
                 Column(
                   children: [
@@ -123,12 +123,12 @@ class CheckoutPickupView extends GetView {
                       children: [
                         Text(
                           'Payment',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
                         ),
                         SizedBox.shrink(),
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 10.h), // ScreenUtil applied
                     GestureDetector(
                       onTap: () {
                         showPaymentMethodDialog(context);
@@ -138,29 +138,29 @@ class CheckoutPickupView extends GetView {
                         final logo = Get.find<CheckoutController>().selectedPaymentMethodLogo.value;
 
                         return Container(
-                          height: 48,
-                          width: 374,
+                          height: 48.h, // ScreenUtil applied
+                          width: 374.w, // ScreenUtil applied
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                               border: Border.all(
-                                  width: 1, color: Color(0xFFEAECED))
+                                  width: 1.w, color: Color(0xFFEAECED)) // ScreenUtil applied
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.w), // ScreenUtil applied
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 method.isEmpty ? Text(
                                   'Select Payment Method',
-                                  style: TextStyle(fontSize: 14,
+                                  style: TextStyle(fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: Color(0xFF6F7E8D)),
+                                      color: Color(0xFF6F7E8D)), // ScreenUtil applied
                                 ) : Row(
                                   children: [
                                     Container(
-                                      width: 40,
-                                      height: 40,
+                                      width: 40.w, // ScreenUtil applied
+                                      height: 40.h, // ScreenUtil applied
                                       decoration: BoxDecoration(
                                           color: Color(0xFFF5F7F8),
                                           shape: BoxShape.circle
@@ -169,10 +169,10 @@ class CheckoutPickupView extends GetView {
                                         child: Image.asset(logo),
                                       ),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(width: 10.w), // ScreenUtil applied
                                     Text(
                                       method,
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF020711)),
+                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
                                     ),
                                   ],
                                 ),
@@ -191,16 +191,16 @@ class CheckoutPickupView extends GetView {
           ),
         ),
 
-        SizedBox(height: 20,),
+        SizedBox(height: 20.h), // ScreenUtil applied
 
         Container(
-          width: 500,
+          width: 500.w, // ScreenUtil applied
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
           ),
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(12.w), // ScreenUtil applied
             child: Column(
               children: [
                 Row(
@@ -208,11 +208,11 @@ class CheckoutPickupView extends GetView {
                   children: [
                     Text(
                       'Sub Total',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                     ),
                     Text(
                       '\$$subTotal',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
                     ),
                   ],
                 ),
@@ -222,11 +222,11 @@ class CheckoutPickupView extends GetView {
                   children: [
                     Text(
                       'Total',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                     ),
                     Text(
                       '\$${(subTotal).toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
                     ),
                   ],
                 ),

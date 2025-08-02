@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:quopon/app/modules/VendorProfile/controllers/vendor_profile_controller.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 // Custom Gradient Button Widget
 class GradientButton extends StatelessWidget {
@@ -44,10 +45,10 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
-      height: height,
+      width: width.w, // Apply ScreenUtil to width
+      height: height.h, // Apply ScreenUtil to height
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius.sp), // Apply ScreenUtil to borderRadius
         boxShadow: boxShadow ?? [
           BoxShadow(
             color: colors.first.withOpacity(0.3),
@@ -57,7 +58,7 @@ class GradientButton extends StatelessWidget {
         ],
       ),
       child: Material(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius.sp),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -67,11 +68,11 @@ class GradientButton extends StatelessWidget {
               begin: begin,
               end: end,
             ),
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius.sp),
           ),
           child: InkWell(
             onTap: isEnabled ? onPressed : null,
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius.sp),
             child: Stack(
               children: [
                 // Apply gradient border effect using ShaderMask
@@ -79,11 +80,11 @@ class GradientButton extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.center,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(borderRadius),
+                      borderRadius: BorderRadius.circular(borderRadius.sp),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            width: borderWidth,
+                            width: borderWidth.sp, // Apply ScreenUtil to borderWidth
                             color: Colors.transparent, // Transparent to show gradient
                           ),
                         ),
@@ -109,7 +110,7 @@ class GradientButton extends StatelessWidget {
                       text,
                       style: textStyle ?? TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 16.sp, // Apply ScreenUtil to font size
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -143,21 +144,21 @@ class _CustomTextButtonState extends State<CustomTextButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 56.h, // Apply ScreenUtil to height
       child: ElevatedButton(
         onPressed: widget.onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFFDC143C),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.sp), // Apply ScreenUtil to borderRadius
           ),
           elevation: 0,
         ),
         child: Text(
           widget.buttonText,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.sp, // Apply ScreenUtil to font size
             fontWeight: FontWeight.w600,
           ),
         ),

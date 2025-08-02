@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/vendor_side_profile/views/vendor_side_profile_view.dart';
-import 'package:quopon/common/customTextButton.dart';
-import 'package:quopon/common/custom_textField.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 
+import 'package:quopon/app/modules/vendor_side_profile/views/vendor_side_profile_view.dart';
 import '../../../../common/ChooseField.dart';
 import '../../../../common/EditProfileField.dart';
-import '../../../../common/red_button.dart';
+import '../../../../common/customTextButton.dart';
+import '../../../../common/custom_textField.dart';
 import '../../signUpProcess/views/vendor_business_hour_row_view.dart';
 
 class EditBusinessProfileView extends GetView {
@@ -18,13 +17,13 @@ class EditBusinessProfileView extends GetView {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),  // Use ScreenUtil for spacing
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -36,7 +35,7 @@ class EditBusinessProfileView extends GetView {
                       ),
                       Text(
                         "Edit Business Profile",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),  // Use ScreenUtil for font size
                       ),
                       SizedBox(),
                     ],
@@ -46,26 +45,26 @@ class EditBusinessProfileView extends GetView {
               Column(
                 children: [
                   CircleAvatar(
-                    radius: 40,
+                    radius: 40.r,  // Use ScreenUtil for radius
                     backgroundImage: AssetImage("assets/images/deals/details/Starbucks_Logo.png"),
                     child: Container(
-                      width: 80,
-                      height: 80,
+                      width: 80.w,
+                      height: 80.h,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.black.withAlpha(100)
                       ),
                       child: Image.asset(
                         "assets/images/Profile/Upload.png",
-                        height: 32,
-                        width: 32,
+                        height: 32.h,
+                        width: 32.w,
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10.h),  // Use ScreenUtil for spacing
                   Text(
                     "Upload Logo",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
                   ),
                 ],
               ),
@@ -76,61 +75,61 @@ class EditBusinessProfileView extends GetView {
                   EditProfileField(label: 'Phone Number', defaultText: '01234567890', hintText: 'Enter Phone Number',),
                   EditProfileField(label: 'Address', defaultText: 'Starbucks, 9737 Destiny USA Dr, Syracuse, NY 13290, USA', hintText: 'Enter Address',),
                   CustomCategoryField(fieldName: 'Category', isRequired: false, selectedCategory: 'Food & Beverage', categories: ['Food & Beverage'],),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h),  // Use ScreenUtil for spacing
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Business Hours',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                       ),
                       SizedBox.shrink()
                     ],
                   ),
-                  SizedBox(height: 8,),
+                  SizedBox(height: 8.h),
                   VendorBusinessHourRowView(
                     isActive: true,
                     day: 'Mon',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: true,
                     day: 'Tue',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: true,
                     day: 'Wed',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: true,
                     day: 'Thu',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: true,
                     day: 'Fri',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: false,
                     day: 'Sat',
                     startTime: '12:00 AM',
                     endTime: '12:00 AM',
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15.h),
                   VendorBusinessHourRowView(
                     isActive: false,
                     day: 'Sun',
@@ -138,7 +137,7 @@ class EditBusinessProfileView extends GetView {
                     endTime: '12:00 AM',
                   ),
 
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20.h),  // Use ScreenUtil for spacing
                 ],
               ),
             ],
@@ -147,8 +146,8 @@ class EditBusinessProfileView extends GetView {
       ),
 
       bottomNavigationBar: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 32),
-        height: 106,
+        padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 32.h),  // Use ScreenUtil for padding
+        height: 106.h,  // Use ScreenUtil for height
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]

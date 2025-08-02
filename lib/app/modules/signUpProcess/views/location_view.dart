@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quopon/common/custom_textField.dart';
 
 import '../../signUpProcess/views/food_preferences_view.dart';
 
@@ -19,7 +21,99 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Stack(
+            children: [
+              // Map background pattern
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Colors.grey[50],
+                ),
+              ),
+              // Streets pattern (simplified)
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: MapPainter(),
+                ),
+              ),
+              // Location pin
+              Center(
+                child: Image.asset(
+                  'assets/images/Location/Mark Location Icon.png',
+                  color: Colors.red,
+                  height: 40.h,
+                  width: 40.w,
+                ),
+              ),
+              // Street names
+              Positioned(
+                top: 100.h,
+                left: 50.w,
+                child: Text(
+                  'Oak Lane',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 50.h,
+                right: 50.w,
+                child: Text(
+                  'Victoria Road',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Positioned(
+          top: 488.h,
+          child: Container(
+            width: 430.w,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(16.r), topRight: Radius.circular(16.r)),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black.withAlpha(20), blurRadius: 24, offset: Offset(0, -4.h))]
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Set Your Location',
+                  style: TextStyle(color: Color(0xFF020711), fontSize: 18.sp, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 16.h,),
+                Divider(color: Color(0xFFEAECED), thickness: 1,),
+                SizedBox(height: 16.h,),
+                GetInTouchTextField(
+                  headingText: 'Address',
+                  fieldText: '9 Victoria Road London SE73 1XL',
+                  iconImagePath: 'assets/images/Location/Address.png',
+                  controller: _addressController,
+                  isRequired: false,
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+
+    /*return Padding(
       padding: EdgeInsets.all(20),
       child: Column(
         children: [
@@ -146,7 +240,7 @@ class _LocationScreenState extends State<LocationScreen> {
           SizedBox(height: 20),
         ],
       ),
-    );
+    );*/
   }
 }
 
@@ -155,7 +249,7 @@ class MapPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.grey[300]!
-      ..strokeWidth = 2
+      ..strokeWidth = 2.w
       ..style = PaintingStyle.stroke;
 
     // Draw some simple street-like lines

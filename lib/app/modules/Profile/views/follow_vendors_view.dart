@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:quopon/common/VendorCard.dart';
-
 import '../controllers/follow_vendors_controller.dart';
 
 class FollowVendorsView extends GetView<FollowVendorsController> {
@@ -13,15 +12,15 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
     final FollowVendorsController controller = Get.put(FollowVendorsController());
 
     return Scaffold(
-        backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Column(
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -29,33 +28,33 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                       onTap: () {
                         Get.back();
                       },
-                      child: Icon(Icons.arrow_back),
+                      child: Icon(Icons.arrow_back, size: 24.sp),
                     ),
                     Text(
                       "Follow Vendors",
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                      ),
                     ),
-                    SizedBox(),
+                    SizedBox(width: 24.w), // Placeholder to balance layout
                   ],
                 )
               ],
             ),
 
-            SizedBox(height: 25,),
+            SizedBox(height: 25.h),
 
             // Search bar
             GestureDetector(
               onTap: () {
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchView()),
-                );*/
+                // TODO: Navigate to search
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
@@ -69,26 +68,34 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                   children: [
                     Expanded(
                       child: TextField(
-                        readOnly: true, // <<— prevent actual editing and avoid focus issues
+                        readOnly: true,
                         decoration: InputDecoration(
                           hintText: 'Search food, store, deals...',
-                          hintStyle: TextStyle(color: Colors.grey[500]),
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14.sp,
+                          ),
                           border: InputBorder.none,
                         ),
                       ),
                     ),
-                    Icon(Icons.search, color: Colors.grey[500]),
+                    Icon(Icons.search, color: Colors.grey[500], size: 24.sp),
                   ],
                 ),
               ),
             ),
 
-            // SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             Expanded(
               child: Obx(() {
                 if (controller.vendorList.isEmpty) {
-                  return const Center(child: Text("No vendors found"));
+                  return Center(
+                    child: Text(
+                      "No vendors found",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                  );
                 }
 
                 return ListView.builder(
@@ -107,7 +114,7 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
             )
           ],
         ),
-      )
+      ),
     );
   }
 }

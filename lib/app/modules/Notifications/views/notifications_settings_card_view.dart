@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/Notifications/controllers/notifications_controller.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class NotificationsSettingsCardView extends GetView {
   final String title;
@@ -25,11 +25,19 @@ class NotificationsSettingsCardView extends GetView {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xFF020711)),
+              style: TextStyle(
+                  fontSize: 16.sp, // Font size scaling
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF020711)
+              ),
             ),
             Text(
               description,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+              style: TextStyle(
+                  fontSize: 12.sp, // Font size scaling
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF6F7E8D)
+              ),
             ),
           ],
         ),

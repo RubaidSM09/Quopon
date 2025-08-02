@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class FAQCard extends GetView {
   final String title;
@@ -20,13 +21,13 @@ class FAQCard extends GetView {
     return Obx(() {
       return Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.sp), // Apply ScreenUtil to borderRadius
           color: Colors.white,
           boxShadow: [
-            BoxShadow(blurRadius: 16, color: Colors.black.withAlpha(41))
+            BoxShadow(blurRadius: 16.sp, color: Colors.black.withAlpha(41)), // Apply ScreenUtil to blurRadius
           ],
         ),
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.sp), // Apply ScreenUtil to padding
         child: Column(
           children: [
             Row(
@@ -35,18 +36,20 @@ class FAQCard extends GetView {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF020711)),
+                  style: TextStyle(
+                    fontSize: 16.sp, // Apply ScreenUtil to fontSize
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF020711),
+                  ),
                 ),
-                isExtented.value ?
-                GestureDetector(
+                isExtented.value
+                    ? GestureDetector(
                   onTap: () {
                     isExtented.value = false;
                   },
                   child: Icon(Icons.minimize),
-                ) :
-                GestureDetector(
+                )
+                    : GestureDetector(
                   onTap: () {
                     isExtented.value = true;
                   },
@@ -54,19 +57,20 @@ class FAQCard extends GetView {
                 )
               ],
             ),
-            isExtented.value ? SizedBox(height: 5,) : SizedBox.shrink(),
-            isExtented.value ?
-            Text(
+            isExtented.value ? SizedBox(height: 5.h) : SizedBox.shrink(), // Apply ScreenUtil to height
+            isExtented.value
+                ? Text(
               description,
-              style: TextStyle(fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF6F7E8D)),
-            ) :
-            SizedBox.shrink(),
+              style: TextStyle(
+                fontSize: 14.sp, // Apply ScreenUtil to fontSize
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF6F7E8D),
+              ),
+            )
+                : SizedBox.shrink(),
           ],
         ),
       );
     });
   }
-
 }

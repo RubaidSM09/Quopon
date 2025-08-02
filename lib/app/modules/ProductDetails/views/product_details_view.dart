@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../common/customTextButton.dart';
 import '../controllers/product_details_controller.dart';
 
@@ -29,7 +30,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
           children: [
             // Image and top section
             Container(
-              height: 264,
+              height: 264.h, // ScreenUtil applied
               decoration: BoxDecoration(
                 color: Color(0xFFF6E7D8),
                 image: DecorationImage(
@@ -38,7 +39,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
+                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -50,9 +51,9 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(Icons.arrow_back),
+                          child: Icon(Icons.arrow_back, size: 24.sp), // ScreenUtil applied
                         ),
-                        Image.asset("assets/images/MyDealsDetails/Upload.png"),
+                        Image.asset("assets/images/MyDealsDetails/Upload.png", width: 40.w, height: 40.h), // ScreenUtil applied
                       ],
                     ),
                   ],
@@ -62,7 +63,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
 
             // Product description section
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w), // ScreenUtil applied
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,7 +74,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         title,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 20,
+                          fontSize: 20.sp, // ScreenUtil applied
                           color: Color(0xFF020711),
                         ),
                       ),
@@ -81,18 +82,18 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         "\$$price",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 18,
+                          fontSize: 18.sp, // ScreenUtil applied
                           color: Color(0xFFD62828),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 16.h), // ScreenUtil applied
                   Text(
                     description,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 14,
+                      fontSize: 14.sp, // ScreenUtil applied
                       color: Color(0xFF6F7E8D),
                     ),
                   ),
@@ -107,7 +108,6 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: controller.itemAddOns.map((addOn) {
-                        // double addOnHeight = 50; // Default height
                         if (addOn.addOnOptions.isEmpty) {
                           return const SizedBox.shrink();
                         }
@@ -115,14 +115,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 20),
+                            SizedBox(height: 20.h), // ScreenUtil applied
                             Row(
                               children: [
                                 Text(
                                   addOn.addOnTitle,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 18,
+                                    fontSize: 18.sp, // ScreenUtil applied
                                     color: Color(0xFF020711),
                                   ),
                                 ),
@@ -131,22 +131,22 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                     "*",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 18,
+                                      fontSize: 18.sp, // ScreenUtil applied
                                       color: Color(0xFFD62828),
                                     ),
                                   ),
                               ],
                             ),
-                            SizedBox(height: 6),
+                            SizedBox(height: 6.h), // ScreenUtil applied
 
                             // Addon options section
                             addOn.addOnOptions.isEmpty
                                 ? const Text("No options available.")
                                 : Container(
-                              width: 500,
+                              width: 500.w, // ScreenUtil applied
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                               ),
                               child: Column(
                                 children: addOn.addOnOptions.asMap().entries.map((entry) {
@@ -154,7 +154,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                   final index = entry.key;
 
                                   return Padding(
-                                    padding: const EdgeInsets.only(left: 12),
+                                    padding: EdgeInsets.only(left: 12.w), // ScreenUtil applied
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                               option.title,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: 14,
+                                                fontSize: 14.sp, // ScreenUtil applied
                                                 color: Color(0xFF020711),
                                               ),
                                             ),
@@ -193,7 +193,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                           "+\$${option.price}",
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 14,
+                                            fontSize: 14.sp, // ScreenUtil applied
                                             color: Color(0xFF6F7E8D),
                                           ),
                                         )
@@ -212,7 +212,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       }).toList(),
                     );
                   }),
-                  SizedBox(height: 10,)
+                  SizedBox(height: 10.h), // ScreenUtil applied
                 ],
               ),
             ),
@@ -223,24 +223,22 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
           child: GradientButton(
-            onPressed: () {  },
+            onPressed: () {},
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],
-            width: 195,
-            height: 44,
-            borderRadius: 12,
+            borderRadius: 12.r, // ScreenUtil applied
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset("assets/images/ProductDetails/Cart.png"),
-                SizedBox(width: 10,),
+                SizedBox(width: 10.w), // ScreenUtil applied
                 Text(
                   "Add 1 to Cart \$5.29",
-                  style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w500, color: Colors.white),
-                )
+                  style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
+                ),
               ],
             ),
           ),

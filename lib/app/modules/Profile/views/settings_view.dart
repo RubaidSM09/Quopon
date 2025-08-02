@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../common/profileCard.dart';
 
 class SettingsView extends GetView {
@@ -11,13 +10,13 @@ class SettingsView extends GetView {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Column(
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),  // Use ScreenUtil for height
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -29,23 +28,26 @@ class SettingsView extends GetView {
                     ),
                     Text(
                       "Settings",
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,  // Use ScreenUtil for font size
+                      ),
                     ),
                     SizedBox(),
                   ],
                 )
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h),  // Use ScreenUtil for height
             Container(
-              height: 278,
-              width: 398,
+              height: 278.h,  // Use ScreenUtil for height
+              width: 398.w,  // Use ScreenUtil for width
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +73,7 @@ class SettingsView extends GetView {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

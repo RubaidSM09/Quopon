@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class ProfileCard extends GetView {
   final String icon;
@@ -23,19 +24,22 @@ class ProfileCard extends GetView {
         Row(
           children: [
             Container(
-              height: 40,
-              width: 40,
+              height: 40.h, // Apply ScreenUtil to height
+              width: 40.w, // Apply ScreenUtil to width
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFDF4F4)
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFDF4F4)
               ),
-              padding: EdgeInsets.all(8),
-              child: Image.asset(icon,),
+              padding: EdgeInsets.all(8.w), // Apply ScreenUtil to padding
+              child: Image.asset(icon),
             ),
-            SizedBox(width: 15,),
+            SizedBox(width: 15.w), // Apply ScreenUtil to width
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16,),
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 16.sp, // Apply ScreenUtil to fontSize
+              ),
             )
           ],
         ),
@@ -48,10 +52,7 @@ class ProfileCard extends GetView {
             child: Switch(
               value: isSwitched.value,
               onChanged: (value) {
-                // Update the local state
                 isSwitched.value = value;
-                // Optionally, notify the controller if needed
-                // Get.find<NotificationsController>().updateSwitchState(title, value);
               },
               activeColor: Colors.white,
               activeTrackColor: Color(0xFFD62828),
@@ -62,8 +63,8 @@ class ProfileCard extends GetView {
         }) :
         Image.asset(
           "assets/images/Profile/NextArrow.png",
-          height: 18,
-          width: 18,
+          height: 18.h, // Apply ScreenUtil to height
+          width: 18.w,  // Apply ScreenUtil to width
         ),
       ],
     );
