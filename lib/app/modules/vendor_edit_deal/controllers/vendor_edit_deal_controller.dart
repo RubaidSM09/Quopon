@@ -1,23 +1,10 @@
 import 'package:get/get.dart';
 
 class VendorEditDealController extends GetxController {
-  //TODO: Implement VendorEditDealController
+  var isChecked = false.obs;
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  // Method to toggle the checkbox state
+  void toggleCheckbox(bool value) {
+    isChecked.value = value;
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

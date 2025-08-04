@@ -38,6 +38,8 @@ import '../modules/VendorProfile/bindings/vendor_profile_binding.dart';
 import '../modules/VendorProfile/views/vendor_profile_view.dart';
 import '../modules/dealDetail/bindings/deal_detail_binding.dart';
 import '../modules/dealDetail/views/deal_detail_view.dart';
+import '../modules/deal_preview/bindings/deal_preview_binding.dart';
+import '../modules/deal_preview/views/deal_preview_view.dart';
 import '../modules/deals/bindings/deals_binding.dart';
 import '../modules/deals/views/deals_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -51,6 +53,8 @@ import '../modules/login/views/login_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_vendor_view.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
+import '../modules/qr_scanner_vendor/bindings/qr_scanner_vendor_binding.dart';
+import '../modules/qr_scanner_vendor/views/qr_scanner_vendor_view.dart';
 import '../modules/signUpProcess/bindings/sign_up_process_binding.dart';
 import '../modules/signUpProcess/views/sign_up_process_view.dart';
 import '../modules/signup/bindings/signup_binding.dart';
@@ -277,6 +281,16 @@ class AppPages {
       name: _Paths.LANDING,
       page: () => const LandingView(),
       binding: LandingBinding(),
+    ),
+    GetPage(
+      name: _Paths.DEAL_PREVIEW,
+      page: () => const DealPreviewView(),
+      binding: DealPreviewBinding(),
+    ),
+    GetPage(
+      name: _Paths.QR_SCANNER_VENDOR,
+      page: () => QrScannerVendorView(),
+      binding: QrScannerVendorBinding(),
     ),
   ];
 }

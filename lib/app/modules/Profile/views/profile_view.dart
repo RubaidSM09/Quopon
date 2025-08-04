@@ -80,6 +80,12 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         GestureDetector(
                           onTap: () {
+
+                          },
+                          child: ProfileCard(icon: 'assets/images/Profile/MyOrders.png', title: 'My Orders'),
+                        ),
+                        GestureDetector(
+                          onTap: () {
                             Get.to(() => FollowVendorsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FollowedVendors.png', title: 'Followed Vendors'),

@@ -83,6 +83,12 @@ class VendorSideProfileView extends GetView {
                         ),
                         GestureDetector(
                           onTap: () {
+
+                          },
+                          child: ProfileCard(icon: 'assets/images/Profile/MyOrders.png', title: 'My Orders'),
+                        ),
+                        GestureDetector(
+                          onTap: () {
                             Get.to(MyFollowersView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Vendors/My Followers.png', title: 'My Followers'),

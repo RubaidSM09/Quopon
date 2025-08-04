@@ -38,6 +38,8 @@ abstract class Routes {
   static const VENDOR_ADD_MENU = _Paths.VENDOR_ADD_MENU;
   static const VENDOR_SIDE_PROFILE = _Paths.VENDOR_SIDE_PROFILE;
   static const LANDING = _Paths.LANDING;
+  static const DEAL_PREVIEW = _Paths.DEAL_PREVIEW;
+  static const QR_SCANNER_VENDOR = _Paths.QR_SCANNER_VENDOR;
 }
 
 abstract class _Paths {
@@ -77,4 +79,6 @@ abstract class _Paths {
   static const VENDOR_ADD_MENU = '/vendor-add-menu';
   static const VENDOR_SIDE_PROFILE = '/vendor-side-profile';
   static const LANDING = '/landing';
+  static const DEAL_PREVIEW = '/deal-preview';
+  static const QR_SCANNER_VENDOR = '/qr-scanner-vendor';
 }

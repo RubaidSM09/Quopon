@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:quopon/app/modules/deal_preview/views/deal_preview_view.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/deal_publish_view.dart';
 import 'package:quopon/common/PictureUploadField.dart';
 import 'package:quopon/common/customTextButton.dart';
@@ -68,7 +70,28 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
-            PictureUploadField(height: 220.h, width: 398.w), // Use ScreenUtil for height and width
+            CustomCategoryField(fieldName: 'Linked Menu Item', isRequired: true, selectedCategory: 'Choose a menu item', categories: ['Choose a menu item'],),
+            SizedBox(height: 8.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/CreateDeals/Info.svg'
+                ),
+                SizedBox(width: 8.w,),
+                Text(
+                  'Auto-added to cart when customer activates the deal.',
+                  style: TextStyle(
+                    color: Color(0xFFD62828),
+                    fontSize: 12.sp
+                  ),
+                )
+              ],
+            ),
+
+            SizedBox(height: 20.h), // Use ScreenUtil for spacing
+
+            PictureUploadField(height: 220.h, width: 425.w), // Use ScreenUtil for height and width
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -124,6 +147,10 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               controller: _titleController,
               isRequired: true,
             ),
+
+            SizedBox(height: 20.h), // Use ScreenUtil for spacing
+
+            CustomCategoryField(fieldName: 'Discount', isRequired: true,),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -236,7 +263,7 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               width: 200.w,
               text: 'Preview',
               onPressed: () {
-                Get.dialog(DealPublishView());
+                Get.dialog(DealPreviewView());
               },
               colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
               borderColor: [Colors.white, Color(0xFFEEF0F3)],

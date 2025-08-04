@@ -25,6 +25,16 @@ class DeliveryCostController extends GetxController {
 
 class DeliveryCostForm extends StatelessWidget {
   final DeliveryCostController controller = Get.put(DeliveryCostController());
+  final String zipCode;
+  final double deliveryFee;
+  final double minOrderAmount;
+
+  DeliveryCostForm({
+    this.zipCode = 'Zip Code',
+    this.deliveryFee = 0.00,
+    this.minOrderAmount = 00,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +94,7 @@ class DeliveryCostForm extends StatelessWidget {
             child: _buildTextField(
               controller: model.zipCodeController,
               label: "Zip Code",
-              hint: "Zip code",
+              hint: zipCode,
             ),
           ),
           const SizedBox(width: 8),
@@ -92,7 +102,7 @@ class DeliveryCostForm extends StatelessWidget {
             child: _buildTextField(
               controller: model.deliveryFeeController,
               label: "Delivery Fee",
-              hint: "€ 0.00",
+              hint: "€ $deliveryFee",
             ),
           ),
           const SizedBox(width: 8),
@@ -100,20 +110,23 @@ class DeliveryCostForm extends StatelessWidget {
             child: _buildTextField(
               controller: model.minOrderController,
               label: "Min Order Amount",
-              hint: "00",
+              hint: "€ $minOrderAmount",
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            padding: EdgeInsets.all(8.w),
-            height: 40.h,
-            width: 40.w,
-            decoration: BoxDecoration(
-              color: Color(0xFFFDF4F4),
-              borderRadius: BorderRadius.circular(10.r)
-            ),
-            child: Center(
-              child: Icon(Icons.delete, color: Colors.red),
+          GestureDetector(
+            onTap: () => controller.removeCost(index),
+            child: Container(
+              padding: EdgeInsets.all(8.w),
+              height: 40.h,
+              width: 40.w,
+              decoration: BoxDecoration(
+                color: Color(0xFFFDF4F4),
+                borderRadius: BorderRadius.circular(10.r)
+              ),
+              child: Center(
+                child: Icon(Icons.delete, color: Colors.red),
+              ),
             ),
           ),
         ],

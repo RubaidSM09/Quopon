@@ -9,8 +9,8 @@ class PictureUploadField extends GetView {
   final String image;
 
   const PictureUploadField({
-    this.width = 366,
-    this.height = 95,
+    this.width = 398,
+    this.height = 220,
     this.isUploaded = false,
     this.image = 'assets/images/DealPerformance/Shakes.jpg',
     super.key

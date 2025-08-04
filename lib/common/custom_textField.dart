@@ -274,8 +274,9 @@ class CustomCategoryField extends GetView {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w),  // Use ScreenUtil for padding
           decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8.r),  // Use ScreenUtil for radius
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+            border: Border.all(color: Color(0xFFEAECED))
           ),
           child: DropdownButton<String>(
             value: selectedCategory,
