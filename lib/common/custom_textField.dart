@@ -120,20 +120,24 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
 class GetInTouchTextField extends StatefulWidget {
   final String headingText;
+  final double headingTextSize;
   final String fieldText;
   final String iconImagePath;
   final int maxLine;
   final TextEditingController controller;
   final bool isPassword;
   final bool isRequired;
+  final bool isOptional;
 
   const GetInTouchTextField({
     super.key,
     required this.headingText,
+    this.headingTextSize = 16,
     required this.fieldText,
     required this.iconImagePath,
     required this.controller,
     required this.isRequired,
+    this.isOptional = false,
     this.maxLine = 1,
     this.isPassword = false,
   });
@@ -161,8 +165,8 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
             Text(
               widget.headingText,
               style: TextStyle(
-                fontSize: 16.sp,  // Use ScreenUtil for font size
-                fontWeight: FontWeight.w500,
+                fontSize: 14.sp,  // Use ScreenUtil for font size
+                fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
@@ -170,9 +174,21 @@ class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
                 ? Text(
               '*',
               style: TextStyle(
-                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontSize: widget.headingTextSize.sp,  // Use ScreenUtil for font size
                 fontWeight: FontWeight.w500,
                 color: Colors.red,
+              ),
+            )
+                : SizedBox.shrink(),
+
+            widget.isOptional
+                ? Text(
+              ' (Optional)',
+              style: TextStyle(
+                fontSize: 14.sp,  // Use ScreenUtil for font size
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+                color: Color(0xFF6F7E8D),
               ),
             )
                 : SizedBox.shrink(),

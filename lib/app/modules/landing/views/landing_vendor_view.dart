@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/my_orders_vendors/views/my_orders_vendors_view.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_scanner_vendor_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
 import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
@@ -21,7 +22,8 @@ class LandingVendorView extends GetView {
       VendorDashboardView(),
       VendorDealsView(),
       QrScannerVendorView(),
-      VendorMenuView(),
+      // VendorMenuView(),
+      MyOrdersVendorsView(),
       VendorSideProfileView(),
     ];
 

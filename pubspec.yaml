@@ -43,6 +43,8 @@ dependencies:
   intl: ^0.20.2
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.0
+  get_storage: ^2.1.1
+  flutter_secure_storage: ^9.2.4
 
 dev_dependencies:
   flutter_test:
@@ -110,6 +112,7 @@ flutter:
     - assets/images/Menu/
     - assets/images/Profile/Vendors/
     - assets/images/deals_preview/
+    - assets/images/my_orders/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

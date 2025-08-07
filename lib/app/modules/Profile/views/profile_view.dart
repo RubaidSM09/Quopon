@@ -6,6 +6,7 @@ import 'package:quopon/app/modules/Profile/views/follow_vendors_view.dart';
 import 'package:quopon/app/modules/Profile/views/settings_view.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
 import 'package:quopon/app/modules/SupportFAQ/views/support_f_a_q_view.dart';
+import 'package:quopon/app/modules/my_orders/views/my_orders_view.dart';
 import 'package:quopon/common/profileCard.dart';
 import '../controllers/profile_controller.dart';
 import 'edit_profile_view.dart'; // Make sure to import EditProfileView
@@ -54,8 +55,6 @@ class ProfileView extends GetView<ProfileController> {
             Column(
               children: [
                 Container(
-                  height: 278.h, // Use ScreenUtil for height
-                  width: 398.w, // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
@@ -70,6 +69,7 @@ class ProfileView extends GetView<ProfileController> {
                           "User Profile",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp), // Use ScreenUtil for font size
                         ),
+                        SizedBox(height: 16.h,),
                         // Edit Profile card with Get.to() for navigation
                         GestureDetector(
                           onTap: () {
@@ -78,38 +78,41 @@ class ProfileView extends GetView<ProfileController> {
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Edit.png', title: 'Edit Profile'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
-
+                            Get.to(MyOrdersView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/MyOrders.png', title: 'My Orders'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(() => FollowVendorsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FollowedVendors.png', title: 'Followed Vendors'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(MyReviewsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'My Reviews'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.bottomSheet(QuoponPlusView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Quopon.png', title: 'Qoupon+ Info/Upgrade'),
                         ),
+                        SizedBox(height: 16.h,),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: 20.h), // Use ScreenUtil for spacing
                 Container(
-                  height: 222.h, // Use ScreenUtil for height
-                  width: 398.w, // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
@@ -124,19 +127,27 @@ class ProfileView extends GetView<ProfileController> {
                           "Security Settings",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp), // Use ScreenUtil for font size
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(() => SupportFAQView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FAQ.png', title: 'Support / FAQ'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(() => SettingsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Settings.png', title: 'Settings'),
                         ),
-                        ProfileCard(icon: 'assets/images/Profile/Logout.png', title: 'Logout'),
+                        SizedBox(height: 16.h,),
+                        GestureDetector(
+                          onTap: () {
+                            controller.userLogout();
+                          },
+                          child: ProfileCard(icon: 'assets/images/Profile/Logout.png', title: 'Logout'),
+                        ),
                       ],
                     ),
                   ),

@@ -11,8 +11,8 @@ class ViewReceiptView extends GetView {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: 632.h, // ScreenUtil applied
-          width: double.infinity,
+          height: 664.h, // ScreenUtil applied
+          width: 398.w,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h), // ScreenUtil applied
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(topLeft: Radius.circular(16.r), topRight: Radius.circular(16.r)), // ScreenUtil applied
@@ -220,7 +220,7 @@ class ViewReceiptView extends GetView {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: 110.w, // ScreenUtil applied
+                    width: 150.w, // ScreenUtil applied
                     child: Text(
                       'Italian Panini x2',
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
@@ -231,7 +231,7 @@ class ViewReceiptView extends GetView {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
                   ),
                   SizedBox(
-                    width: 170.w, // ScreenUtil applied
+                    width: 130.w, // ScreenUtil applied
                     child: Text(
                       textAlign: TextAlign.left,
                       '\$9.00',
@@ -246,7 +246,7 @@ class ViewReceiptView extends GetView {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 110.w, // ScreenUtil applied
+                    width: 150.w, // ScreenUtil applied
                     child: Text(
                       'Delivery Charges',
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
@@ -257,7 +257,7 @@ class ViewReceiptView extends GetView {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
                   ),
                   SizedBox(
-                    width: 170.w, // ScreenUtil applied
+                    width: 130.w, // ScreenUtil applied
                     child: Text(
                       textAlign: TextAlign.left,
                       '\$1.99',
@@ -272,7 +272,33 @@ class ViewReceiptView extends GetView {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 110.w, // ScreenUtil applied
+                    width: 150.w, // ScreenUtil applied
+                    child: Text(
+                      'Applied Deal Discount',
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                    ),
+                  ),
+                  Text(
+                    ':',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
+                  ),
+                  SizedBox(
+                    width: 130.w, // ScreenUtil applied
+                    child: Text(
+                      textAlign: TextAlign.left,
+                      '50% OFF',
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h), // ScreenUtil applied
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 150.w, // ScreenUtil applied
                     child: Text(
                       'Total Amount',
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
@@ -283,10 +309,10 @@ class ViewReceiptView extends GetView {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
                   ),
                   SizedBox(
-                    width: 170.w, // ScreenUtil applied
+                    width: 130.w, // ScreenUtil applied
                     child: Text(
                       textAlign: TextAlign.left,
-                      '\$37.99',
+                      '\$9.99',
                       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
                     ),
                   ),

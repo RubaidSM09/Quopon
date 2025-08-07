@@ -40,6 +40,9 @@ abstract class Routes {
   static const LANDING = _Paths.LANDING;
   static const DEAL_PREVIEW = _Paths.DEAL_PREVIEW;
   static const QR_SCANNER_VENDOR = _Paths.QR_SCANNER_VENDOR;
+  static const MY_ORDERS_VENDORS = _Paths.MY_ORDERS_VENDORS;
+  static const MY_ORDERS = _Paths.MY_ORDERS;
+  static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
 }
 
 abstract class _Paths {
@@ -81,4 +84,7 @@ abstract class _Paths {
   static const LANDING = '/landing';
   static const DEAL_PREVIEW = '/deal-preview';
   static const QR_SCANNER_VENDOR = '/qr-scanner-vendor';
+  static const MY_ORDERS_VENDORS = '/my-orders-vendors';
+  static const MY_ORDERS = '/my-orders';
+  static const FORGOT_PASSWORD = '/forgot-password';
 }

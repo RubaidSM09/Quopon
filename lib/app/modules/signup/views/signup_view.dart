@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/PrivacyPolicy/views/privacy_policy_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 import 'package:quopon/app/modules/signup/controllers/signup_controller.dart';
 
@@ -8,13 +10,7 @@ import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
 
 class SignupView extends GetView<SignupController> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _referralCodeController = TextEditingController();
-
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
+  final SignupController signupController = Get.put(SignupController());
 
   @override
   Widget build(BuildContext context) {
@@ -22,121 +18,132 @@ class SignupView extends GetView<SignupController> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 92.h, left: 16.w, right: 16.w),  // Use ScreenUtil for padding
+          padding: EdgeInsets.only(
+            top: 92.h,
+            left: 16.w,
+            right: 16.w,
+          ), // Use ScreenUtil for padding
           child: Column(
             children: [
               // Logo
               Container(
-                  padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [Color(0xFFD62828), Color(0xFFC21414)]),
-                      borderRadius: BorderRadius.circular(16.r), // Use ScreenUtil for border radius
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.transparent,
-                      ),
-                      boxShadow: [BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)]
+                padding: EdgeInsets.all(12.w), // Use ScreenUtil for padding
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFD62828), Color(0xFFC21414)],
                   ),
-                  child: Image.asset(
-                    'assets/images/login/Logo Icon.png',
-                    fit: BoxFit.cover,
-                  )
+                  borderRadius: BorderRadius.circular(
+                    16.r,
+                  ), // Use ScreenUtil for border radius
+                  border: Border.all(width: 1, color: Colors.transparent),
+                  boxShadow: [
+                    BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/login/Logo Icon.png',
+                  fit: BoxFit.cover,
+                ),
               ),
 
-              SizedBox(height: 32.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 32.h), // Use ScreenUtil for height spacing
               // Title
               Text(
                 'Create Your Qoupon Account',
                 style: TextStyle(
-                  fontSize: 28.sp,  // Use ScreenUtil for font size
+                  fontSize: 28.sp, // Use ScreenUtil for font size
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF020711),
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 12.h), // Use ScreenUtil for height spacing
               // Subtitle
               Text(
                 'Join Qoupon to discover local deals, redeem offers\ninstantly, and unlock exclusive savings.',
                 style: TextStyle(
-                  fontSize: 16.sp,  // Use ScreenUtil for font size
+                  fontSize: 16.sp, // Use ScreenUtil for font size
                   color: Color(0xFF6F7E8D),
                   fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              SizedBox(height: 24.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 24.h), // Use ScreenUtil for height spacing
               // Email Field
               CustomTextField(
-                  headingText: 'Email Address',
-                  fieldText: 'Enter email address',
-                  iconImagePath: 'assets/images/login/Email.png',
-                  controller: _emailController,
-                  isRequired: true
+                headingText: 'Email Address',
+                fieldText: 'Enter email address',
+                iconImagePath: 'assets/images/login/Email.png',
+                controller: signupController.emailController,
+                isRequired: true,
               ),
 
-              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 12.h), // Use ScreenUtil for height spacing
               // Create Password Field
               CustomTextField(
-                  headingText: 'Create Password',
-                  fieldText: '••••••••••••',
-                  iconImagePath: 'assets/images/login/Password.png',
-                  controller: _passwordController,
-                  isRequired: true,
-                  isPassword: true
+                headingText: 'Create Password',
+                fieldText: '••••••••••••',
+                iconImagePath: 'assets/images/login/Password.png',
+                controller: signupController.passwordController,
+                isRequired: true,
+                isPassword: true,
               ),
 
-              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 12.h), // Use ScreenUtil for height spacing
               // Confirm Password Field
               CustomTextField(
-                  headingText: 'Confirm Password',
-                  fieldText: '••••••••••••',
-                  iconImagePath: 'assets/images/login/Password.png',
-                  controller: _confirmPasswordController,
-                  isRequired: true,
-                  isPassword: true
+                headingText: 'Confirm Password',
+                fieldText: '••••••••••••',
+                iconImagePath: 'assets/images/login/Password.png',
+                controller: signupController.confirmPasswordController,
+                isRequired: true,
+                isPassword: true,
               ),
 
-              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 12.h), // Use ScreenUtil for height spacing
               // Referral Code Field
               CustomTextField(
-                  headingText: 'Referral Code',
-                  fieldText: 'Referral Code',
-                  iconImagePath: '',
-                  controller: _emailController,
-                  isRequired: false
+                headingText: 'Referral Code',
+                fieldText: 'Referral Code',
+                iconImagePath: '',
+                controller: signupController.referralCodeController,
+                isRequired: false,
               ),
 
-              SizedBox(height: 32.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 32.h), // Use ScreenUtil for height spacing
               // Create Account Button
-              GradientButton(
-                text: 'Create Account',
-                onPressed: () {
-                  Get.to(SignUpProcessView());
-                },
-                colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
-                boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
-                child: Text(
-                  'Create Account',
-                  style: TextStyle(
-                    fontSize: 16.sp,  // Use ScreenUtil for font size
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
+              Obx(
+                () => signupController.isLoading.value
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : GradientButton(
+                        text: 'Create Account',
+                        onPressed: () {
+                          signupController.signup();
+                        },
+                        colors: [
+                          const Color(0xFFD62828),
+                          const Color(0xFFC21414),
+                        ],
+                        boxShadow: [
+                          const BoxShadow(
+                            color: Color(0xFF9A0000),
+                            spreadRadius: 1,
+                          ),
+                        ],
+                        child: Text(
+                          'Create Account',
+                          style: TextStyle(
+                            fontSize: 16.sp, // Use ScreenUtil for font size
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
               ),
 
-              SizedBox(height: 12.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 12.h), // Use ScreenUtil for height spacing
               // Already have account
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -144,9 +151,9 @@ class SignupView extends GetView<SignupController> {
                   Text(
                     "Already have an account? ",
                     style: TextStyle(
-                        color: Color(0xFF6F7E8D),
-                        fontSize: 14.sp,  // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w500
+                      color: Color(0xFF6F7E8D),
+                      fontSize: 14.sp, // Use ScreenUtil for font size
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   TextButton(
@@ -155,7 +162,7 @@ class SignupView extends GetView<SignupController> {
                       'Sign In',
                       style: TextStyle(
                         color: Color(0xFFDC143C),
-                        fontSize: 14.sp,  // Use ScreenUtil for font size
+                        fontSize: 14.sp, // Use ScreenUtil for font size
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -163,11 +170,12 @@ class SignupView extends GetView<SignupController> {
                 ],
               ),
 
-              SizedBox(height: 16.h),  // Use ScreenUtil for height spacing
-
+              SizedBox(height: 16.h), // Use ScreenUtil for height spacing
               // Terms and Privacy Policy
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),  // Use ScreenUtil for padding
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                ), // Use ScreenUtil for padding
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -176,7 +184,7 @@ class SignupView extends GetView<SignupController> {
                         text: 'By creating an account, you agree to our ',
                         style: TextStyle(
                           color: Color(0xFF6F7E8D),
-                          fontSize: 14.sp,  // Use ScreenUtil for font size
+                          fontSize: 14.sp, // Use ScreenUtil for font size
                           height: 1.4,
                         ),
                       ),
@@ -184,7 +192,7 @@ class SignupView extends GetView<SignupController> {
                         text: 'Terms of Use',
                         style: TextStyle(
                           color: Color(0xFFDC143C),
-                          fontSize: 14.sp,  // Use ScreenUtil for font size
+                          fontSize: 14.sp, // Use ScreenUtil for font size
                           fontWeight: FontWeight.w500,
                           height: 1.4,
                         ),
@@ -193,25 +201,29 @@ class SignupView extends GetView<SignupController> {
                         text: ' and ',
                         style: TextStyle(
                           color: Color(0xFF6F7E8D),
-                          fontSize: 14.sp,  // Use ScreenUtil for font size
+                          fontSize: 14.sp, // Use ScreenUtil for font size
                           height: 1.4,
                         ),
                       ),
                       TextSpan(
-                        text: 'Privacy Policy',
-                        style: TextStyle(
-                          color: Color(0xFFDC143C),
-                          fontSize: 14.sp,  // Use ScreenUtil for font size
-                          fontWeight: FontWeight.w500,
-                          height: 1.4,
-                        ),
+                      text: 'Privacy Policy',
+                      style: TextStyle(
+                        color: Color(0xFFDC143C),
+                        fontSize: 14.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.w500,
+                        height: 1.4.h,
+                      ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                        Get.to(PrivacyPolicyView());
+                          }
                       ),
                     ],
                   ),
                 ),
               ),
 
-              SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
+              SizedBox(height: 8.h), // Use ScreenUtil for height spacing
             ],
           ),
         ),

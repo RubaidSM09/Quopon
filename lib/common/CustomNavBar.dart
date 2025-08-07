@@ -107,9 +107,9 @@ class VendorNavigationBar extends StatelessWidget {
         'defaultIcon': 'assets/images/BottomNavigation/Scan.svg',
       },
       {
-        'label': 'Menu',
-        'filledIcon': 'assets/images/BottomNavigation/Menu Active.svg',
-        'defaultIcon': 'assets/images/BottomNavigation/Menu.svg',
+        'label': 'Orders',
+        'filledIcon': 'assets/images/BottomNavigation/Orders Active.svg',
+        'defaultIcon': 'assets/images/BottomNavigation/Orders.svg',
       },
       {
         'label': 'Profile',

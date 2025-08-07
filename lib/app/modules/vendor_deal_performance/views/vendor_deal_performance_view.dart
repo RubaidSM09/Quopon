@@ -116,80 +116,86 @@ class VendorDealPerformanceView extends GetView<VendorDealPerformanceController>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: EdgeInsets.only(left: 52.w, right: 52.w, top: 12.h, bottom: 12.h),  // Use ScreenUtil for padding
+                          padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
                               color: Color(0xFFEFF6FF),
                               border: Border.all(color: Color(0xFFE2ECFD))
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 28.h,
-                                width: 28.w,
-                                padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white
+                          child: SizedBox(
+                            width: 159.w,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 28.h,
+                                  width: 28.w,
+                                  padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: Image.asset('assets/images/DealPerformance/Views.png'),
                                 ),
-                                child: Image.asset('assets/images/DealPerformance/Views.png'),
-                              ),
-                              SizedBox(height: 20.h),
-                              Text(
-                                '2,547',
-                                style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 16.sp, fontWeight: FontWeight.w700),
-                              ),
-                              SizedBox(height: 10.h),
-                              Text(
-                                'Total Views',
-                                style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 12.sp, fontWeight: FontWeight.w400),
-                              ),
-                            ],
+                                SizedBox(height: 20.h),
+                                Text(
+                                  '2,547',
+                                  style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 16.sp, fontWeight: FontWeight.w700),
+                                ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  'Total Views',
+                                  style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 12.sp, fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
                         Container(
-                          padding: EdgeInsets.only(left: 52.w, right: 52.w, top: 12.h, bottom: 12.h),  // Use ScreenUtil for padding
+                          padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
                               color: Color(0xFFFAF5FF),
                               border: Border.all(color: Color(0xFFF3E8FC))
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 28.h,
-                                width: 28.w,
-                                padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white
+                          child: SizedBox(
+                            width: 159.w,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 28.h,
+                                  width: 28.w,
+                                  padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: Image.asset('assets/images/DealPerformance/Activations.png'),
                                 ),
-                                child: Image.asset('assets/images/DealPerformance/Activations.png'),
-                              ),
-                              SizedBox(height: 20.h),
-                              Text(
-                                '864',
-                                style: TextStyle(color: Color(0xFF7E22CE), fontSize: 16.sp, fontWeight: FontWeight.w700),
-                              ),
-                              SizedBox(height: 10.h),
-                              Text(
-                                'Activations',
-                                style: TextStyle(color: Color(0xFF7E22CE), fontSize: 12.sp, fontWeight: FontWeight.w400),
-                              ),
-                            ],
+                                SizedBox(height: 20.h),
+                                Text(
+                                  '864',
+                                  style: TextStyle(color: Color(0xFF7E22CE), fontSize: 16.sp, fontWeight: FontWeight.w700),
+                                ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  'Activations',
+                                  style: TextStyle(color: Color(0xFF7E22CE), fontSize: 12.sp, fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 15.h),
+                    SizedBox(height: 8.h),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: EdgeInsets.only(left: 48.w, right: 48.w, top: 12.h, bottom: 12.h),  // Use ScreenUtil for padding
+                          padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
                               color: Color(0xFFF0FDF4),
@@ -197,15 +203,18 @@ class VendorDealPerformanceView extends GetView<VendorDealPerformanceController>
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                height: 28.h,
-                                width: 28.w,
-                                padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white
+                              SizedBox(
+                                width: 159.w,
+                                child: Container(
+                                  height: 28.h,
+                                  width: 28.w,
+                                  padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: Image.asset('assets/images/DealPerformance/Redemptions.png'),
                                 ),
-                                child: Image.asset('assets/images/DealPerformance/Redemptions.png'),
                               ),
                               SizedBox(height: 20.h),
                               Text(
@@ -222,72 +231,78 @@ class VendorDealPerformanceView extends GetView<VendorDealPerformanceController>
                         ),
 
                         Container(
-                          padding: EdgeInsets.only(left: 56.w, right: 56.w, top: 12.h, bottom: 12.h),  // Use ScreenUtil for padding
+                          padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
                               color: Color(0xFFFFFBEB),
                               border: Border.all(color: Color(0xFFFAF1DD))
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 28.h,
-                                width: 28.w,
-                                padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white
+                          child: SizedBox(
+                            width: 159.w,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 28.h,
+                                  width: 28.w,
+                                  padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: Image.asset('assets/images/DealPerformance/Time Left.png'),
                                 ),
-                                child: Image.asset('assets/images/DealPerformance/Time Left.png'),
-                              ),
-                              SizedBox(height: 20.h),
-                              Text(
-                                '5 days',
-                                style: TextStyle(color: Color(0xFFB45309), fontSize: 16.sp, fontWeight: FontWeight.w700),
-                              ),
-                              SizedBox(height: 10.h),
-                              Text(
-                                'Time Left',
-                                style: TextStyle(color: Color(0xFFB45309), fontSize: 12.sp, fontWeight: FontWeight.w400),
-                              ),
-                            ],
+                                SizedBox(height: 20.h),
+                                Text(
+                                  '5 days',
+                                  style: TextStyle(color: Color(0xFFB45309), fontSize: 16.sp, fontWeight: FontWeight.w700),
+                                ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  'Time Left',
+                                  style: TextStyle(color: Color(0xFFB45309), fontSize: 12.sp, fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 15.h),
+                    SizedBox(height: 8.h),
 
                     Container(
-                      padding: EdgeInsets.only(left: 145.w, right: 145.w, top: 12.h, bottom: 12.h),  // Use ScreenUtil for padding
+                      padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
                           color: Color(0xFFEEF2FF),
                           border: Border.all(color: Color(0xFFE4E7FC))
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 28.h,
-                            width: 28.w,
-                            padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white
+                      child: SizedBox(
+                        width: 350.w,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 28.h,
+                              width: 28.w,
+                              padding: EdgeInsets.all(6.r),  // Use ScreenUtil for padding
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white
+                              ),
+                              child: Image.asset('assets/images/DealPerformance/Push Sent.png'),
                             ),
-                            child: Image.asset('assets/images/DealPerformance/Push Sent.png'),
-                          ),
-                          SizedBox(height: 20.h),
-                          Text(
-                            '331',
-                            style: TextStyle(color: Color(0xFF4338CA), fontSize: 16.sp, fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            'Push Sent',
-                            style: TextStyle(color: Color(0xFF4338CA), fontSize: 12.sp, fontWeight: FontWeight.w400),
-                          ),
-                        ],
+                            SizedBox(height: 20.h),
+                            Text(
+                              '331',
+                              style: TextStyle(color: Color(0xFF4338CA), fontSize: 16.sp, fontWeight: FontWeight.w700),
+                            ),
+                            SizedBox(height: 10.h),
+                            Text(
+                              'Push Sent',
+                              style: TextStyle(color: Color(0xFF4338CA), fontSize: 12.sp, fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

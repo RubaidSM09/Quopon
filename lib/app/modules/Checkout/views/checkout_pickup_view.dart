@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/Checkout/views/select_payment_method_view.dart';
+import 'package:quopon/common/custom_textField.dart';
 
 import '../../../../../../common/CheckoutCard.dart';
 import '../controllers/checkout_controller.dart';
@@ -9,14 +10,17 @@ import '../controllers/checkout_controller.dart';
 class CheckoutPickupView extends GetView {
   final double subTotal;
   final String mapLocationImg;
+  final _addNoteController = TextEditingController();
 
-  const CheckoutPickupView({
+  CheckoutPickupView({
     required this.subTotal,
     required this.mapLocationImg,
     super.key
   });
   @override
   Widget build(BuildContext context) {
+    RxBool isStandard = true.obs;
+
     return Column(
       children: [
         Container(
@@ -52,67 +56,83 @@ class CheckoutPickupView extends GetView {
                 Divider(color: Color(0xFFEAECED), thickness: 1),
 
                 SizedBox(height: 20.h), // ScreenUtil applied
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                        height: 72.h, // ScreenUtil applied
-                        width: 175.w, // ScreenUtil applied
-                        decoration:BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                            border: BoxBorder.all(
-                              color: Color(0xFFD62828),
-                              width: 1.6.w, // ScreenUtil applied
+                Obx(() {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (!isStandard.value) {
+                            isStandard.value = !isStandard.value;
+                          }
+                        },
+                        child: Container(
+                            height: 72.h, // ScreenUtil applied
+                            width: 175.w, // ScreenUtil applied
+                            decoration:BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
+                                border: BoxBorder.all(
+                                  color: isStandard.value ? Color(0xFFD62828) : Color(0xFFEAECED),
+                                  width: 1.6.w, // ScreenUtil applied
+                                )
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Standard',
+                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
+                                  ),
+                                  Text(
+                                    '10 - 20 mins',
+                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                                  ),
+                                ],
+                              ),
                             )
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Standard',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (isStandard.value) {
+                            isStandard.value = !isStandard.value;
+                          }
+                        },
+                        child: Container(
+                            height: 72.h, // ScreenUtil applied
+                            width: 175.w, // ScreenUtil applied
+                            decoration:BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
+                                border: BoxBorder.all(
+                                  color: isStandard.value ? Color(0xFFEAECED) : Color(0xFFD62828),
+                                  width: 1.6.w, // ScreenUtil applied
+                                )
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Schedule',
+                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
+                                  ),
+                                  Text(
+                                    'Select',
+                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                                  ),
+                                ],
                               ),
-                              Text(
-                                '10 - 20 mins',
-                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                        )
-                    ),
-                    Container(
-                        height: 72.h, // ScreenUtil applied
-                        width: 175.w, // ScreenUtil applied
-                        decoration:BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                            border: BoxBorder.all(
-                              color: Color(0xFFEAECED),
-                              width: 1.6.w, // ScreenUtil applied
                             )
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16.w), // ScreenUtil applied
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Schedule',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                              Text(
-                                'Select',
-                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                        )
-                    )
-                  ],
-                ),
+                      )
+                    ],
+                  );
+                }),
                 SizedBox(height: 20.h), // ScreenUtil applied
                 Divider(color: Color(0xFFEAECED), thickness: 1),
                 SizedBox(height: 20.h), // ScreenUtil applied
@@ -186,6 +206,18 @@ class CheckoutPickupView extends GetView {
                     ),
                   ],
                 ),
+
+                SizedBox(height: 20.h), // ScreenUtil applied
+
+                GetInTouchTextField(
+                  headingText: 'Add Note',
+                  headingTextSize: 20,
+                  fieldText: 'Write here...',
+                  iconImagePath: '',
+                  controller: _addNoteController,
+                  isRequired: false,
+                  maxLine: 6,
+                )
               ],
             ),
           ),

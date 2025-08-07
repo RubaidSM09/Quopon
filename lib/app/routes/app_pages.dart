@@ -42,14 +42,21 @@ import '../modules/deal_preview/bindings/deal_preview_binding.dart';
 import '../modules/deal_preview/views/deal_preview_view.dart';
 import '../modules/deals/bindings/deals_binding.dart';
 import '../modules/deals/views/deals_view.dart';
+import '../modules/forgot_password/bindings/forgot_password_binding.dart';
+import '../modules/forgot_password/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/home2/bindings/home2_binding.dart';
 import '../modules/home2/views/home2_view.dart';
 import '../modules/landing/bindings/landing_binding.dart';
+import '../modules/landing/views/landing_vendor_view.dart';
 import '../modules/landing/views/landing_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/my_orders/bindings/my_orders_binding.dart';
+import '../modules/my_orders/views/my_orders_view.dart';
+import '../modules/my_orders_vendors/bindings/my_orders_vendors_binding.dart';
+import '../modules/my_orders_vendors/views/my_orders_vendors_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_vendor_view.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
@@ -91,7 +98,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingVendorView(),
+      page: () => OnboardingView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -291,6 +298,21 @@ class AppPages {
       name: _Paths.QR_SCANNER_VENDOR,
       page: () => QrScannerVendorView(),
       binding: QrScannerVendorBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_ORDERS_VENDORS,
+      page: () => const MyOrdersVendorsView(),
+      binding: MyOrdersVendorsBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_ORDERS,
+      page: () => const MyOrdersView(),
+      binding: MyOrdersBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGOT_PASSWORD,
+      page: () => ForgotPasswordView(),
+      binding: ForgotPasswordBinding(),
     ),
   ];
 }

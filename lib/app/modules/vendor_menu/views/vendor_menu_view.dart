@@ -7,6 +7,7 @@ import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
 import 'package:quopon/app/modules/vendor_menu/views/menu_card_view.dart';
 import 'package:quopon/app/modules/vendor_side_profile/views/vendor_side_profile_view.dart';
 
+import '../../../../common/customTextButton.dart';
 import '../../Search/views/search_view.dart';
 import '../../vendor_create_deal/views/vendor_create_deal_view.dart';
 import '../../vendor_dashboard/views/vendor_dashboard_view.dart';
@@ -22,40 +23,25 @@ class VendorMenuView extends GetView<VendorMenuController> {
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),  // Use ScreenUtil for padding
+          padding: EdgeInsets.fromLTRB(16.w, 60.h, 16.w, 22.h),  // Use ScreenUtil for padding
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Manage Your Menu',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
-                      ),
-                      Text(
-                        'Keep your menu updated and organized for your customers.',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 11.sp, color: Color(0xFF6F7E8D)),  // Use ScreenUtil for font size
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Icon(Icons.arrow_back, color: Color(0xFF020711), size: 24.sp,),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
+                  Text(
+                    'My Menu',
+                    style: TextStyle(
+                        color: Color(0xFF020711),
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
                     ),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(VendorAddMenuView());
-                      },
-                      child: Icon(Icons.add),
-                    ),
-                  )
+                  ),
+                  SizedBox.shrink(),
                 ],
               ),
 
@@ -98,7 +84,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                 ),
               ),
 
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
+              SizedBox(height: 20.h),  // Use ScreenUtil for height
 
               Row(
                 children: [
@@ -210,6 +196,23 @@ class VendorMenuView extends GetView<VendorMenuController> {
               ),
             ],
           ),
+        ),
+      ),
+
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 24.r)]
+        ),
+        child: GradientButton(
+          text: 'Add Menu Item',
+          onPressed: () {
+            Get.to(VendorAddMenuView());
+          },
+          borderColor: [Color(0xFFF44646), Color(0xFFC21414)],
+          boxShadow: [BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1.r)],
+          colors: [Color(0xFFD62828), Color(0xFFC21414)],
         ),
       ),
     );

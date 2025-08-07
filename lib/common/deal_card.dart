@@ -26,10 +26,8 @@ class _DealCardState extends State<DealCard> {
         borderRadius: BorderRadius.circular(12.sp), // Apply ScreenUtil to borderRadius
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            offset: Offset(4.w, 4.h), // Apply ScreenUtil to offset for responsive positioning
+            color: Colors.black.withAlpha(15),
             blurRadius: 10.sp,
-            spreadRadius: 0,
           ),
         ],
       ),

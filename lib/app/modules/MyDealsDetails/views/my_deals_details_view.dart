@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 import 'package:quopon/common/deal_card.dart';
 import 'package:quopon/common/my_deals_card.dart';
 
@@ -153,6 +156,7 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.r),
                       color: Colors.white,
+                      border: Border.all(color: Color(0xFFEFF1F2)),
                     ),
                     child: GestureDetector(
                       onTap: () {
@@ -179,28 +183,32 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
-                    child: Container(
-                      height: 92.h,
-                      width: 195.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.r),
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/MyDealsDetails/Delivery Icon.png',
-                              height: 24.h,
-                              width: 24.w,
-                            ),
-                            SizedBox(height: 2.5.h),
-                            Text(
-                              "Delivery",
-                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp, color: Color(0xFF020711)),
-                            ),
-                          ],
+                    child: GestureDetector(
+                      onTap: () => Get.to(VendorProfileView()),
+                      child: Container(
+                        height: 92.h,
+                        width: 195.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          color: Colors.white,
+                          border: Border.all(color: Color(0xFFEFF1F2)),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/MyDealsDetails/Delivery Icon.png',
+                                height: 24.h,
+                                width: 24.w,
+                              ),
+                              SizedBox(height: 2.5.h),
+                              Text(
+                                "Delivery",
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp, color: Color(0xFF020711)),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

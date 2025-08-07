@@ -121,7 +121,8 @@ class SendPushNotificationsView extends GetView {
                 GradientButton(
                   text: 'Send Push Notification',
                   onPressed: () {
-                    Get.dialog(SendPushNotificationsView());
+                    Get.back();
+                    Get.back();
                   },
                   colors: [Color(0xFFD62828), Color(0xFFC21414)],
                 ),
@@ -129,6 +130,7 @@ class SendPushNotificationsView extends GetView {
                 GradientButton(
                   text: 'Skip for Now',
                   onPressed: () {
+                    Get.back();
                     Get.back();
                   },
                   colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],

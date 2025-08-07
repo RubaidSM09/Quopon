@@ -1,8 +1,13 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+
+import '../../login/views/login_view.dart';
 
 class ProfileController extends GetxController {
   // Observable for tracking selected index
   var selectedIndex = 4.obs;
+
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   // Method for handling Bottom Navigation bar item taps
   void onItemTapped(int index) {
@@ -29,6 +34,20 @@ class ProfileController extends GetxController {
       case 4:
       // Stay on Profile view
         break;
+    }
+  }
+
+  Future<void> userLogout() async {
+    try {
+      await FlutterSecureStorage().deleteAll();
+      await _storage.delete(key: 'access_token');
+      await _storage.delete(key: 'refresh_token');
+
+      Get.snackbar('Success', 'Logged out successfully!');
+
+      Get.offAll(() => LoginView());
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred while logging out. Please try again.');
     }
   }
 }

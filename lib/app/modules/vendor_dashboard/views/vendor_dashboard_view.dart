@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
+import 'package:quopon/app/modules/vendor_dashboard/views/dashboard_order_card_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/dashboard_view.dart';
 import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
 import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
@@ -140,6 +141,99 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
               Row(
                 children: [
                   Text(
+                    'Latest Orders',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
+                  ),
+                  SizedBox.shrink(),
+                ],
+              ),
+
+              SizedBox(height: 5.h),
+
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                isNew: true,
+                status: 'Pickup',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+              SizedBox(height: 7.5.h),
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                isNew: true,
+                status: 'Delivery',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+              SizedBox(height: 7.5.h),
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                isNew: true,
+                status: 'Pickup',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+              SizedBox(height: 7.5.h),
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                status: 'Delivery',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+              SizedBox(height: 7.5.h),
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                status: 'Delivery',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+              SizedBox(height: 7.5.h),
+              DashboardOrderCardView(
+                itemImg: 'assets/images/Cart/Italian Panini.png',
+                itemName: 'Italian Panini',
+                itemAddons: {'Cheese':['Cheddar'], 'Spreads':['Mayo', 'Ranch', 'Chipotle']},
+                status: 'Pickup',
+                customerName: 'Mubashir Saleem',
+                orderItem: 'Item Name/Deal Name',
+                quantity: 2,
+                totalAmount: 9.99,
+                orderTime: '03 Aug 2025, 5:49 PM',
+                orderStatus: 'Order Received',
+              ),
+
+              /*Row(
+                children: [
+                  Text(
                     'Push History',
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
                   ),
@@ -228,7 +322,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                 redemptions: 412,
                 startValidTime: '28 May 2025',
                 endValidTime: '10 Jun 2025',
-              ),
+              ),*/
             ],
           ),
         ),

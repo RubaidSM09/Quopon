@@ -57,7 +57,8 @@ class DealPublishView extends GetView {
                 GradientButton(
                   text: 'Skip for Now',
                   onPressed: () {
-                    Get.to(VendorCreateDealView());
+                    Get.back();
+                    Get.back();
                   },
                   colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
                   boxShadow: [BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],

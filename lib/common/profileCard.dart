@@ -24,8 +24,6 @@ class ProfileCard extends GetView {
         Row(
           children: [
             Container(
-              height: 40.h, // Apply ScreenUtil to height
-              width: 40.w, // Apply ScreenUtil to width
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xFFFDF4F4)

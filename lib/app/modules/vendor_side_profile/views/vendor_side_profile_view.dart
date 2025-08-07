@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:quopon/app/modules/my_orders_vendors/views/my_orders_vendors_view.dart';
 
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
@@ -59,8 +60,6 @@ class VendorSideProfileView extends GetView {
             Column(
               children: [
                 Container(
-                  height: 278.h,  // Use ScreenUtil for height
-                  width: 398.w,  // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
@@ -75,30 +74,35 @@ class VendorSideProfileView extends GetView {
                           "Business Info",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(EditBusinessProfileView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Edit.png', title: 'Edit Business Profile'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
-
+                            Get.to(VendorMenuView());
                           },
-                          child: ProfileCard(icon: 'assets/images/Profile/MyOrders.png', title: 'My Orders'),
+                          child: ProfileCard(icon: 'assets/images/Profile/Vendors/MyMenu.png', title: 'My Menu'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(MyFollowersView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Vendors/My Followers.png', title: 'My Followers'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(ReviewsView());
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/MyReviews.png', title: 'Reviews'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
 
@@ -111,8 +115,6 @@ class VendorSideProfileView extends GetView {
                 ),
                 SizedBox(height: 20.h),
                 Container(
-                  height: 222.h,  // Use ScreenUtil for height
-                  width: 398.w,  // Use ScreenUtil for width
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
@@ -127,18 +129,21 @@ class VendorSideProfileView extends GetView {
                           "Security Settings",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
 
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/FAQ.png', title: 'Support / FAQ'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
 
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Vendors/Change Password.png', title: 'Change Password'),
                         ),
+                        SizedBox(height: 16.h,),
                         GestureDetector(
                           onTap: () {
                             Get.to(LoginVendorView());

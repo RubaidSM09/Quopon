@@ -207,6 +207,20 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
+                                'Order Type',
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                              ),
+                              Text(
+                                'Delivery',
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
                                 'Estimated Time',
                                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                               ),
@@ -280,6 +294,19 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                           ),
                         ],
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Applied Deal Discount',
+                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                          ),
+                          Text(
+                            '50% OFF',
+                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
+                          ),
+                        ],
+                      ),
                       Divider(color: Color(0xFFEAECED), thickness: 1),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,7 +333,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                               ),
                               SizedBox(width: 5.w), // ScreenUtil applied
                               Text(
-                                '\$37.99',
+                                '\$9.99',
                                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
                               ),
                             ],

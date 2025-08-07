@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QrScannerVendorController extends GetxController {
-  final List<TextEditingController> controllers =
-  List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
 
   final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
 

@@ -64,7 +64,7 @@ class DealDetailView extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-      
+
                   Positioned(
                     top: 12.h,
                     right: 12.w,
@@ -91,12 +91,12 @@ class DealDetailView extends StatelessWidget {
                   ),
                 ],
               ),
-      
+
               SizedBox(height: 12.h),
-      
+
               // Deal Title
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -112,36 +112,35 @@ class DealDetailView extends StatelessWidget {
                           ),
                         ),
                         Obx(() {
-                          return isSaved.value ?
-                          GestureDetector(
-                            onTap: () {
-                              if (isSaved.value) {
-                                isSaved.value = !isSaved.value;
-                              }
-                            },
-                            child: Icon(
-                              Icons.favorite_rounded,
-                              color: Color(0xFFD62828),
-                            ),
-                          ) :
-                          GestureDetector(
-                            onTap: () {
-                              if (!isSaved.value) {
-                                isSaved.value = !isSaved.value;
-                              }
-                              showTopSavedDealBanner(context);
-                            },
-                            child: Icon(
-                              Icons.favorite_outline_rounded,
-                              color: Color(0xFFD62828),
-                            ),
-                          );
-                        }
-                        ),
+                          return isSaved.value
+                              ? GestureDetector(
+                                  onTap: () {
+                                    if (isSaved.value) {
+                                      isSaved.value = !isSaved.value;
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: Color(0xFFD62828),
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    if (!isSaved.value) {
+                                      isSaved.value = !isSaved.value;
+                                    }
+                                    showTopSavedDealBanner(context);
+                                  },
+                                  child: Icon(
+                                    Icons.favorite_outline_rounded,
+                                    color: Color(0xFFD62828),
+                                  ),
+                                );
+                        }),
                       ],
                     ),
                     SizedBox(height: 8.h),
-      
+
                     // Deal Description
                     Text(
                       dealDescription,
@@ -152,7 +151,7 @@ class DealDetailView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12.h),
-      
+
                     // Deal Store Name and Validity
                     Container(
                       decoration: BoxDecoration(
@@ -167,181 +166,219 @@ class DealDetailView extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.asset(
-                                    brandLogo,
-                                    height: 44.h,
-                                    width: 44.w,
-                                  ),
-                                ),
-                                SizedBox(width: 10.w),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      dealStoreName,
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.asset(
+                                        brandLogo,
+                                        height: 44.h,
+                                        width: 44.w,
                                       ),
                                     ),
-                                    Row(
+                                    SizedBox(width: 10.w),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Valid Until: ',
+                                          dealStoreName,
                                           style: TextStyle(
-                                            fontSize: 12.sp,
+                                            fontSize: 14.sp,
+                                            color: Colors.black,
                                             fontWeight: FontWeight.w500,
-                                            color: Color(0xFFD62828),
                                           ),
                                         ),
-                                        Text(
-                                          dealValidity,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey[500],
-                                          ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Valid Until: ',
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xFFD62828),
+                                              ),
+                                            ),
+                                            Text(
+                                              dealValidity,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey[500],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            Container(
-                              width: 63.w,
-                              height: 22.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: Color(0xFFD62828),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '50% OFF',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
+                                Container(
+                                  width: 63.w,
+                                  height: 22.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Color(0xFFD62828),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '50% OFF',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
+                            ),
+
+                            Divider(color: Color(0xFFF0F2F3)),
+
+                            SizedBox(height: 6.h),
+
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 123.w,
+                                  child: Text(
+                                    'Redemption Type',
+                                    style: TextStyle(
+                                      color: Color(0xFF6F7E8D),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Text(
+                                  ':',
+                                  style: TextStyle(
+                                    color: Color(0xFF020711),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                SizedBox(
+                                  width: 139.w,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Delivery & Pickup ',
+                                          style: TextStyle(
+                                            color: Color(0xFF020711),
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '(Both)',
+                                          style: TextStyle(
+                                            color: Color(0xFF6F7E8D),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 123.w,
+                                  child: Text(
+                                    'Min. Order Amount',
+                                    style: TextStyle(
+                                      color: Color(0xFF6F7E8D),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Text(
+                                  ':',
+                                  style: TextStyle(
+                                    color: Color(0xFF020711),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                SizedBox(
+                                  width: 139.w,
+                                  child: Text(
+                                    '\$20.00',
+                                    style: TextStyle(
+                                      color: Color(0xFF020711),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 123.w,
+                                  child: Text(
+                                    'Delivery Costs',
+                                    style: TextStyle(
+                                      color: Color(0xFF6F7E8D),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Text(
+                                  ':',
+                                  style: TextStyle(
+                                    color: Color(0xFF020711),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                SizedBox(
+                                  width: 139.w,
+                                  child: Text(
+                                    '\$1.99',
+                                    style: TextStyle(
+                                      color: Color(0xFF020711),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-      
-              SizedBox(height: 12.h),
-      
-              Obx(() {
-                return Column(
-                  children: [
-                    Text(
-                      'Order Type',
-                      style: TextStyle(
-                        color: Color(0xFF020711),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100.r),
-                        color: Color(0xFFF1F3F4),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (!isPickup.value) {
-                                isPickup.value = !isPickup.value;
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.h,
-                                horizontal: 16.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isPickup.value
-                                    ? Color(0xFFD62828)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(100.r),
-                              ),
-                              child: SizedBox(
-                                width: 125.w,
-                                child: Text(
-                                  'Pickup',
-                                  style: TextStyle(
-                                    color: isPickup.value
-                                        ? Colors.white
-                                        : Color(0xFF6F7E8D),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.sp,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (isPickup.value) {
-                                isPickup.value = !isPickup.value;
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.h,
-                                horizontal: 16.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isPickup.value
-                                    ? Colors.transparent
-                                    : Color(0xFFD62828),
-                                borderRadius: BorderRadius.circular(100.r),
-                              ),
-                              child: SizedBox(
-                                width: 125.w,
-                                child: Text(
-                                  'Delivery',
-                                  style: TextStyle(
-                                    color: isPickup.value
-                                        ? Color(0xFF6F7E8D)
-                                        : Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.sp,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-      
+
                     SizedBox(height: 20.h),
-      
-                    // Activate Deal Button
+
                     GradientButton(
                       text: 'Order Now',
                       onPressed: () {
@@ -349,10 +386,7 @@ class DealDetailView extends StatelessWidget {
                       },
                       colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                       boxShadow: [
-                        const BoxShadow(
-                          color: Color(0xFF9A0000),
-                          spreadRadius: 1,
-                        ),
+                        const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1),
                       ],
                       child: Text(
                         'Order Now',
@@ -364,8 +398,8 @@ class DealDetailView extends StatelessWidget {
                       ),
                     ),
                   ],
-                );
-              }),
+                ),
+              ),
             ],
           ),
         ),
@@ -391,10 +425,7 @@ class DealDetailView extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10.r),
               boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(26),
-                  blurRadius: 20,
-                )
+                BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20),
               ],
             ),
             child: Row(
@@ -416,8 +447,12 @@ class DealDetailView extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () => overlayEntry.remove(), // ✅ Now valid
-                  child: Icon(Icons.close, color: Color(0xFFD62828), size: 16.sp),
-                )
+                  child: Icon(
+                    Icons.close,
+                    color: Color(0xFFD62828),
+                    size: 16.sp,
+                  ),
+                ),
               ],
             ),
           ),
