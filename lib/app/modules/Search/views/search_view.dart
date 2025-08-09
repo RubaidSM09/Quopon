@@ -1,134 +1,138 @@
 import 'package:flutter/material.dart' hide SearchController;
 
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/Search/views/search_history_view.dart';
 import 'package:quopon/common/customTextButton.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 import '../controllers/search_controller.dart';
 
-class SearchView extends StatefulWidget {
+class SearchView extends GetView<SearchController> {
   const SearchView({super.key});
 
-  @override
-  State<SearchView> createState() => _SearchViewState();
-}
-
-class _SearchViewState extends State<SearchView> {
   // final TextEditingController _searchController = TextEditingController(text: "Downtown");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h), // ScreenUtil for padding
-              child: Row(
+      body: Padding(
+        padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 60.h, bottom: 22.h),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: const Icon(Icons.arrow_back),
+                    onTap: () => Get.back(),
+                    child: Icon(Icons.arrow_back, color: Color(0xFF020711), size: 24.sp,),
                   ),
-                  SizedBox(width: 8.w), // Use ScreenUtil for spacing
-                  const Text(
-                    "Search",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    'Search',
+                    style: TextStyle(
+                        color: Color(0xFF020711),
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
                   ),
+                  SizedBox.shrink(),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w), // ScreenUtil for padding
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r), // ScreenUtil for border radius
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        readOnly: true, // <<— prevent actual editing and avoid focus issues
-                        decoration: InputDecoration(
-                          hintText: 'Downtown',
-                          hintStyle: TextStyle(color: Color(0xFF6F7E8D), fontSize: 14.sp), // ScreenUtil for font size
-                          border: InputBorder.none,
+
+              SizedBox(height: 24.h,),
+
+              // Search bar
+              GestureDetector(
+                onTap: () {
+                  // Get.to(SearchView());
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),  // Use ScreenUtil for padding
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for border radius
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          readOnly: true, // <<— prevent actual editing and avoid focus issues
+                          decoration: InputDecoration(
+                            hintText: 'Search food, store, deals...',
+                            hintStyle: TextStyle(color: Colors.grey[500]),
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
-                    ),
-                    Icon(Icons.search, color: Colors.grey[500], size: 24.sp), // Use ScreenUtil for icon size
-                  ],
+                      Image.asset('assets/images/Home/Search.png'),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 40.h), // Use ScreenUtil for height spacing
-            Image.asset(
-              'assets/images/Search/No Deals.png', // ensure this asset exists
-              height: 200.h, // Use ScreenUtil for height
-            ),
-            SizedBox(height: 24.h), // Use ScreenUtil for height spacing
-            Text(
-              'No Deals Found Nearby',
-              style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32.0.w, vertical: 12.h),
-              child: Text(
-                'Try exploring nearby cities or check out trending deals from other locations.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ),
-            SizedBox(height: 50.h), // Use ScreenUtil for height spacing
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w), // ScreenUtil for padding
-              child: Column(
+
+              SizedBox(height: 20.h,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GradientButton(
-                    text: "Browse Popular Deals",
-                    onPressed: () {},
-                    colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.sp, // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
+                  Text(
+                    'Recent Searches',
+                    style: TextStyle(
+                        color: Color(0xFF020711),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500
                     ),
                   ),
-                  SizedBox(height: 12.h), // Use ScreenUtil for height spacing
-                  GradientButton(
-                    text: 'Explore Nearby Cities',
-                    onPressed: () {
-
-                    },
-                    colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
-                    boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
-                    child: Text(
-                      'Explore Nearby Cities',
-                      style: TextStyle(
-                        fontSize: 16.sp,  // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
+                  Text(
+                    'Clear All',
+                    style: TextStyle(
+                        color: Color(0xFFD62828),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500
                     ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 24.h), // Use ScreenUtil for height spacing
-          ],
+              SizedBox(height: 12.h,),
+              SearchHistoryView(title: 'SABABA - Albert Cuypstraat',),
+              SearchHistoryView(title: 'Starbucks',),
+              SearchHistoryView(title: 'KFC',),
+              SearchHistoryView(title: 'Mcdonald',),
+              SearchHistoryView(title: 'Best burger near me'),
+
+              SizedBox(height: 16.h,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Frequently searched by people’s',
+                    style: TextStyle(
+                        color: Color(0xFF020711),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                  SizedBox.shrink()
+                ],
+              ),
+              SizedBox(height: 12.h,),
+              SearchHistoryView(title: 'SABABA - Albert Cuypstraat',),
+              SearchHistoryView(title: 'Starbucks',),
+              SearchHistoryView(title: 'KFC',),
+              SearchHistoryView(title: 'Mcdonald',),
+              SearchHistoryView(title: 'Best burger near me'),
+            ],
+          ),
         ),
       ),
     );

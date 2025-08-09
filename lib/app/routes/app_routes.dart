@@ -43,6 +43,7 @@ abstract class Routes {
   static const MY_ORDERS_VENDORS = _Paths.MY_ORDERS_VENDORS;
   static const MY_ORDERS = _Paths.MY_ORDERS;
   static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
+  static const DISCOVER = _Paths.DISCOVER;
 }
 
 abstract class _Paths {
@@ -87,4 +88,5 @@ abstract class _Paths {
   static const MY_ORDERS_VENDORS = '/my-orders-vendors';
   static const MY_ORDERS = '/my-orders';
   static const FORGOT_PASSWORD = '/forgot-password';
+  static const DISCOVER = '/discover';
 }

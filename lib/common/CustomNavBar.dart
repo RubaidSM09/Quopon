@@ -18,9 +18,9 @@ class CustomNavigationBar extends StatelessWidget {
         'defaultIcon': 'assets/images/BottomNavigation/Home.svg',
       },
       {
-        'label': 'Deals',
-        'filledIcon': 'assets/images/BottomNavigation/Deals Active.svg',
-        'defaultIcon': 'assets/images/BottomNavigation/Deals.svg',
+        'label': 'Discover',
+        'filledIcon': 'assets/images/BottomNavigation/Discover Active.svg',
+        'defaultIcon': 'assets/images/BottomNavigation/Discover.svg',
       },
       {
         'label': '',

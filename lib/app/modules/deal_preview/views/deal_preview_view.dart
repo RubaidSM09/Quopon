@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../common/customTextButton.dart';
 import '../controllers/deal_preview_controller.dart';
 
 class DealPreviewView extends GetView<DealPreviewController> {
@@ -125,162 +126,80 @@ class DealPreviewView extends GetView<DealPreviewController> {
 
                           SizedBox(height: 16.h,),
 
-                          Row(
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
                             children: [
-                              SizedBox(
-                                width: 121.w,
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFB81EFF).withAlpha(20),
+                                ),
                                 child: Text(
-                                  'Max Coupons',
-                                  style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 14.sp, fontWeight: FontWeight.normal),
+                                  'Redemption: Delivery & Pickup',
+                                  style: TextStyle(
+                                    color: Color(0xFFB81EFF),
+                                    fontSize: 10.sp,
+                                  ),
                                 ),
                               ),
-                              SizedBox(width: 16.w,),
-                              Text(
-                                ':',
-                                style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(width: 16.w,),
-                              SizedBox(
-                                width: 121.w,
+
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFF1E92FF).withAlpha(20),
+                                ),
                                 child: Text(
-                                  '50',
-                                  style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
+                                  'Delivery Cost: \$1.99',
+                                  style: TextStyle(
+                                    color: Color(0xFF1E92FF),
+                                    fontSize: 10.sp,
+                                  ),
+                                ),
+                              ),
+
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: Color(0xFFFF8E24).withAlpha(20),
+                                ),
+                                child: Text(
+                                  'Min. Order Amount: \$20.00',
+                                  style: TextStyle(
+                                    color: Color(0xFFFF8E24),
+                                    fontSize: 10.sp,
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          SizedBox(height: 16.h,),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 121.w,
-                                child: Text(
-                                  'Coupons Per Customer',
-                                  style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                              SizedBox(width: 16.w,),
-                              Text(
-                                ':',
-                                style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(width: 16.w,),
-                              SizedBox(
-                                width: 121.w,
-                                child: Text(
-                                  '01',
-                                  style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16.h,),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 121.w,
-                                child: Text(
-                                  'Available Days',
-                                  style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                              SizedBox(width: 16.w,),
-                              Text(
-                                ':',
-                                style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(width: 16.w,),
-                              SizedBox(
-                                width: 121.w,
-                                child: Text(
-                                  'Monday to Friday',
-                                  style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp, fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                            ],
-                          ),
+                          )
                         ],
                       ),
                     ),
 
                     SizedBox(height: 16.h,),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Choose Order Method',
-                          style: TextStyle(color: Color(0xFF020711), fontWeight: FontWeight.normal, fontSize: 14.sp),
-                        ),
-                        SizedBox.shrink()
-                      ],
-                    ),
-                    SizedBox(height: 8.h,),
-                    Obx(() {
-                      return Container(
-                        padding: EdgeInsets.all(4.w),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.r),
-                            color: Color(0xFFF1F3F4)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                if(!isPickup.value) {
-                                  isPickup.value = !isPickup.value;
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                                decoration: BoxDecoration(
-                                  color: isPickup.value ? Color(0xFFD62828) : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(100.r)
-                                ),
-                                child: SizedBox(
-                                  width: 115.w,
-                                  child: Center(
-                                    child: Text(
-                                      'Pickup',
-                                      style: TextStyle(
-                                        color: isPickup.value ? Colors.white : Color(0xFF6F7E8D),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                    GradientButton(
+                      text: 'Order Now',
+                      onPressed: () {
 
-                            GestureDetector(
-                              onTap: () {
-                                if(isPickup.value) {
-                                  isPickup.value = !isPickup.value;
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                                decoration: BoxDecoration(
-                                    color: isPickup.value ? Colors.transparent : Color(0xFFD62828),
-                                    borderRadius: BorderRadius.circular(100.r)
-                                ),
-                                child: SizedBox(
-                                  width: 115.w,
-                                  child: Center(
-                                    child: Text(
-                                      'Delivery',
-                                      style: TextStyle(
-                                        color: isPickup.value ? Color(0xFF6F7E8D) : Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                      },
+                      colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+                      boxShadow: [
+                        const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1),
+                      ],
+                      child: Text(
+                        'Order Now',
+                        style: TextStyle(
+                          fontSize: 16.sp, // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
-                      );
-                    })
+                      ),
+                    ),
                   ],
                 ),
               )

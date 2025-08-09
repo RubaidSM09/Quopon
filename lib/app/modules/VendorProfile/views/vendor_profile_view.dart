@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/ProductDetails/views/product_details_view.dart';
+import 'package:quopon/app/modules/VendorProfile/views/cart_bottom_view.dart';
 import 'package:quopon/common/ItemCard.dart';
 import 'package:quopon/common/customTextButton.dart';
 import 'package:quopon/common/restaurant_card.dart';
@@ -526,6 +527,38 @@ class VendorProfileView extends GetView<VendorProfileController> {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topRight: Radius.circular(12.r), topLeft: Radius.circular(12.r),),
+          boxShadow: [BoxShadow(color: Colors.black.withAlpha(20), blurRadius: 24.r, offset: Offset(0, -4))]
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Cart',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF020711),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Get.bottomSheet(CartBottomView());
+              },
+              child: Icon(
+                Icons.keyboard_arrow_up_outlined,
+                size: 24.sp,
+                color: Color(0xFF020711),
+              ),
+            )
           ],
         ),
       ),

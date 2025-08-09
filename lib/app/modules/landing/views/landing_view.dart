@@ -5,6 +5,7 @@ import 'package:quopon/app/modules/MyDeals/views/my_deals_view.dart';
 import 'package:quopon/app/modules/Profile/views/profile_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
 import 'package:quopon/app/modules/deals/views/deals_view.dart';
+import 'package:quopon/app/modules/discover/views/discover_view.dart';
 import 'package:quopon/app/modules/home/views/home_view.dart';
 import 'package:quopon/common/CustomNavBar.dart';
 
@@ -18,7 +19,7 @@ class LandingView extends GetView<LandingController> {
 
     final List<Widget> pages = [
       HomeView(),
-      DealsView(),
+      DiscoverView(),
       QRScannerView(),
       MyDealsView(),
       ProfileView(),

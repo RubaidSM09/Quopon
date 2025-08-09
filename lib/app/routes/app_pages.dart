@@ -42,6 +42,8 @@ import '../modules/deal_preview/bindings/deal_preview_binding.dart';
 import '../modules/deal_preview/views/deal_preview_view.dart';
 import '../modules/deals/bindings/deals_binding.dart';
 import '../modules/deals/views/deals_view.dart';
+import '../modules/discover/bindings/discover_binding.dart';
+import '../modules/discover/views/discover_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
 import '../modules/forgot_password/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -98,7 +100,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => LandingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -140,7 +142,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEARCH,
-      page: () => const SearchView(),
+      page: () => SearchView(),
       binding: SearchBinding(),
     ),
     GetPage(
@@ -313,6 +315,11 @@ class AppPages {
       name: _Paths.FORGOT_PASSWORD,
       page: () => ForgotPasswordView(),
       binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.DISCOVER,
+      page: () => const DiscoverView(),
+      binding: DiscoverBinding(),
     ),
   ];
 }

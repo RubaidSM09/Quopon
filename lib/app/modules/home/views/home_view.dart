@@ -8,7 +8,9 @@ import 'package:quopon/app/modules/MyDeals/views/my_deals_view.dart';
 import 'package:quopon/app/modules/Notifications/views/notifications_view.dart';
 import 'package:quopon/app/modules/Profile/views/profile_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
+import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
+import 'package:quopon/app/modules/dealDetail/views/deal_detail_view.dart';
 import 'package:quopon/common/Filter.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
@@ -273,22 +275,110 @@ class _HomeViewState extends State<HomeView> {
                             child: Row(
                               children: [
                                 // Sonic card
-                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Domino\'s', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.0', reviewCount: '65', deliveryTime: '20 min', isPremium: false,),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.dialog(
+                                      DealDetailView(
+                                        dealImage: 'assets/images/deals/Pizza.jpg',
+                                        dealTitle: '20% Discount',
+                                        dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                                        dealValidity: '11:59 PM, May 31',
+                                        dealStoreName: 'Pizzeria Bella Italia',
+                                        brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
+                                      )
+                                    );
+                                  },
+                                  child: HomeRestaurantCard(
+                                    /*discountTxt: '', */
+                                    restaurantImg: 'assets/images/Home/Restaurants/Image.png',
+                                    restaurantName: 'Domino\'s',
+                                    deliveryFee: 'US\$0 Delivery Free',
+                                    distance: '16 mi',
+                                    rating: '4.0',
+                                    reviewCount: '65',
+                                    deliveryTime: '20 min',
+                                    isPremium: false,
+                                  ),
+                                ),
 
                                 SizedBox(width: 12.w,),
 
                                 // Coupon section
-                                HomeRestaurantCard(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min', isPremium: true,),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.bottomSheet(
+                                        QuoponPlusView()
+                                    );
+                                  },
+                                  child: HomeRestaurantCard(
+                                    restaurantImg: 'assets/images/Home/Restaurants/Image.png',
+                                    restaurantName: 'Sonic',
+                                    deliveryFee: 'US\$0 Delivery Free',
+                                    distance: '16 mi',
+                                    rating: '4.5',
+                                    reviewCount: '12',
+                                    deliveryTime: '45 min',
+                                    isPremium: true,
+                                  ),
+                                ),
 
                                 SizedBox(width: 12.w,),
 
                                 // Starbucks card
-                                HomeRestaurantCard(/*discountTxt: 'Spend \$15, Save \$3', */restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.dialog(
+                                        DealDetailView(
+                                          dealImage: 'assets/images/deals/Pizza.jpg',
+                                          dealTitle: '20% Discount',
+                                          dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                                          dealValidity: '11:59 PM, May 31',
+                                          dealStoreName: 'Pizzeria Bella Italia',
+                                          brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
+                                        )
+                                    );
+                                  },
+                                  child: HomeRestaurantCard(
+                                    /*discountTxt: 'Spend \$15, Save \$3', */
+                                    restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg',
+                                    restaurantName: 'Starbucks',
+                                    deliveryFee: 'US\$0 Delivery Free',
+                                    distance: '16 mi',
+                                    rating: '4.5',
+                                    reviewCount: '27',
+                                    deliveryTime: '15 min',
+                                    isPremium: false,
+                                  ),
+                                ),
 
                                 SizedBox(width: 12.w,),
 
                                 // City Grille card
-                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.dialog(
+                                        DealDetailView(
+                                          dealImage: 'assets/images/deals/Pizza.jpg',
+                                          dealTitle: '20% Discount',
+                                          dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
+                                          dealValidity: '11:59 PM, May 31',
+                                          dealStoreName: 'Pizzeria Bella Italia',
+                                          brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
+                                        )
+                                    );
+                                  },
+                                  child: HomeRestaurantCard(
+                                    /*discountTxt: '', */
+                                    restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg',
+                                    restaurantName: 'City Grille',
+                                    deliveryFee: 'US\$2.19 Free',
+                                    distance: '16 mi',
+                                    rating: '4.5',
+                                    reviewCount: '27',
+                                    deliveryTime: '15 min',
+                                    isPremium: false,
+                                  ),
+                                ),
                               ],
                             ),
                           ),

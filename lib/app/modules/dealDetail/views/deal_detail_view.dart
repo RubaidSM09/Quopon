@@ -167,6 +167,7 @@ class DealDetailView extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,130 +249,56 @@ class DealDetailView extends StatelessWidget {
 
                             SizedBox(height: 6.h),
 
-                            Row(
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
                               children: [
-                                SizedBox(
-                                  width: 123.w,
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    color: Color(0xFFB81EFF).withAlpha(20),
+                                  ),
                                   child: Text(
-                                    'Redemption Type',
+                                    'Redemption: Delivery & Pickup',
                                     style: TextStyle(
-                                      color: Color(0xFF6F7E8D),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xFFB81EFF),
+                                      fontSize: 10.sp,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 16.w),
-                                Text(
-                                  ':',
-                                  style: TextStyle(
-                                    color: Color(0xFF020711),
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.normal,
+
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    color: Color(0xFF1E92FF).withAlpha(20),
+                                  ),
+                                  child: Text(
+                                    'Delivery Cost: \$1.99',
+                                    style: TextStyle(
+                                      color: Color(0xFF1E92FF),
+                                      fontSize: 10.sp,
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width: 16.w),
-                                SizedBox(
-                                  width: 139.w,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'Delivery & Pickup ',
-                                          style: TextStyle(
-                                            color: Color(0xFF020711),
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: '(Both)',
-                                          style: TextStyle(
-                                            color: Color(0xFF6F7E8D),
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ]
+
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    color: Color(0xFFFF8E24).withAlpha(20),
+                                  ),
+                                  child: Text(
+                                    'Min. Order Amount: \$20.00',
+                                    style: TextStyle(
+                                      color: Color(0xFFFF8E24),
+                                      fontSize: 10.sp,
                                     ),
                                   ),
                                 ),
                               ],
-                            ),
-                            SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 123.w,
-                                  child: Text(
-                                    'Min. Order Amount',
-                                    style: TextStyle(
-                                      color: Color(0xFF6F7E8D),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                Text(
-                                  ':',
-                                  style: TextStyle(
-                                    color: Color(0xFF020711),
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                SizedBox(
-                                  width: 139.w,
-                                  child: Text(
-                                    '\$20.00',
-                                    style: TextStyle(
-                                      color: Color(0xFF020711),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 123.w,
-                                  child: Text(
-                                    'Delivery Costs',
-                                    style: TextStyle(
-                                      color: Color(0xFF6F7E8D),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                Text(
-                                  ':',
-                                  style: TextStyle(
-                                    color: Color(0xFF020711),
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                SizedBox(
-                                  width: 139.w,
-                                  child: Text(
-                                    '\$1.99',
-                                    style: TextStyle(
-                                      color: Color(0xFF020711),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            )
                           ],
                         ),
                       ),
