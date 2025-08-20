@@ -10,6 +10,7 @@ class ChooseRedemptionDealView extends StatefulWidget {
   final String dealValidity;
   final String dealStoreName;
   final String brandLogo;
+
   const ChooseRedemptionDealView({
     super.key,
     required this.dealImage,
@@ -67,7 +68,7 @@ class _ChooseRedemptionDealViewState extends State<ChooseRedemptionDealView> {
                             builder: (BuildContext context) {
                               return Dialog(
                                   backgroundColor: Colors.transparent,
-                                  child: DealDetailView(dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo)
+                                  child: DealDetailView(dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo, redemptionType: '', deliveryCost: '', minOrder: 0,)
                               );
                             },
                           );

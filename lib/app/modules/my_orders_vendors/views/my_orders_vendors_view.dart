@@ -11,6 +11,7 @@ class MyOrdersVendorsView extends GetView<MyOrdersVendorsController> {
   const MyOrdersVendorsView({super.key});
   @override
   Widget build(BuildContext context) {
+    Get.put(MyOrdersVendorsController());
     RxBool isPickup = true.obs;
 
     return Scaffold(

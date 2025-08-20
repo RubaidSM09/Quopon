@@ -14,6 +14,8 @@ class SearchView extends GetView<SearchController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(SearchController());
+
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: Padding(
@@ -126,11 +128,20 @@ class SearchView extends GetView<SearchController> {
                 ],
               ),
               SizedBox(height: 12.h,),
-              SearchHistoryView(title: 'SABABA - Albert Cuypstraat',),
-              SearchHistoryView(title: 'Starbucks',),
-              SearchHistoryView(title: 'KFC',),
-              SearchHistoryView(title: 'Mcdonald',),
-              SearchHistoryView(title: 'Best burger near me'),
+              Obx(() {
+                if (controller.frequentSearches.isEmpty) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                else {
+                  return Column(
+                    children: controller.frequentSearches.take(5).map((frequentSearch) {
+                      return SearchHistoryView(title: frequentSearch.queryText);
+                    }).toList(),
+                  );
+                }
+              }),
             ],
           ),
         ),

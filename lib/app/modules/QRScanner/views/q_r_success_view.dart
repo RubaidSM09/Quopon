@@ -139,7 +139,7 @@ class QRSuccessView extends StatelessWidget {
                     text: 'Done',
                     onPressed: () {
                       Get.back();
-                      Get.dialog(DealDetailView(
+                      /*Get.dialog(DealDetailView(
                         dealImage: 'assets/images/deals/Pizza.jpg',
                         dealTitle: dealTitle,
                         dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
@@ -147,7 +147,7 @@ class QRSuccessView extends StatelessWidget {
                         dealStoreName: dealStoreName,
                         brandLogo: brandLogo,
                       )
-                      );
+                      );*/
                     },
                     colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                     boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],

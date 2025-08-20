@@ -29,7 +29,7 @@ class DealsView extends GetView<DealsController> {
       dealDescription: dealDescription,
       dealValidity: dealValidity,
       dealStoreName: dealStoreName,
-      brandLogo: brandLogo,
+      brandLogo: brandLogo, redemptionType: '', deliveryCost: '', minOrder: 0,
     ),
     );
   }

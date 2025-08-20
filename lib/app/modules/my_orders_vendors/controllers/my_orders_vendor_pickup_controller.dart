@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 
-class MyOrdersVendorsController extends GetxController {
-  RxList<RxBool> selectedTime = [false.obs, true.obs, false.obs, false.obs, false.obs].obs;
-  RxInt time = 30.obs;
+class MyOrdersVendorPickupController extends GetxController {
+  RxList<RxBool> filters = [true.obs, false.obs, false.obs, false.obs, false.obs, false.obs].obs;
 
   final count = 0.obs;
   @override

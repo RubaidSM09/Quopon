@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:quopon/app/data/model/discoverList.dart';
+
+import '../../../data/api.dart';
+import '../../../data/base_client.dart';
 
 class DiscoverController extends GetxController {
   RxBool isMap = true.obs;
@@ -12,10 +18,36 @@ class DiscoverController extends GetxController {
 
   RxList<RxBool> selectedRating = [false.obs, false.obs, true.obs, true.obs].obs;
 
-  final count = 0.obs;
+  var discoverList = <DiscoverList>[].obs;
+
+  Future<void> fetchDiscoverList() async {
+    try {
+      // Call the API to get the categories
+      final response = await BaseClient.getRequest(api: Api.discoverList);
+      print('Hi!');
+
+      // Decode the response body from JSON
+      final decodedResponse = json.decode(response.body);
+
+      // Check if the response contains categories
+      if (decodedResponse != null && decodedResponse is List) {
+        // Map the response to Category objects and update the list
+        discoverList.value = decodedResponse
+            .map((discoverListJson) => DiscoverList.fromJson(discoverListJson))
+            .toList();
+      } else {
+        print('No categories found or incorrect response format.');
+      }
+    } catch (e) {
+      print('Error fetching categories: $e');
+      // Handle error appropriately (e.g., show a Snackbar or error message)
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
+    fetchDiscoverList();
   }
 
   @override
@@ -27,6 +59,4 @@ class DiscoverController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

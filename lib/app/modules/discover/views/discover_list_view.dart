@@ -173,92 +173,34 @@ class DiscoverListView extends GetView<DiscoverController> {
             }),
         
             SizedBox(height: 20.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
-        
-            SizedBox(height: 8.h,),
-        
-            DiscoverListCardView(
-              title: 'SABABA - Albert Cuypstraat',
-              image: 'assets/images/discover/starbucks_logo.png',
-              rating: 4.2,
-              review: 600,
-              distance: 1.2,
-              offer: '20% Discount',
-            ),
+
+            Obx(() {
+              if (controller.discoverList.isEmpty) {
+                return Center(
+                  child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
+                );
+              } else {
+                return Column(
+                  children: controller.discoverList.map((discoverList) {
+                    double rating = double.tryParse(discoverList.rating) ?? 0.0;
+                    int review = discoverList.reviewCount;
+                    double distance = double.tryParse(discoverList.distanceKm) ?? 0.0;
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4.0.h),
+                      child: DiscoverListCardView(
+                        title: discoverList.name,
+                        image: discoverList.logoUrl,
+                        rating: rating,
+                        review: review,
+                        distance: distance,
+                        offer: discoverList.discountPercentage.toString(),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+            }),
           ],
         ),
       ),

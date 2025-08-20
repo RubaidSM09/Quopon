@@ -100,7 +100,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => LandingVendorView(),
+      page: () => OnboardingView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -137,6 +137,9 @@ class AppPages {
         dealValidity: '',
         dealStoreName: '',
         brandLogo: '',
+        redemptionType: '',
+        deliveryCost: '',
+        minOrder: 0,
       ),
       binding: DealDetailBinding(),
     ),
@@ -179,7 +182,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => VendorProfileView(),
+      page: () => VendorProfileView(logo: '',),
       binding: VendorProfileBinding(),
     ),
     GetPage(

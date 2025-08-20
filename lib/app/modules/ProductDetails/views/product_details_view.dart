@@ -34,7 +34,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
               decoration: BoxDecoration(
                 color: Color(0xFFF6E7D8),
                 image: DecorationImage(
-                  image: AssetImage(image!),
+                  image: NetworkImage(image!),
                   fit: BoxFit.cover,
                 ),
               ),

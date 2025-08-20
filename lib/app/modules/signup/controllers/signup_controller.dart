@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/forgot_password/views/mail_verification_code_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 
 import '../../../data/api.dart';
@@ -18,7 +19,7 @@ class SignupController extends GetxController {
   bool _isConfirmPasswordVisible = false;
   var isLoading = false.obs;
 
-  Future<void> signup() async {
+  Future<void> signup(String userType) async {
 
     if (emailController.text.trim().isEmpty) {
       SnackBar(content: Text('Please enter a valid email'),);
@@ -42,7 +43,7 @@ class SignupController extends GetxController {
         'email': emailController.text.trim(),
         'password': passwordController.text.trim(),
         'referral_code': referralCodeController.text.trim(),
-        'user_type': 'user'
+        'user_type': userType
       };
 
       final headers = {'Content-Type': 'application/json'};
@@ -70,6 +71,7 @@ class SignupController extends GetxController {
 
         Get.snackbar('Success', 'Account created successfully!');
         //Get.off(() => VerifyOTPView());
+        Get.to(MailVerificationCodeView(email: emailController.text.trim(), passwordForgot: false,));
 
 
         // SharedPreferences
@@ -80,7 +82,6 @@ class SignupController extends GetxController {
         // homeController.fetchProfileData();
         // homeController.checkVerified(email);
 
-        Get.to(SignUpProcessView());
       } else {
         final responseBody = jsonDecode(response.body);
         Get.snackbar('Error', responseBody['message'] ?? 'Sign-up failed\nPlease Use Different Username');

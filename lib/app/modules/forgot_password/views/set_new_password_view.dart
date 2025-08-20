@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/forgot_password/controllers/forgot_password_controller.dart';
 import 'package:quopon/app/modules/login/views/login_view.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
 
-class SetNewPasswordView extends GetView {
+class SetNewPasswordView extends GetView<ForgotPasswordController> {
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final String email;
+  final ForgotPasswordController forgotPasswordController = Get.put(ForgotPasswordController());
 
-  SetNewPasswordView({super.key});
+  SetNewPasswordView({
+    required this.email,
+    super.key
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +104,7 @@ class SetNewPasswordView extends GetView {
                   GradientButton(
                     text: 'Update Password',
                     onPressed: () {
-                      Get.to(LoginView());
+                      forgotPasswordController.setNewPassword(email, newPasswordController.text.trim(), confirmPasswordController.text.trim());
                     },
                     colors: [
                       const Color(0xFFD62828),

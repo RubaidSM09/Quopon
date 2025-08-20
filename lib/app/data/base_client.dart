@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
@@ -10,15 +11,40 @@ import '../../common/helper/local_store.dart';
 import '../modules/login/views/login_view.dart';
 
 class BaseClient {
+  static const _storage = FlutterSecureStorage();
 
-  static getRequest({required String api, params, headers}) async {
+  // Retrieve access token from secure storage
+  static Future<String?> getAccessToken() async {
+    return await _storage.read(key: 'access_token');
+  }
+
+  // Retrieve refresh token from secure storage
+  static Future<String?> getRefreshToken() async {
+    return await _storage.read(key: 'refresh_token');
+  }
+
+  static Future<Map<String, String>> authHeaders() async {
+    String? token = await getAccessToken();
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${token ?? ''}',
+    };
+  }
+
+  static Future<Map<String, String>> get basicHeaders async => {
+    'Content-Type': 'application/json',
+  };
+
+  static getRequest({required String api, Map<String, String>? params, Map<String, String>? headers}) async {
 
     debugPrint("API Hit: $api");
     debugPrint("Header: $headers");
 
+    final resolvedHeaders = headers != null ? await headers : null;
+
     http.Response response = await http.get(
       Uri.parse(api).replace(queryParameters: params),
-      headers: headers,
+      headers: resolvedHeaders,
     );
     return response;
   }
@@ -27,12 +53,12 @@ class BaseClient {
 
     debugPrint("API Hit: $api");
     debugPrint("body: $body");
+    debugPrint("headers: $headers");
     http.Response response = await http.post(
       Uri.parse(api),
       body: body,
       headers: headers,
     );
-    print('Hi!');
     debugPrint("<================= response ====== ${response.body} ===========>");
 
     return response;

@@ -184,7 +184,13 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => Get.to(VendorProfileView()),
+                      onTap: () {
+                       Get.to(
+                           VendorProfileView(
+                             logo: '',
+                           )
+                       );
+                      },
                       child: Container(
                         height: 92.h,
                         width: 195.w,

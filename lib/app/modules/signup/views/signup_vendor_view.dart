@@ -6,12 +6,10 @@ import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_vendor_vi
 import 'package:quopon/app/modules/signup/controllers/signup_vendor_controller.dart';
 import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
+import '../controllers/signup_controller.dart';
 
-class SignupVendorView extends GetView<SignupVendorController> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _referralCodeController = TextEditingController();
+class SignupVendorView extends GetView<SignupController> {
+  final SignupController signupController = Get.put(SignupController());
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -74,7 +72,7 @@ class SignupVendorView extends GetView<SignupVendorController> {
                   headingText: 'Email Address',
                   fieldText: 'Enter email address',
                   iconImagePath: 'assets/images/login/Email.png',
-                  controller: _emailController,
+                  controller: signupController.emailController,
                   isRequired: true
               ),
 
@@ -85,7 +83,7 @@ class SignupVendorView extends GetView<SignupVendorController> {
                   headingText: 'Create Password',
                   fieldText: '••••••••••••',
                   iconImagePath: 'assets/images/login/Password.png',
-                  controller: _passwordController,
+                  controller: signupController.passwordController,
                   isRequired: true,
                   isPassword: true
               ),
@@ -97,7 +95,7 @@ class SignupVendorView extends GetView<SignupVendorController> {
                   headingText: 'Confirm Password',
                   fieldText: '••••••••••••',
                   iconImagePath: 'assets/images/login/Password.png',
-                  controller: _confirmPasswordController,
+                  controller: signupController.confirmPasswordController,
                   isRequired: true,
                   isPassword: true
               ),
@@ -108,21 +106,27 @@ class SignupVendorView extends GetView<SignupVendorController> {
               SizedBox(
                   width: double.infinity,
                   height: 56.h, // Use ScreenUtil for height
-                  child: GradientButton(
-                    text: 'Create Account',
-                    onPressed: () {
-                      Get.to(SignUpProcessVendorView());
-                    },
-                    colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
-                    boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
-                    child: Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontSize: 16.sp,  // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                  child: Obx(() => signupController.isLoading.value
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : GradientButton(
+                      text: 'Create Account',
+                      onPressed: () {
+                        signupController.signup('vendor');
+                      },
+                      colors: [
+                        const Color(0xFFD62828),
+                        const Color(0xFFC21414)
+                      ],
+                      boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+                      child: Text(
+                        'Create Account',
+                        style: TextStyle(
+                          fontSize: 16.sp, // Use ScreenUtil for font size
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
+                    )
                   ),
               ),
 

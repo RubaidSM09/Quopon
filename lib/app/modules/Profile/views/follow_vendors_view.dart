@@ -89,7 +89,7 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
 
             Expanded(
               child: Obx(() {
-                if (controller.vendorList.isEmpty) {
+                if (controller.followedVendors.isEmpty) {
                   return Center(
                     child: Text(
                       "No vendors found",
@@ -99,13 +99,13 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                 }
 
                 return ListView.builder(
-                  itemCount: controller.vendorList.length,
+                  itemCount: controller.followedVendors.length,
                   itemBuilder: (context, index) {
-                    final vendor = controller.vendorList[index];
+                    final vendor = controller.followedVendors[index];
                     return VendorCard(
-                      brandLogo: vendor.brandLogo,
-                      dealStoreName: vendor.dealStoreName,
-                      dealType: vendor.dealType,
+                      brandLogo: vendor.logoUrl,
+                      dealStoreName: vendor.title,
+                      dealType: vendor.category,
                       activeDeals: vendor.activeDeals,
                     );
                   },

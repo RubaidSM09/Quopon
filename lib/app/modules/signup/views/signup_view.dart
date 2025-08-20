@@ -120,7 +120,7 @@ class SignupView extends GetView<SignupController> {
                     : GradientButton(
                         text: 'Create Account',
                         onPressed: () {
-                          signupController.signup();
+                          signupController.signup('user');
                         },
                         colors: [
                           const Color(0xFFD62828),

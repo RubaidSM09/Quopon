@@ -1,12 +1,55 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:quopon/app/data/api.dart';
+import 'package:quopon/app/data/base_client.dart';
+import 'package:quopon/app/data/model/searches.dart';
 
 class SearchController extends GetxController {
-  //TODO: Implement SearchController
+  var frequentSearches = <FrequentSearches>[].obs;
+  
+  Future<void> fetchFrequentSearches() async {
+    try {
+      final response = await BaseClient.getRequest(api: Api.frequentSearch);
+      
+      final decodedResponse = json.decode(response.body);
+      
+      if (decodedResponse != null && decodedResponse is List) {
+        frequentSearches.value = decodedResponse
+            .map((frequentSearchesJson) => FrequentSearches.fromJson(frequentSearchesJson))
+            .toList();
+      } else {
+        print('No frequent searches found or incorrect response format.');
+      }
+    } catch (e) {
+      print('Error fetching frequent searches: $e');
+      // Handle error appropriately (e.g., show a Snackbar or error message)
+    }
+  }
 
-  final count = 0.obs;
+  Future<void> fetchRecentSearches() async {
+    try {
+      final response = await BaseClient.getRequest(api: Api.frequentSearch);
+
+      final decodedResponse = json.decode(response.body);
+
+      if (decodedResponse != null && decodedResponse is List) {
+        frequentSearches.value = decodedResponse
+            .map((frequentSearchesJson) => FrequentSearches.fromJson(frequentSearchesJson))
+            .toList();
+      } else {
+        print('No frequent searches found or incorrect response format.');
+      }
+    } catch (e) {
+      print('Error fetching frequent searches: $e');
+      // Handle error appropriately (e.g., show a Snackbar or error message)
+    }
+  }
+  
   @override
   void onInit() {
     super.onInit();
+    fetchFrequentSearches();
   }
 
   @override
@@ -18,6 +61,4 @@ class SearchController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

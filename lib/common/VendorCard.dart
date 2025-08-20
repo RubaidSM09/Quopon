@@ -30,14 +30,10 @@ class VendorCard extends GetView {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
+                CircleAvatar(
+                  radius: 20.r,
+                  backgroundImage: NetworkImage(
                     brandLogo,
-                    width: 40.w, // responsive size for brand logo
-                    height: 40.h,
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -86,7 +82,10 @@ class VendorCard extends GetView {
             ),
             GestureDetector(
               onTap: () {
-                Get.to(() => VendorProfileView());
+                Get.to(VendorProfileView(
+                    logo: brandLogo,
+                  )
+                );
               },
               child: Container(
                 width: 93.w,

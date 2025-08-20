@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 
@@ -32,11 +33,10 @@ class DiscoverListCardView extends GetView {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
+          Image.network(
             image,
-            height: 88.h,
-            width: 88.w,
-            scale: 4,
+            width: 80.w,
+            height: 80.h,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +72,7 @@ class DiscoverListCardView extends GetView {
                           )
                         ),
                         TextSpan(
-                            text: review > 500 ? '(500+)' : '($rating)',
+                            text: review > 500 ? '(500+)' : '($review)',
                             style: TextStyle(
                               color: Color(0xFF6F7E8D),
                               fontSize: 12.sp,
@@ -134,7 +134,7 @@ class DiscoverListCardView extends GetView {
                   color: Color(0xFFD62828),
                 ),
                 child: Text(
-                  offer,
+                  "$offer% Discount",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 10.sp,

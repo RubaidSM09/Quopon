@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quopon/app/modules/home/controllers/home_controller.dart'; // Import ScreenUtil
 
-class FilterCard extends GetView {
+class FilterCard extends GetView<HomeController> {
   final String filterName;
   final bool isSortable;
   final String filterIcon;
@@ -44,7 +45,10 @@ class FilterCard extends GetView {
             ),
           ),
           isSortable ? SizedBox(width: 12.w) : SizedBox.shrink(), // Use ScreenUtil for width
-          isSortable ? Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),) : SizedBox.shrink(),
+          isSortable ? Obx(() {
+            return controller.deliveryHighToLow.value ? Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),) : Icon(Icons.keyboard_arrow_up, color: Color(0xFF6F7E8D),);
+
+          }) : SizedBox.shrink(),
         ],
       ),
     );

@@ -277,7 +277,7 @@ class HomeRestaurantCard extends GetView {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
-                    child: Image.asset(restaurantImg, height: 120.h, width: 204.w, fit: BoxFit.cover,),
+                    child: Image.network(restaurantImg, height: 120.h, width: 204.w, fit: BoxFit.cover,),
                   ),
                   /*Positioned(
                     top: 13.h,

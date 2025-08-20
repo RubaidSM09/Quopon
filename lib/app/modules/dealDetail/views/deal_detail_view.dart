@@ -17,6 +17,9 @@ class DealDetailView extends StatelessWidget {
   final String dealValidity;
   final String dealStoreName;
   final String brandLogo;
+  final String redemptionType;
+  final String deliveryCost;
+  final int minOrder;
 
   const DealDetailView({
     super.key,
@@ -26,6 +29,9 @@ class DealDetailView extends StatelessWidget {
     required this.dealValidity,
     required this.dealStoreName,
     required this.brandLogo,
+    required this.redemptionType,
+    required this.deliveryCost,
+    required this.minOrder,
   });
 
   @override
@@ -57,7 +63,7 @@ class DealDetailView extends StatelessWidget {
                   // Deal Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.r),
-                    child: Image.asset(
+                    child: Image.network(
                       dealImage, // Image of the deal
                       width: double.infinity,
                       height: 220.h,
@@ -180,7 +186,7 @@ class DealDetailView extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),
-                                      child: Image.asset(
+                                      child: Image.network(
                                         brandLogo,
                                         height: 44.h,
                                         width: 44.w,
@@ -260,7 +266,7 @@ class DealDetailView extends StatelessWidget {
                                     color: Color(0xFFB81EFF).withAlpha(20),
                                   ),
                                   child: Text(
-                                    'Redemption: Delivery & Pickup',
+                                    'Redemption: $redemptionType',
                                     style: TextStyle(
                                       color: Color(0xFFB81EFF),
                                       fontSize: 10.sp,
@@ -275,7 +281,7 @@ class DealDetailView extends StatelessWidget {
                                     color: Color(0xFF1E92FF).withAlpha(20),
                                   ),
                                   child: Text(
-                                    'Delivery Cost: \$1.99',
+                                    'Delivery Cost: \$$deliveryCost',
                                     style: TextStyle(
                                       color: Color(0xFF1E92FF),
                                       fontSize: 10.sp,
@@ -290,7 +296,7 @@ class DealDetailView extends StatelessWidget {
                                     color: Color(0xFFFF8E24).withAlpha(20),
                                   ),
                                   child: Text(
-                                    'Min. Order Amount: \$20.00',
+                                    'Min. Order Amount: \$$minOrder',
                                     style: TextStyle(
                                       color: Color(0xFFFF8E24),
                                       fontSize: 10.sp,
@@ -309,7 +315,11 @@ class DealDetailView extends StatelessWidget {
                     GradientButton(
                       text: 'Order Now',
                       onPressed: () {
-                        Get.to(VendorProfileView());
+                        Get.to(
+                            VendorProfileView(
+                              logo: brandLogo,
+                            )
+                        );
                       },
                       colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                       boxShadow: [

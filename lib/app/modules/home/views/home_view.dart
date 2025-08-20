@@ -4,29 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:quopon/app/modules/MyDeals/views/my_deals_view.dart';
 import 'package:quopon/app/modules/Notifications/views/notifications_view.dart';
 import 'package:quopon/app/modules/Profile/views/profile_view.dart';
 import 'package:quopon/app/modules/QRScanner/views/q_r_scanner_view.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
+import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 import 'package:quopon/app/modules/dealDetail/views/deal_detail_view.dart';
+import 'package:quopon/app/modules/home/controllers/home_controller.dart';
 import 'package:quopon/common/Filter.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
 import '../../Cart/views/cart_view.dart';
 import '../../deals/views/deals_view.dart';
 
-class HomeView extends StatefulWidget {
-  @override
-  _HomeViewState createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  int _selectedIndex = 0;
-
+class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
+
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
@@ -177,49 +175,23 @@ class _HomeViewState extends State<HomeView> {
                   // Food categories
                   Column(
                     children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _buildCategoryItem('assets/images/Home/Breakfast.png', 'Breakfast', Colors.orange),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Coffee.png', 'Coffee', Colors.brown),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Grocery.png', 'Grocery', Colors.green),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Fast Food.png', 'Fast Food', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Wings.png', 'Wings', Colors.orange),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Pizza.png', 'Pizza', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Sweets.png', 'Sweets', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Chinese.png', 'Chinese', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/BBQ.png', 'BBQ', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/American.png', 'American', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Mexican.png', 'Mexican', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Sandwich.png', 'Sandwich', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Seafood.png', 'Seafood', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Bakery.png', 'Bakery', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Burger.png', 'Burger', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Smoothies.png', 'Smoothies', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Soup.png', 'Soup', Colors.red),
-                            SizedBox(width: 16.w),
-                            _buildCategoryItem('assets/images/Home/Desserts.png', 'Desserts', Colors.red),
-                            SizedBox(width: 16.w),
-                          ],
-                        ),
-                      ),
+                      Obx(() {
+                        // Check if categories are loaded
+                        if (controller.categories.isEmpty) {
+                          return Center(
+                            child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
+                          );
+                        } else {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: controller.categories.map((category) {
+                                return _buildCategoryItem(category); // Use category object here
+                              }).toList(),
+                            ),
+                          );
+                        }
+                      }),
 
                       SizedBox(height: 20,),
 
@@ -232,7 +204,12 @@ class _HomeViewState extends State<HomeView> {
                             SizedBox(width: 8.w),
                             FilterCard(filterName: 'Offers', isSortable: false, filterIcon: 'assets/images/Home/Filters/Offers.svg',),
                             SizedBox(width: 8.w),
-                            FilterCard(filterName: 'Delivery Fee', filterIcon: 'assets/images/Home/Filters/Delivery Fee.svg',),
+                            GestureDetector(
+                              onTap: () {
+                                controller.deliveryHighToLow.value = !controller.deliveryHighToLow.value;
+                              },
+                              child: FilterCard(filterName: 'Delivery Fee', filterIcon: 'assets/images/Home/Filters/Delivery Fee.svg',),
+                            ),
                             SizedBox(width: 8.w),
                             FilterCard(filterName: 'Under 30 min', isSortable: false, filterIcon: 'assets/images/Home/Filters/Under 30 Min.svg',),
                           ],
@@ -269,119 +246,54 @@ class _HomeViewState extends State<HomeView> {
                             ],
                           ),
 
-                          // Restaurant and Coupon cards in a row
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                // Sonic card
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.dialog(
-                                      DealDetailView(
-                                        dealImage: 'assets/images/deals/Pizza.jpg',
-                                        dealTitle: '20% Discount',
-                                        dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                        dealValidity: '11:59 PM, May 31',
-                                        dealStoreName: 'Pizzeria Bella Italia',
-                                        brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                                      )
-                                    );
-                                  },
-                                  child: HomeRestaurantCard(
-                                    /*discountTxt: '', */
-                                    restaurantImg: 'assets/images/Home/Restaurants/Image.png',
-                                    restaurantName: 'Domino\'s',
-                                    deliveryFee: 'US\$0 Delivery Free',
-                                    distance: '16 mi',
-                                    rating: '4.0',
-                                    reviewCount: '65',
-                                    deliveryTime: '20 min',
-                                    isPremium: false,
-                                  ),
+                          Obx(() {
+                            // Check if categories are loaded
+                            if (controller.beyondNeighbourhood.isEmpty) {
+                              return Center(
+                                child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
+                              );
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: controller.beyondNeighbourhood.map((beyondNeighbourhood) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          !beyondNeighbourhood.isPremium ? Get.dialog(
+                                              DealDetailView(
+                                                dealImage: beyondNeighbourhood.coverImageUrl!,
+                                                dealTitle: beyondNeighbourhood.offers,
+                                                dealDescription: beyondNeighbourhood.description,
+                                                dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(beyondNeighbourhood.dealValidity)),
+                                                dealStoreName: beyondNeighbourhood.name,
+                                                brandLogo: beyondNeighbourhood.logoUrl!,
+                                                redemptionType: beyondNeighbourhood.redemptionType,
+                                                deliveryCost: beyondNeighbourhood.deliveryFee,
+                                                minOrder: beyondNeighbourhood.minOrder,
+                                              )
+                                          ) : 
+                                          Get.bottomSheet(QuoponPlusView());
+                                        },
+                                        child: HomeRestaurantCard(
+                                          /*discountTxt: '', */
+                                          restaurantImg: beyondNeighbourhood.coverImageUrl!,
+                                          restaurantName: beyondNeighbourhood.name,
+                                          deliveryFee: beyondNeighbourhood.deliveryFee.toString(),
+                                          distance: beyondNeighbourhood.distanceMiles,
+                                          rating: beyondNeighbourhood.rating.toString(),
+                                          reviewCount: beyondNeighbourhood.rating.toString(),
+                                          deliveryTime: beyondNeighbourhood.deliveryTimeMinutes.toString(),
+                                          isPremium: beyondNeighbourhood.isPremium,
+                                        ),
+                                      ),
+                                    ); // Use category object here
+                                  }).toList(),
                                 ),
-
-                                SizedBox(width: 12.w,),
-
-                                // Coupon section
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.bottomSheet(
-                                        QuoponPlusView()
-                                    );
-                                  },
-                                  child: HomeRestaurantCard(
-                                    restaurantImg: 'assets/images/Home/Restaurants/Image.png',
-                                    restaurantName: 'Sonic',
-                                    deliveryFee: 'US\$0 Delivery Free',
-                                    distance: '16 mi',
-                                    rating: '4.5',
-                                    reviewCount: '12',
-                                    deliveryTime: '45 min',
-                                    isPremium: true,
-                                  ),
-                                ),
-
-                                SizedBox(width: 12.w,),
-
-                                // Starbucks card
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.dialog(
-                                        DealDetailView(
-                                          dealImage: 'assets/images/deals/Pizza.jpg',
-                                          dealTitle: '20% Discount',
-                                          dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                          dealValidity: '11:59 PM, May 31',
-                                          dealStoreName: 'Pizzeria Bella Italia',
-                                          brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                                        )
-                                    );
-                                  },
-                                  child: HomeRestaurantCard(
-                                    /*discountTxt: 'Spend \$15, Save \$3', */
-                                    restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg',
-                                    restaurantName: 'Starbucks',
-                                    deliveryFee: 'US\$0 Delivery Free',
-                                    distance: '16 mi',
-                                    rating: '4.5',
-                                    reviewCount: '27',
-                                    deliveryTime: '15 min',
-                                    isPremium: false,
-                                  ),
-                                ),
-
-                                SizedBox(width: 12.w,),
-
-                                // City Grille card
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.dialog(
-                                        DealDetailView(
-                                          dealImage: 'assets/images/deals/Pizza.jpg',
-                                          dealTitle: '20% Discount',
-                                          dealDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                                          dealValidity: '11:59 PM, May 31',
-                                          dealStoreName: 'Pizzeria Bella Italia',
-                                          brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
-                                        )
-                                    );
-                                  },
-                                  child: HomeRestaurantCard(
-                                    /*discountTxt: '', */
-                                    restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg',
-                                    restaurantName: 'City Grille',
-                                    deliveryFee: 'US\$2.19 Free',
-                                    distance: '16 mi',
-                                    rating: '4.5',
-                                    reviewCount: '27',
-                                    deliveryTime: '15 min',
-                                    isPremium: false,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              );
+                            }
+                          }),
                         ],
                       ),
 
@@ -415,28 +327,35 @@ class _HomeViewState extends State<HomeView> {
                             ],
                           ),
 
-                          // Shop icons
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildShopItem('7-Eleven', '10 min', 'assets/images/Home/Shops/image.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('Speedway', '15 min', 'assets/images/Home/Shops/image-1.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('Lowe\'s', '20 min', 'assets/images/Home/Shops/image-2.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('Wawa', '10 min', 'assets/images/Home/Shops/image-3.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('Pet Supp...', 'Closed', 'assets/images/Home/Shops/image-4.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('Petco', 'Closed', 'assets/images/Home/Shops/Petco.png'),
-                                SizedBox(width: 15.w),
-                                _buildShopItem('GNC', '11:00 AM', 'assets/images/Home/Shops/GNC.png'),
-                              ],
-                            ),
-                          ),
+                          Obx(() {
+                            // Check if categories are loaded
+                            if (controller.nearShops.isEmpty) {
+                              return Center(
+                                child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
+                              );
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: controller.nearShops.map((nearShops) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Get.to(
+                                              VendorProfileView(
+                                                logo: nearShops.logoUrl!,
+                                              )
+                                          );
+                                        },
+                                        child: _buildShopItem(nearShops.shopTitle, nearShops.statusText, nearShops.logoUrl!),
+                                      ),
+                                    ); // Use category object here
+                                  }).toList(),
+                                ),
+                              );
+                            }
+                          }),
                         ],
                       ),
 
@@ -471,30 +390,53 @@ class _HomeViewState extends State<HomeView> {
                           ),
 
                           // Restaurant and Coupon cards in a row
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                // Sonic card
-                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Domino\'s', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.0', reviewCount: '65', deliveryTime: '20 min', isPremium: false,),
-
-                                SizedBox(width: 12.w,),
-
-                                // Coupon section
-                                HomeRestaurantCard(restaurantImg: 'assets/images/Home/Restaurants/Image.png', restaurantName: 'Sonic', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '12', deliveryTime: '45 min', isPremium: true,),
-
-                                SizedBox(width: 12.w,),
-
-                                // Starbucks card
-                                HomeRestaurantCard(/*discountTxt: 'Spend \$15, Save \$3', */restaurantImg: 'assets/images/Home/Restaurants/Starbucks.jpg', restaurantName: 'Starbucks', deliveryFee: 'US\$0 Delivery Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
-
-                                SizedBox(width: 12.w,),
-
-                                // City Grille card
-                                HomeRestaurantCard(/*discountTxt: '', */restaurantImg: 'assets/images/Home/Restaurants/City Grille.jpg', restaurantName: 'City Grille', deliveryFee: 'US\$2.19 Free', distance: '16 mi', rating: '4.5', reviewCount: '27', deliveryTime: '15 min', isPremium: false,),
-                              ],
-                            ),
-                          ),
+                          Obx(() {
+                            // Check if categories are loaded
+                            if (controller.speedyDeliveries.isEmpty) {
+                              return Center(
+                                child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
+                              );
+                            } else {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: controller.speedyDeliveries.map((speedyDeliveries) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          !speedyDeliveries.isPremium ? Get.dialog(
+                                              DealDetailView(
+                                                dealImage: speedyDeliveries.coverImageUrl!,
+                                                dealTitle: speedyDeliveries.offers,
+                                                dealDescription: speedyDeliveries.description,
+                                                dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(speedyDeliveries.dealValidity)),
+                                                dealStoreName: speedyDeliveries.name,
+                                                brandLogo: speedyDeliveries.logoUrl!,
+                                                redemptionType: speedyDeliveries.redemptionType,
+                                                deliveryCost: speedyDeliveries.deliveryFee,
+                                                minOrder: speedyDeliveries.minOrder,
+                                              )
+                                          ) : Get.bottomSheet(QuoponPlusView());
+                                        },
+                                        child: HomeRestaurantCard(
+                                          /*discountTxt: '', */
+                                          restaurantImg: speedyDeliveries.coverImageUrl!,
+                                          restaurantName: speedyDeliveries.name,
+                                          deliveryFee: speedyDeliveries.deliveryFee,
+                                          distance: speedyDeliveries.distanceMiles,
+                                          rating: speedyDeliveries.rating,
+                                          reviewCount: speedyDeliveries.rating,
+                                          deliveryTime: speedyDeliveries.deliveryTimeMinutes.toString(),
+                                          isPremium: speedyDeliveries.isPremium,
+                                        ),
+                                      ),
+                                    ); // Use category object here
+                                  }).toList(),
+                                ),
+                              );
+                            }
+                          }),
                         ],
                       ),
                     ],
@@ -508,20 +450,29 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildCategoryItem(String icon, String label, Color color) {
-    return Column(
-      children: [
-        Image.asset(icon, height: 60.h, width: 60.w,),  // Use ScreenUtil for icon size
-        SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.sp,  // Use ScreenUtil for font size
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w500,
+  Widget _buildCategoryItem(Category category) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+      child: Column(
+        children: [
+          // Display category image
+          Image.network(
+            category.imageUrl,
+            height: 60.h,
+            width: 60.w,
+            fit: BoxFit.cover,
           ),
-        ),
-      ],
+          SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
+          Text(
+            category.name,
+            style: TextStyle(
+              fontSize: 12.sp,  // Use ScreenUtil for font size
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -556,15 +507,22 @@ class _HomeViewState extends State<HomeView> {
       children: [
         CircleAvatar(
           radius: 30.w,  // Use ScreenUtil for radius
-          backgroundImage: AssetImage(logo),
+          backgroundImage: NetworkImage(logo),
         ),
         SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
-        Text(
-          name,
-          style: TextStyle(
-            fontSize: 12.sp,  // Use ScreenUtil for font size
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
+        SizedBox(
+          width: 66.w,
+          child: Center(
+            child: Text(
+              name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12.sp,  // Use ScreenUtil for font size
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                overflow: TextOverflow.ellipsis
+              ),
+            ),
           ),
         ),
         Text(

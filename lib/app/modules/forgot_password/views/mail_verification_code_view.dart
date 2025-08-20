@@ -1,18 +1,77 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:quopon/app/modules/forgot_password/views/set_new_password_view.dart';
+import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../../../../common/custom_textField.dart';
+import '../../../data/api.dart';
+import '../../../data/base_client.dart';
 import '../controllers/forgot_password_controller.dart';
 
 class MailVerificationCodeView extends GetView<ForgotPasswordController> {
+  final String email;
+  final bool passwordForgot;
   final emailController = TextEditingController();
+  bool isLoading = false;
 
-  MailVerificationCodeView({super.key}) {
+  MailVerificationCodeView({
+    required this.email,
+    required this.passwordForgot,
+    super.key
+  }) {
     Get.put(ForgotPasswordController());
+  }
+
+  // API call to verify OTP
+  Future<void> verifyOtp(String otp) async {
+    try {
+      controller.setLoading(true); // Set loading to true
+
+      final body = {
+        'email': email,
+        'otp': otp
+      };
+
+      final headers = {'Content-Type': 'application/json'};
+
+      final response = await BaseClient.postRequest(
+        api: Api.verification,
+        body: jsonEncode(body),
+        headers: headers,
+      );
+
+      print(response.statusCode);
+
+      controller.setLoading(false); // Set loading to false
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // If OTP verification is successful, navigate to the next screen
+        passwordForgot ? Get.to(SetNewPasswordView(email: email)) : Get.to(SignUpProcessView());
+      } else {
+        // Show error message
+        final responseData = json.decode(response.body);
+        _showError(responseData['message'] ?? 'OTP verification failed');
+      }
+    } catch (error) {
+      controller.setLoading(false); // Set loading to false
+      _showError('An error occurred. Please try again.');
+    }
+  }
+
+  // Show error dialog or snack bar
+  void _showError(String message) {
+    Get.snackbar(
+      'Error',
+      message,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
   }
 
   @override
@@ -73,7 +132,6 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                   ),
 
                   SizedBox(height: 48.h), // Use ScreenUtil for height spacing
-
                   // Input boxes
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -82,6 +140,7 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                         width: 58.w,
                         height: 58.h,
                         child: TextField(
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
                           controller: controller.controllers[index],
                           focusNode: controller.focusNodes[index],
                           onChanged: (value) =>
@@ -110,7 +169,7 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                     }),
                   ),
 
-                  SizedBox(height: 24.h,),
+                  SizedBox(height: 24.h),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -123,9 +182,7 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
-
-                        },
+                        onTap: () {},
                         child: Text(
                           'Resend Now',
                           style: TextStyle(
@@ -142,31 +199,48 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
 
               Column(
                 children: [
-                  GradientButton(
-                    text: 'Verify',
-                    onPressed: () {
-                      Get.to(SetNewPasswordView());
-                    },
-                    colors: [
-                      const Color(0xFFD62828),
-                      const Color(0xFFC21414),
-                    ],
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color(0xFF9A0000),
-                        spreadRadius: 1,
+                  Obx(() {
+                    return GradientButton(
+                      text: 'Verify',
+                      onPressed: () {
+                        if (controller.isLoading.value) {
+                          return null;
+                        } else {
+                          String otp = controller.code;
+                          if (otp.length == 6) {
+                            verifyOtp(otp); // Call the API
+                          } else {
+                            _showError('Please enter a valid 6-digit OTP');
+                          }
+                        }
+                      },
+                      colors: [
+                        const Color(0xFFD62828),
+                        const Color(0xFFC21414),
+                      ],
+                      boxShadow: [
+                        const BoxShadow(
+                          color: Color(0xFF9A0000),
+                          spreadRadius: 1,
+                        ),
+                      ],
+                      child: controller.isLoading.value
+                          ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )  // Show loading indicator if isLoading is true
+                          : Text(
+                        'Verify',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
-                    ],
-                    child: Text(
-                      'Verify',
-                      style: TextStyle(
-                        fontSize: 16.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 12.h,),
+                    );
+                  }),
+
+
+                  SizedBox(height: 12.h),
                   GradientButton(
                     text: 'Go Back',
                     onPressed: () {
@@ -175,7 +249,10 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                     colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
                     borderColor: [Colors.white, Color(0xFFEEF0F3)],
                     boxShadow: [
-                      const BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1),
+                      const BoxShadow(
+                        color: Color(0xFFDFE4E9),
+                        spreadRadius: 1,
+                      ),
                     ],
                     child: Text(
                       'Go Back',
@@ -187,7 +264,7 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
