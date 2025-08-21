@@ -10,9 +10,13 @@ import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
   final String logo;
+  final String name;
+  final String type;
 
   const VendorProfileView({
     required this.logo,
+    required this.name,
+    required this.type,
     super.key
   });
 
@@ -56,14 +60,14 @@ class VendorProfileView extends GetView<VendorProfileController> {
                             ),
                             SizedBox(height: 10.h), // ScreenUtil applied
                             Text(
-                              'Starbucks',
+                              name,
                               style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                             ),
                             SizedBox(height: 2.5.h), // ScreenUtil applied
                             Row(
                               children: [
                                 Text(
-                                  'Café',
+                                  type,
                                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
                                 SizedBox(width: 5.w), // ScreenUtil applied
@@ -229,18 +233,27 @@ class VendorProfileView extends GetView<VendorProfileController> {
 
                   SizedBox(height: 20.h), // ScreenUtil applied
 
-                  Column(
-                    children: controller.menu.map((menu) {
-                      return Column(
-                        children: [
-                          Text(
-                            menu.name!,
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                          ),
+                  Obx(() {
+                    if (controller.menu.isEmpty) {
+                      return const Text("No active deals available.");
+                    }
 
-                          SizedBox(height: 6.h),
+                    return Column(
+                      children: controller.menu.map((menu) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  menu.name!,
+                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
+                                ),
+                              ],
+                            ),
 
-                          Column(
+                            SizedBox(height: 6.h),
+
+                            Column(
                               children: menu.items!.map((items) {
                                 return Container(
                                   width: 398.w, // ScreenUtil applied
@@ -258,6 +271,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                           calory: (items.calories ?? 0).toDouble(),
                                           description: items.description!,
                                           image: items.imageUrl,
+                                          item: items,
                                         ));
                                       },
                                       child: ItemCard(
@@ -271,9 +285,9 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                   ),
                                 );
                               },
-                            ).toList(),
+                              ).toList(),
 
-                            /*return SizedBox(
+                              /*return SizedBox(
                               height: boxHeight,
                               child: ListView.builder(
                                 scrollDirection: Axis.vertical,
@@ -312,11 +326,14 @@ class VendorProfileView extends GetView<VendorProfileController> {
                               ),*/
                             ),
 
-                          SizedBox(height: 20.h),
-                        ],
-                      );
-                    }).toList(),
-                  ),
+                            SizedBox(height: 20.h),
+                          ],
+                        );
+                      }).toList(),
+                    );
+                  }),
+
+
 
 
                   /*Text(

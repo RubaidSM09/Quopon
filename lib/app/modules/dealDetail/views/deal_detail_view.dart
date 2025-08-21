@@ -318,6 +318,8 @@ class DealDetailView extends StatelessWidget {
                         Get.to(
                             VendorProfileView(
                               logo: brandLogo,
+                              name: dealStoreName,
+                              type: 'Cafe',
                             )
                         );
                       },

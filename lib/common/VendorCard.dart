@@ -83,7 +83,9 @@ class VendorCard extends GetView {
             GestureDetector(
               onTap: () {
                 Get.to(VendorProfileView(
-                    logo: brandLogo,
+                  logo: brandLogo,
+                  name: dealStoreName,
+                  type: dealType,
                   )
                 );
               },

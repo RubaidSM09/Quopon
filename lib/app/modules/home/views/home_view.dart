@@ -345,6 +345,8 @@ class HomeView extends GetView<HomeController> {
                                           Get.to(
                                               VendorProfileView(
                                                 logo: nearShops.logoUrl!,
+                                                name: nearShops.name,
+                                                type: nearShops.categoryName,
                                               )
                                           );
                                         },

@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quopon/app/data/model/menu.dart';
 import '../../../../common/customTextButton.dart';
+import '../../VendorProfile/controllers/vendor_profile_controller.dart';
 import '../controllers/product_details_controller.dart';
 
-class ProductDetailsView extends GetView<ProductDetailsController> {
+class ProductDetailsView extends GetView<VendorProfileController> {
   final String title;
   final double price;
   final double calory;
   final String description;
   final String? image;
+  final Items item;
 
   const ProductDetailsView({
     required this.title,
     required this.price,
     required this.calory,
     required this.description,
+    required this.item,
     this.image,
     super.key,
   });
@@ -71,7 +75,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        title,
+                        item.name!,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20.sp, // ScreenUtil applied
@@ -79,7 +83,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         ),
                       ),
                       Text(
-                        "\$$price",
+                        "\$${item.price}",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp, // ScreenUtil applied
@@ -90,7 +94,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   ),
                   SizedBox(height: 16.h), // ScreenUtil applied
                   Text(
-                    description,
+                    item.description!,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp, // ScreenUtil applied
@@ -101,14 +105,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
 
                   // Addons section
                   Obx(() {
-                    if (controller.itemAddOns.isEmpty) {
+                    if (controller.menu.isEmpty) {
                       return const Text("No active add-ons available.");
                     }
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: controller.itemAddOns.map((addOn) {
-                        if (addOn.addOnOptions.isEmpty) {
+                      children: item.optionTitle!.map((optionTitle) {
+                        if (optionTitle.options!.isEmpty) {
                           return const SizedBox.shrink();
                         }
 
@@ -119,14 +123,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                             Row(
                               children: [
                                 Text(
-                                  addOn.addOnTitle,
+                                  optionTitle.title!,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.sp, // ScreenUtil applied
                                     color: Color(0xFF020711),
                                   ),
                                 ),
-                                if (addOn.addOnType)
+                                if (optionTitle.isRequired!)
                                   Text(
                                     "*",
                                     style: TextStyle(
@@ -140,7 +144,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                             SizedBox(height: 6.h), // ScreenUtil applied
 
                             // Addon options section
-                            addOn.addOnOptions.isEmpty
+                            optionTitle.options!.isEmpty
                                 ? const Text("No options available.")
                                 : Container(
                               width: 500.w, // ScreenUtil applied
@@ -149,7 +153,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                 borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
                               ),
                               child: Column(
-                                children: addOn.addOnOptions.asMap().entries.map((entry) {
+                                children: optionTitle.options!.asMap().entries.map((entry) {
                                   final option = entry.value;
                                   final index = entry.key;
 
@@ -164,7 +168,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              option.title,
+                                              option.name!,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14.sp, // ScreenUtil applied
@@ -174,14 +178,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                             GestureDetector(
                                               onTap: () {
                                                 // Update the checked value on tap
-                                                option.checked = !option.checked!;
+                                                option.isSelected = !option.isSelected!;
                                                 controller.update();
                                               },
                                               child: Radio(
-                                                value: option.checked!,
+                                                value: option.isSelected!,
                                                 groupValue: true,
                                                 onChanged: (bool? value) {
-                                                  option.checked = value!;
+                                                  option.isSelected = value!;
                                                   controller.update();
                                                 },
                                               ),
@@ -199,7 +203,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                         )
                                             : SizedBox.shrink(),
 
-                                        if (index < addOn.addOnOptions.length - 1)
+                                        if (index < optionTitle.options!.length - 1)
                                           Divider(color: Color(0xFFEAECED), thickness: 1),
                                       ],
                                     ),

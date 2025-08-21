@@ -85,7 +85,7 @@ class ItemCard extends GetView {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.sp), // Apply ScreenUtil to borderRadius
-                  child: Image.asset(
+                  child: Image.network(
                     image!,
                     width: 84.w, // Apply ScreenUtil to width
                     height: 84.h, // Apply ScreenUtil to height

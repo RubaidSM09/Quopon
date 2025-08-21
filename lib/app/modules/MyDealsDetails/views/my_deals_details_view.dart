@@ -188,6 +188,8 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                        Get.to(
                            VendorProfileView(
                              logo: '',
+                             name: '',
+                             type: '',
                            )
                        );
                       },

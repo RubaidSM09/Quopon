@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:quopon/app/data/model/menu.dart';
 
 import '../modules/Cart/bindings/cart_binding.dart';
 import '../modules/Cart/views/cart_view.dart';
@@ -182,7 +183,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => VendorProfileView(logo: '',),
+      page: () => VendorProfileView(logo: '', name: '', type: '',),
       binding: VendorProfileBinding(),
     ),
     GetPage(
@@ -194,6 +195,7 @@ class AppPages {
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
         image: 'assets/images/VendorProfile/Shake.png',
+        item: Items(),
       ),
       binding: ProductDetailsBinding(),
     ),
