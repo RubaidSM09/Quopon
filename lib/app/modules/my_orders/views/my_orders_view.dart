@@ -1,21 +1,24 @@
+// my_orders_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/my_orders/views/my_orders_active_view.dart';
 import 'package:quopon/app/modules/my_orders/views/my_orders_cancelled_view.dart';
 import 'package:quopon/app/modules/my_orders/views/my_orders_completed_view.dart';
-
 import '../controllers/my_orders_controller.dart';
 
 class MyOrdersView extends GetView<MyOrdersController> {
   const MyOrdersView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final c = Get.put(MyOrdersController());
     RxList<RxBool> status = [true.obs, false.obs, false.obs].obs;
 
+    String _countText(int n) => n.toString().padLeft(2, '0');
+
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: Padding(
         padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 60.h, bottom: 22.h),
         child: SingleChildScrollView(
@@ -26,37 +29,40 @@ class MyOrdersView extends GetView<MyOrdersController> {
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: Icon(Icons.arrow_back, color: Color(0xFF020711), size: 24.sp,),
+                    child: Icon(Icons.arrow_back, color: const Color(0xFF020711), size: 24.sp),
                   ),
                   Text(
                     'My Orders',
                     style: TextStyle(
-                        color: Color(0xFF020711),
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500
+                      color: const Color(0xFF020711),
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox.shrink(),
+                  const SizedBox.shrink(),
                 ],
               ),
 
-              SizedBox(height: 24.h,),
+              SizedBox(height: 24.h),
 
               Obx(() {
+                final activeCount = c.activeOrders.length; // dynamic count; completed/cancelled are static for now
+                final completedCount = c.completedOrders.length;
                 return Column(
                   children: [
                     Container(
                       padding: EdgeInsets.all(4.w),
                       decoration: BoxDecoration(
-                        color: Color(0xFFF1F3F4),
+                        color: const Color(0xFFF1F3F4),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          // Active tab
                           GestureDetector(
                             onTap: () {
-                              for (int i=0;i<3;i++) {
+                              for (int i = 0; i < 3; i++) {
                                 status[i].value = false;
                               }
                               status[0].value = true;
@@ -65,15 +71,15 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.r),
-                                color: status[0].value ? Color(0xFFD62828) : Colors.transparent,
+                                color: status[0].value ? const Color(0xFFD62828) : Colors.transparent,
                               ),
                               child: SizedBox(
                                 width: 103.33.w,
                                 child: Center(
                                   child: Text(
-                                    'Active (05)',
+                                    'Active (${_countText(activeCount)})',
                                     style: TextStyle(
-                                      color: status[0].value ? Colors.white : Color(0xFF6F7E8D),
+                                      color: status[0].value ? Colors.white : const Color(0xFF6F7E8D),
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -82,9 +88,10 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               ),
                             ),
                           ),
+                          // Completed tab (placeholder count)
                           GestureDetector(
                             onTap: () {
-                              for (int i=0;i<3;i++) {
+                              for (int i = 0; i < 3; i++) {
                                 status[i].value = false;
                               }
                               status[1].value = true;
@@ -93,15 +100,15 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.r),
-                                color: status[1].value ? Color(0xFFD62828) : Colors.transparent,
+                                color: status[1].value ? const Color(0xFFD62828) : Colors.transparent,
                               ),
                               child: SizedBox(
                                 width: 103.33.w,
                                 child: Center(
                                   child: Text(
-                                    'Completed (12)',
+                                    'Completed (${_countText(completedCount)})', // replace with live count when available
                                     style: TextStyle(
-                                      color: status[1].value ? Colors.white : Color(0xFF6F7E8D),
+                                      color: status[1].value ? Colors.white : const Color(0xFF6F7E8D),
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -110,9 +117,10 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               ),
                             ),
                           ),
+                          // Cancelled tab (placeholder count)
                           GestureDetector(
                             onTap: () {
-                              for (int i=0;i<3;i++) {
+                              for (int i = 0; i < 3; i++) {
                                 status[i].value = false;
                               }
                               status[2].value = true;
@@ -121,15 +129,15 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.r),
-                                color: status[2].value ? Color(0xFFD62828) : Colors.transparent,
+                                color: status[2].value ? const Color(0xFFD62828) : Colors.transparent,
                               ),
                               child: SizedBox(
                                 width: 103.33.w,
                                 child: Center(
                                   child: Text(
-                                    'Cancelled (03)',
+                                    'Cancelled (03)', // replace with live count when available
                                     style: TextStyle(
-                                      color: status[2].value ? Colors.white : Color(0xFF6F7E8D),
+                                      color: status[2].value ? Colors.white : const Color(0xFF6F7E8D),
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -142,9 +150,35 @@ class MyOrdersView extends GetView<MyOrdersController> {
                       ),
                     ),
 
-                    SizedBox(height: 20.h,),
+                    SizedBox(height: 20.h),
 
-                    status[0].value ? MyOrdersActiveView() : status[1].value ? MyOrdersCompletedView() : MyOrdersCancelledView(),
+                    // Content area: handle loading/error here, then pass list down
+                    if (c.isLoading.value)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      )
+                    else if (c.errorText.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        child: Column(
+                          children: [
+                            Text(
+                              c.errorText.value,
+                              style: TextStyle(color: const Color(0xFFD62828), fontSize: 14.sp),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 12.h),
+                            TextButton(onPressed: c.fetchActiveOrders, child: const Text('Retry')),
+                          ],
+                        ),
+                      )
+                    else
+                      (status[0].value)
+                          ? MyOrdersActiveView(orders: c.activeOrders.toList())
+                          : (status[1].value)
+                          ? MyOrdersCompletedView(orders: c.completedOrders.toList())
+                          : const MyOrdersCancelledView(),
                   ],
                 );
               }),

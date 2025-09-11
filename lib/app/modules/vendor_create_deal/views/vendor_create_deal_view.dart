@@ -14,9 +14,9 @@ import '../../signUpProcess/views/vendor_business_hour_row_view.dart';
 import '../controllers/vendor_create_deal_controller.dart';
 
 class VendorCreateDealView extends GetView<VendorCreateDealController> {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final VendorCreateDealController checkboxController = Get.put(VendorCreateDealController());
+  // final _titleController = TextEditingController();
+  // final _descriptionController = TextEditingController();
+  // final VendorCreateDealController checkboxController = Get.put(VendorCreateDealController());
 
   final RxString startDate = ''.obs;
 
@@ -41,6 +41,8 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(VendorCreateDealController());
+
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
@@ -70,8 +72,26 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
-            CustomCategoryField(fieldName: 'Linked Menu Item', isRequired: true, selectedCategory: 'Choose a menu item', categories: ['Choose a menu item'],),
+            Obx(() {
+              final names = controller.menuNames;
+              final selectedName = controller.selectedMenuName.value;
+
+              return CustomCategoryField(
+                fieldName: 'Linked Menu Item',
+                isRequired: true,
+                selectedCategory: names.isNotEmpty ? selectedName : 'Select',
+                categories: names.isNotEmpty ? names : const ['Select'],
+
+                // from our earlier widget change:
+                onCategorySelected: (name) {
+                  controller.selectedMenuName.value = name;
+                  controller.setMenuId(controller.nameToId[name] ?? 0);
+                },
+              );
+            }),
+
             SizedBox(height: 8.h,),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -91,7 +111,31 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
-            PictureUploadField(height: 220.h, width: 425.w), // Use ScreenUtil for height and width
+            Obx(() {
+              final names = controller.discounts;
+              final selectedName = controller.selectedDiscount.value;
+
+              return CustomCategoryField(
+                fieldName: 'Discount',
+                isRequired: true,
+                selectedCategory: names.isNotEmpty ? selectedName : 'Select',
+                categories: names.isNotEmpty ? names : const ['Select'],
+
+                // from our earlier widget change:
+                onCategorySelected: (name) {
+                  controller.selectedDiscount.value = name;
+                },
+              );
+            }),
+
+            SizedBox(height: 20.h), // Use ScreenUtil for spacing
+
+            Obx(() => PictureUploadField(
+              height: 220.h,
+              width: 398.w,
+              file: controller.imageFile.value,          // shows preview if picked
+              onImageSelected: (file) => controller.setImageFile(file),
+            )),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -99,7 +143,7 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               headingText: 'Title',
               fieldText: 'Enter deal title',
               iconImagePath: '',
-              controller: _titleController,
+              controller: controller.titleController,
               isRequired: true,
             ),
 
@@ -109,7 +153,7 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               headingText: 'Description',
               fieldText: 'Write here...',
               iconImagePath: '',
-              controller: _descriptionController,
+              controller: controller.descriptionController,
               isRequired: true,
               maxLine: 6,
             ),
@@ -126,7 +170,22 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
-            CustomCategoryField(fieldName: 'Redemption Type', isRequired: true,),
+            Obx(() {
+              final names = controller.redemptionTypes;
+              final selectedName = controller.selectedRedemptionType.value;
+
+              return CustomCategoryField(
+                fieldName: 'Choose a menu item',
+                isRequired: true,
+                selectedCategory: names.isNotEmpty ? selectedName : 'Select',
+                categories: names.isNotEmpty ? names : const ['Select'],
+
+                // from our earlier widget change:
+                onCategorySelected: (name) {
+                  controller.selectedRedemptionType.value = name;
+                },
+              );
+            }),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -134,7 +193,7 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               headingText: 'Max Cuopons For This Deals',
               fieldText: '50 Cuopons',
               iconImagePath: '',
-              controller: _titleController,
+              controller: controller.maxCuoponController,
               isRequired: true,
             ),
 
@@ -144,13 +203,9 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               headingText: 'Max Cuopons Per Customer',
               fieldText: '01 Cuopons',
               iconImagePath: '',
-              controller: _titleController,
+              controller: controller.maxCuoponPerCustomerController,
               isRequired: true,
             ),
-
-            SizedBox(height: 20.h), // Use ScreenUtil for spacing
-
-            CustomCategoryField(fieldName: 'Discount', isRequired: true,),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -172,54 +227,54 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
               ],
             ),
             SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Mon',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Tue',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Wed',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Thu',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Fri',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: false,
-              day: 'Sat',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: false,
-              day: 'Sun',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 
@@ -229,9 +284,9 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
                 Obx(() {
                   return Checkbox(
                     activeColor: Color(0xFFD62828),
-                    value: checkboxController.isChecked.value,
+                    value: controller.isChecked.value,
                     onChanged: (bool? value) {
-                      checkboxController.toggleCheckbox(value ?? false);
+                      controller.toggleCheckbox(value ?? false);
                     },
                   );
                 }),
@@ -276,10 +331,12 @@ class VendorCreateDealView extends GetView<VendorCreateDealController> {
             GradientButton(
               width: 200.w,
               text: 'Create Deal',
-              onPressed: () {
-                Get.dialog(DealPublishView());
+              onPressed: () async {
+                await controller.createDeal();
+                // you can open the publish dialog on success if you like:
+                // Get.dialog(DealPublishView());
               },
-              colors: [Color(0xFFD62828), Color(0xFFC21414)],
+              colors: const [Color(0xFFD62828), Color(0xFFC21414)],
             ),
           ],
         ),

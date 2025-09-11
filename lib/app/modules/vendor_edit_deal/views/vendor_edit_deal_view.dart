@@ -170,54 +170,54 @@ class VendorEditDealView extends GetView<VendorEditDealController> {
               ],
             ),
             SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Mon',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Tue',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Wed',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Thu',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: true,
-              day: 'Fri',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: false,
-              day: 'Sat',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
-            SizedBox(height: 15.h),  // Use ScreenUtil for spacing
-            VendorBusinessHourRowView(
-              isActive: false,
-              day: 'Sun',
-              startTime: '12:00 AM',
-              endTime: '12:00 AM',
-            ),
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
+            // SizedBox(height: 15.h),  // Use ScreenUtil for spacing
+            // VendorBusinessHourRowView(
+            //   isActive: true,
+            //   day: 'Mon',
+            //   startTime: '08:00',
+            //   endTime: '17:00',
+            // ),
 
             SizedBox(height: 20.h), // Use ScreenUtil for spacing
 

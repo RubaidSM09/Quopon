@@ -39,16 +39,16 @@ class SignupController extends GetxController {
     try {
       isLoading.value = true;
 
-      final body = {
+      var body = {
         'email': emailController.text.trim(),
         'password': passwordController.text.trim(),
         'referral_code': referralCodeController.text.trim(),
         'user_type': userType
       };
 
-      final headers = {'Content-Type': 'application/json'};
+      var headers = {'Content-Type': 'application/json'};
 
-      final response = await BaseClient.postRequest(
+      var response = await BaseClient.postRequest(
         api: Api.signup,
         body: jsonEncode(body),
         headers: headers,
@@ -70,8 +70,9 @@ class SignupController extends GetxController {
         print(':::::::::::::::refreshToken:::::::::::::::::::::$refreshToken');
 
         Get.snackbar('Success', 'Account created successfully!');
+
         //Get.off(() => VerifyOTPView());
-        Get.to(MailVerificationCodeView(email: emailController.text.trim(), passwordForgot: false,));
+        Get.to(MailVerificationCodeView(email: emailController.text.trim(), password: passwordController.text.trim(), passwordForgot: false, userType: userType,));
 
 
         // SharedPreferences

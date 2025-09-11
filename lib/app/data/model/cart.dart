@@ -1,39 +1,97 @@
-class Menu {
+class Cart {
   int? id;
-  int? userId;
   String? userEmail;
-  String? name;
+  int? user;
+  String? deliveryType;
   List<Items>? items;
+  PriceSummary? priceSummary;
 
-  Menu({this.id, this.userId, this.userEmail, this.name, this.items});
+  Cart(
+      {this.id,
+        this.userEmail,
+        this.user,
+        this.deliveryType,
+        this.items,
+        this.priceSummary});
 
-  Menu.fromJson(Map<String, dynamic> json) {
+  Cart.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
     userEmail = json['user_email'];
-    name = json['name'];
+    user = json['user'];
+    deliveryType = json['delivery_type'];
     if (json['items'] != null) {
       items = <Items>[];
       json['items'].forEach((v) {
         items!.add(new Items.fromJson(v));
       });
     }
+    priceSummary = json['price_summary'] != null
+        ? new PriceSummary.fromJson(json['price_summary'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['user_id'] = this.userId;
     data['user_email'] = this.userEmail;
-    data['name'] = this.name;
+    data['user'] = this.user;
+    data['delivery_type'] = this.deliveryType;
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
+    }
+    if (this.priceSummary != null) {
+      data['price_summary'] = this.priceSummary!.toJson();
     }
     return data;
   }
 }
 
 class Items {
+  int? id;
+  MenuItem? menuItem;
+  int? quantity;
+  List<SelectedOptions>? selectedOptions;
+  String? addToCartPrice;
+
+  Items(
+      {this.id,
+        this.menuItem,
+        this.quantity,
+        this.selectedOptions,
+        this.addToCartPrice});
+
+  Items.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    menuItem = json['menu_item'] != null
+        ? new MenuItem.fromJson(json['menu_item'])
+        : null;
+    quantity = json['quantity'];
+    if (json['selected_options'] != null) {
+      selectedOptions = <SelectedOptions>[];
+      json['selected_options'].forEach((v) {
+        selectedOptions!.add(new SelectedOptions.fromJson(v));
+      });
+    }
+    addToCartPrice = json['add_to_cart_price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.menuItem != null) {
+      data['menu_item'] = this.menuItem!.toJson();
+    }
+    data['quantity'] = this.quantity;
+    if (this.selectedOptions != null) {
+      data['selected_options'] =
+          this.selectedOptions!.map((v) => v.toJson()).toList();
+    }
+    data['add_to_cart_price'] = this.addToCartPrice;
+    return data;
+  }
+}
+
+class MenuItem {
   int? id;
   String? name;
   String? description;
@@ -44,7 +102,7 @@ class Items {
   double? totalPrice;
   List<OptionTitle>? optionTitle;
 
-  Items(
+  MenuItem(
       {this.id,
         this.name,
         this.description,
@@ -55,7 +113,7 @@ class Items {
         this.totalPrice,
         this.optionTitle});
 
-  Items.fromJson(Map<String, dynamic> json) {
+  MenuItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];
@@ -142,6 +200,53 @@ class Options {
     data['name'] = this.name;
     data['price'] = this.price;
     data['is_selected'] = this.isSelected;
+    return data;
+  }
+}
+
+class SelectedOptions {
+  int? id;
+  String? name;
+  String? price;
+  bool? isSelected;
+
+  SelectedOptions({this.id, this.name, this.price, this.isSelected});
+
+  SelectedOptions.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    price = json['price'];
+    isSelected = json['is_selected'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['price'] = this.price;
+    data['is_selected'] = this.isSelected;
+    return data;
+  }
+}
+
+class PriceSummary {
+  double? subTotalPrice;
+  double? deliveryCharges;
+  double? inTotalPrice;
+
+  PriceSummary({this.subTotalPrice, this.deliveryCharges, this.inTotalPrice});
+
+  PriceSummary.fromJson(Map<String, dynamic> json) {
+    subTotalPrice = json['sub_total_price'];
+    deliveryCharges = json['delivery_charges'];
+    inTotalPrice = json['in_total_price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['sub_total_price'] = this.subTotalPrice;
+    data['delivery_charges'] = this.deliveryCharges;
+    data['in_total_price'] = this.inTotalPrice;
     return data;
   }
 }

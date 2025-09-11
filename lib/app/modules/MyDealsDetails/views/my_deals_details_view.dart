@@ -187,9 +187,11 @@ class _MyDealsDetailsViewState extends State<MyDealsDetailsView> {
                       onTap: () {
                        Get.to(
                            VendorProfileView(
+                             vendorId: 0,
                              logo: '',
                              name: '',
                              type: '',
+                             address: '',
                            )
                        );
                       },

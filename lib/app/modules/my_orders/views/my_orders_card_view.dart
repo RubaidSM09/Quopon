@@ -37,7 +37,7 @@ class MyOrdersCardView extends GetView {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),
-                child: Image.asset(
+                child: Image.network(
                   itemImg,
                   scale: 4,
                   height: 72.h,
@@ -78,7 +78,7 @@ class MyOrdersCardView extends GetView {
                       ),
                       SizedBox(width: 12.w,),
                       Text(
-                        '\$9.99',
+                        '\$$price',
                         style: TextStyle(
                           color: Color(0xFF6F7E8D),
                           fontSize: 14.sp,

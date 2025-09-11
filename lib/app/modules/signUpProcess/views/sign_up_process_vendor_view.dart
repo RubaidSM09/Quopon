@@ -65,7 +65,9 @@ class SignUpProcessVendorView extends GetView<SignUpProcessVendorController> {
                   },
                   children: [
                     BusinessProfileVendorView(
-                      onNext: () => _nextPage(),
+                      onNext: () {
+                        _nextPage();
+                      },
                       onSkip: () => _nextPage(),
                     ),
                     VendorBusinessHourView(
@@ -121,6 +123,7 @@ class SignUpProcessVendorView extends GetView<SignUpProcessVendorController> {
     if (currentPage.value == 1) {
       _finishOnboarding();
     } else {
+      controller.submitBusinessProfile();
       _nextPage();
     }
   }

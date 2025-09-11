@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/Cart/controllers/cart_controller.dart';
 
+import '../../../data/model/cart.dart';
+
 class CartCardView extends GetView {
-  final Cart cart;
+  final Items items;
 
   const CartCardView({
-    required this.cart,
+    required this.items,
     super.key
   });
 
@@ -22,8 +24,8 @@ class CartCardView extends GetView {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
-              child: Image.asset(
-                cart.image!,
+              child: Image.network(
+                items.menuItem!.imageUrl!,
                 width: 62.w, // ScreenUtil applied
                 height: 62.h, // ScreenUtil applied
               ),
@@ -33,22 +35,22 @@ class CartCardView extends GetView {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  cart.title,
+                  items.menuItem!.name!,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp), // ScreenUtil applied
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: cart.selectedAddons!.asMap().entries.map((entry) {
+                  children: items.selectedOptions!.asMap().entries.map((entry) {
                     final option = entry.value;
 
                     return Row(
                       children: [
                         Text(
-                          'Select ${option.selectTitle}: ',
+                          'Select ${option.name}: ',
                           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                         ),
                         Text(
-                          option.selectOptions.join(", "),
+                          option.name!,
                           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                         ),
                       ],
@@ -62,7 +64,7 @@ class CartCardView extends GetView {
                       icon: Image.asset('assets/images/Cart/Delete.png', width: 24.w, height: 24.h), // ScreenUtil applied
                     ),
                     Text(
-                      '0${cart.quantity}',
+                      '0${items.quantity}',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
                     ),
                     IconButton(
@@ -76,7 +78,7 @@ class CartCardView extends GetView {
           ],
         ),
         Text(
-          '\$${cart.price}',
+          '\$${items.addToCartPrice}',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
         ),
       ],

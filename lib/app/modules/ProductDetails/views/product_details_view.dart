@@ -7,26 +7,29 @@ import '../../VendorProfile/controllers/vendor_profile_controller.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<VendorProfileController> {
+  final int id;
   final String title;
   final double price;
-  final double calory;
+  final int calory;
   final String description;
   final String? image;
-  final Items item;
+  // final Items item;
 
   const ProductDetailsView({
+    required this.id,
     required this.title,
     required this.price,
     required this.calory,
     required this.description,
-    required this.item,
+    // required this.item,
     this.image,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProductDetailsController());
+    // Get.put(VendorProfileController());
+
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
@@ -43,7 +46,12 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
+                padding: EdgeInsets.fromLTRB(
+                  16.w,
+                  32.h,
+                  16.w,
+                  16.h,
+                ), // ScreenUtil applied
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -55,9 +63,16 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(Icons.arrow_back, size: 24.sp), // ScreenUtil applied
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 24.sp,
+                          ), // ScreenUtil applied
                         ),
-                        Image.asset("assets/images/MyDealsDetails/Upload.png", width: 40.w, height: 40.h), // ScreenUtil applied
+                        Image.asset(
+                          "assets/images/MyDealsDetails/Upload.png",
+                          width: 40.w,
+                          height: 40.h,
+                        ), // ScreenUtil applied
                       ],
                     ),
                   ],
@@ -75,7 +90,7 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        item.name!,
+                        title,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20.sp, // ScreenUtil applied
@@ -83,7 +98,7 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                         ),
                       ),
                       Text(
-                        "\$${item.price}",
+                        "\$${price}",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp, // ScreenUtil applied
@@ -94,7 +109,7 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                   ),
                   SizedBox(height: 16.h), // ScreenUtil applied
                   Text(
-                    item.description!,
+                    description,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp, // ScreenUtil applied
@@ -104,10 +119,10 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                   Divider(color: Color(0xFFEAECED), thickness: 1),
 
                   // Addons section
-                  Obx(() {
-                    if (controller.menu.isEmpty) {
+                  /*Obx(() {
+                    *//*if (controller.menu.isEmpty) {
                       return const Text("No active add-ons available.");
-                    }
+                    }*//*
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,80 +157,143 @@ class ProductDetailsView extends GetView<VendorProfileController> {
                               ],
                             ),
                             SizedBox(height: 6.h), // ScreenUtil applied
-
                             // Addon options section
                             optionTitle.options!.isEmpty
                                 ? const Text("No options available.")
-                                : Container(
-                              width: 500.w, // ScreenUtil applied
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                              ),
-                              child: Column(
-                                children: optionTitle.options!.asMap().entries.map((entry) {
-                                  final option = entry.value;
-                                  final index = entry.key;
+                                : () {
+                                    for (int i = 0; i < optionTitle.options!.length; i++) {
+                                      controller.isOptionsSelected[i].value = optionTitle.options![i].isSelected!;
+                                    }
 
-                                  return Padding(
-                                    padding: EdgeInsets.only(left: 12.w), // ScreenUtil applied
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              option.name!,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14.sp, // ScreenUtil applied
-                                                color: Color(0xFF020711),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                // Update the checked value on tap
-                                                option.isSelected = !option.isSelected!;
-                                                controller.update();
-                                              },
-                                              child: Radio(
-                                                value: option.isSelected!,
-                                                groupValue: true,
-                                                onChanged: (bool? value) {
-                                                  option.isSelected = value!;
-                                                  controller.update();
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        option.price != 0.0
-                                            ? Text(
-                                          "+\$${option.price}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14.sp, // ScreenUtil applied
-                                            color: Color(0xFF6F7E8D),
-                                          ),
-                                        )
-                                            : SizedBox.shrink(),
+                                    for (int i = 0; i < optionTitle.options!.length; i++) {
+                                      print(controller.isOptionsSelected[i].value,);
+                                    }
 
-                                        if (index < optionTitle.options!.length - 1)
-                                          Divider(color: Color(0xFFEAECED), thickness: 1),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                                    return Container(
+                                      width: 500.w, // ScreenUtil applied
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ), // ScreenUtil applied
+                                      ),
+                                      child: Column(
+                                        children: optionTitle.options!.asMap().entries.map((
+                                          entry,
+                                        ) {
+                                          final option = entry.value;
+                                          final index = entry.key;
+
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 12.w,
+                                              right: 12.w,
+                                              top: 12.h,
+                                            ),
+                                            // ScreenUtil applied
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      option.name!,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 14.sp,
+                                                        // ScreenUtil applied
+                                                        color: Color(
+                                                          0xFF020711,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        // Update the checked value on tap
+                                                        option.isSelected = !option.isSelected!;
+                                                        controller.isOptionsSelected[index].value = option.isSelected!;
+
+                                                        *//*controller.toggleOption(
+                                                          id,
+                                                          item.id!,
+                                                          item.addedToCart!,
+                                                          option.id!,
+                                                          option.isSelected!,
+                                                        );*//*
+                                                        print(controller.total_price);
+                                                        // controller.update();
+                                                      },
+                                                      child: Container(
+                                                        width: 15.w,
+                                                        height: 15.h,
+                                                        decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              controller
+                                                                  .isOptionsSelected[index]
+                                                                  .value
+                                                              ? Color(
+                                                                  0xFFD62828,
+                                                                )
+                                                              : Colors
+                                                                    .transparent,
+                                                          border: Border.all(
+                                                            color: Color(
+                                                              0xFFDADCDD,
+                                                            ),
+                                                            width: 1.13.sp,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                option.price != 0.0
+                                                    ? Text(
+                                                        "+\$${option.price}",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 14.sp,
+                                                          // ScreenUtil applied
+                                                          color: Color(
+                                                            0xFF6F7E8D,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : SizedBox.shrink(),
+
+                                                if (index <
+                                                    optionTitle
+                                                            .options!
+                                                            .length -
+                                                        1)
+                                                  Divider(
+                                                    color: Color(0xFFEAECED),
+                                                    thickness: 1,
+                                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    );
+                                  }(),
                           ],
                         );
                       }).toList(),
                     );
-                  }),
+                  }),*/
                   SizedBox(height: 10.h), // ScreenUtil applied
                 ],
               ),
@@ -227,9 +305,24 @@ class ProductDetailsView extends GetView<VendorProfileController> {
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
+          padding: EdgeInsets.fromLTRB(
+            16.w,
+            16.h,
+            16.w,
+            32.h,
+          ), // ScreenUtil applied
           child: GradientButton(
-            onPressed: () {},
+            onPressed: () {
+              /*controller.toggleOption(
+                id,
+                item.id!,
+                true,
+                1,
+                false,
+              );*/
+
+              Get.back();
+            },
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],
             borderRadius: 12.r, // ScreenUtil applied
@@ -239,10 +332,18 @@ class ProductDetailsView extends GetView<VendorProfileController> {
               children: [
                 Image.asset("assets/images/ProductDetails/Cart.png"),
                 SizedBox(width: 10.w), // ScreenUtil applied
-                Text(
-                  "Add 1 to Cart \$5.29",
-                  style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
-                ),
+                Obx(() {
+                  // controller.total_price.value = item.totalPrice!;
+
+                  return Text(
+                    "Add 1 to Cart \$${controller.total_price.value}",
+                    style: TextStyle(
+                      fontSize: 17.5.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  );
+                }),
               ],
             ),
           ),

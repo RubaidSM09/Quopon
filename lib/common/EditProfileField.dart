@@ -9,12 +9,14 @@ class EditProfileField extends GetView<ProfileController> {
   final String label;
   final String defaultText;
   final String hintText;
+  TextEditingController editProfileController;
 
-  const EditProfileField({
+  EditProfileField({
     super.key,
     required this.label,
     required this.defaultText,
     required this.hintText,
+    required this.editProfileController,
   });
 
   @override
@@ -33,7 +35,7 @@ class EditProfileField extends GetView<ProfileController> {
         ),
         SizedBox(height: 8.h), // Use ScreenUtil for spacing
         TextField(
-          controller: TextEditingController(text: defaultText),  // Default text in the field
+          controller: editProfileController,  // Default text in the field
           style: TextStyle(
             fontSize: 14.sp, // Use ScreenUtil for font size
             fontWeight: FontWeight.w400,

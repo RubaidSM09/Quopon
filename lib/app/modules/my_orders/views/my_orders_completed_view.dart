@@ -3,62 +3,43 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/model/order.dart';
 import 'my_orders_card_view.dart';
 
 class MyOrdersCompletedView extends GetView {
-  const MyOrdersCompletedView({super.key});
+  final List<Order> orders;
+  const MyOrdersCompletedView({super.key, required this.orders});
+
+  String _cap(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        MyOrdersCardView(
-          itemImg: 'assets/images/my_orders/Shakes.png',
-          itemName: '50% OFF Any Grande Beverage',
-          orderId: '#ORD-57321',
-          price: 9.99,
-          orderType: 'Delivery',
+    if (orders.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 24.h),
+        child: Text(
+          'No active orders',
+          style: TextStyle(color: const Color(0xFF6F7E8D), fontSize: 14.sp),
         ),
+      );
+    }
 
-        SizedBox(height: 8.h,),
-
-        MyOrdersCardView(
-          itemImg: 'assets/images/my_orders/Shakes.png',
-          itemName: '50% OFF Any Grande Beverage',
-          orderId: '#ORD-57321',
-          price: 9.99,
-          orderType: 'Pickup',
-        ),
-
-        SizedBox(height: 8.h,),
-
-        MyOrdersCardView(
-          itemImg: 'assets/images/my_orders/Shakes.png',
-          itemName: '50% OFF Any Grande Beverage',
-          orderId: '#ORD-57321',
-          price: 9.99,
-          orderType: 'Pickup',
-        ),
-
-        SizedBox(height: 8.h,),
-
-        MyOrdersCardView(
-          itemImg: 'assets/images/my_orders/Shakes.png',
-          itemName: '50% OFF Any Grande Beverage',
-          orderId: '#ORD-57321',
-          price: 9.99,
-          orderType: 'Delivery',
-        ),
-
-        SizedBox(height: 8.h,),
-
-        MyOrdersCardView(
-          itemImg: 'assets/images/my_orders/Shakes.png',
-          itemName: '50% OFF Any Grande Beverage',
-          orderId: '#ORD-57321',
-          price: 9.99,
-          orderType: 'Pickup',
-        ),
-      ],
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: orders.length,
+      separatorBuilder: (_, __) => SizedBox(height: 8.h),
+      itemBuilder: (context, i) {
+        final o = orders[i];
+        final price = double.tryParse(o.price) ?? 0.0;
+        return MyOrdersCardView(
+          itemImg: o.productImageUrl,   // ensure MyOrdersCardView can handle network images
+          itemName: o.productName,
+          orderId: '#${o.orderId}',
+          price: price,
+          orderType: _cap(o.orderType),
+        );
+      },
     );
   }
 }

@@ -342,15 +342,43 @@ class HomeView extends GetView<HomeController> {
                                       padding: EdgeInsets.symmetric(horizontal: 6.w),
                                       child: GestureDetector(
                                         onTap: () {
+                                          const placeholderLogo = 'https://via.placeholder.com/200x200.png?text=Logo';
+
+                                          String categoryLabel(int? id) {
+                                            switch (id) {
+                                              case 1:
+                                                return 'Restaurant';
+                                              case 2:
+                                                return 'Grocery';
+                                              default:
+                                                return 'Other';
+                                            }
+                                          }
+
+                                          final safeLogo = (nearShops.logoImage != null &&
+                                              nearShops.logoImage!.trim().isNotEmpty)
+                                              ? nearShops.logoImage!
+                                              : placeholderLogo;
+
+                                          final safeType = categoryLabel(nearShops.category);
+
+                                          print(nearShops.vendorId);
+
                                           Get.to(
-                                              VendorProfileView(
-                                                logo: nearShops.logoUrl!,
-                                                name: nearShops.name,
-                                                type: nearShops.categoryName,
-                                              )
+                                            VendorProfileView(
+                                              vendorId: nearShops.vendorId,
+                                              logo: safeLogo,                 // <- never null
+                                              name: nearShops.name,           // assuming non-null in model
+                                              type: safeType,                 // readable label, never "null"
+                                              address: nearShops.address,
+                                            ),
                                           );
                                         },
-                                        child: _buildShopItem(nearShops.shopTitle, nearShops.statusText, nearShops.logoUrl!),
+                                        child: _buildShopItem(
+                                          nearShops.name,
+                                          nearShops.address,
+                                          nearShops.logoImage,               // nullable; _buildShopItem handles fallback
+                                        ),
                                       ),
                                     ); // Use category object here
                                   }).toList(),
@@ -504,14 +532,16 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildShopItem(String name, String time, String logo) {
+  Widget _buildShopItem(String name, String time, String? logo) {
+    final hasLogo = (logo != null && logo.isNotEmpty);
     return Column(
       children: [
         CircleAvatar(
-          radius: 30.w,  // Use ScreenUtil for radius
-          backgroundImage: NetworkImage(logo),
+          radius: 30.w,
+          backgroundImage: hasLogo ? NetworkImage(logo!) : null,
+          child: hasLogo ? null : const Icon(Icons.store), // fallback icon
         ),
-        SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
+        SizedBox(height: 6.h),
         SizedBox(
           width: 66.w,
           child: Center(
@@ -519,10 +549,10 @@ class HomeView extends GetView<HomeController> {
               name,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12.sp,  // Use ScreenUtil for font size
+                fontSize: 12.sp,
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
-                overflow: TextOverflow.ellipsis
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -530,7 +560,7 @@ class HomeView extends GetView<HomeController> {
         Text(
           time,
           style: TextStyle(
-            fontSize: 10.sp,  // Use ScreenUtil for font size
+            fontSize: 10.sp,
             color: Colors.grey[600],
           ),
         ),

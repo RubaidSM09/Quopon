@@ -67,12 +67,12 @@ class EditProfileView extends GetView {
             ),
             Column(
               children: [
-                EditProfileField(label: 'Full Name', defaultText: 'Tanjiro Kamado', hintText: 'Enter Full Name',),
-                EditProfileField(label: 'Email Address', defaultText: 'tanjirokamado@email.com', hintText: 'Enter Email',),
-                EditProfileField(label: 'Phone Number', defaultText: '01234567890', hintText: 'Enter Phone Number',),
-                ChooseCountryField(),
-                ChooseCityField(),
-                EditProfileField(label: 'Address', defaultText: 'Starbucks, 9737 Destiny USA Dr, Syracuse, NY 13290, USA', hintText: 'Enter Address',),
+                // EditProfileField(label: 'Full Name', defaultText: 'Tanjiro Kamado', hintText: 'Enter Full Name',),
+                // EditProfileField(label: 'Email Address', defaultText: 'tanjirokamado@email.com', hintText: 'Enter Email',),
+                // EditProfileField(label: 'Phone Number', defaultText: '01234567890', hintText: 'Enter Phone Number',),
+                // ChooseCountryField(),
+                // ChooseCityField(),
+                // EditProfileField(label: 'Address', defaultText: 'Starbucks, 9737 Destiny USA Dr, Syracuse, NY 13290, USA', hintText: 'Enter Address',),
               ],
             ),
             GradientButton(

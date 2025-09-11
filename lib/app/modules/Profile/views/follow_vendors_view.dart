@@ -106,7 +106,7 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                       brandLogo: vendor.logoUrl,
                       dealStoreName: vendor.title,
                       dealType: vendor.category,
-                      activeDeals: vendor.activeDeals,
+                      activeDeals: vendor.menuCategory,
                     );
                   },
                 );

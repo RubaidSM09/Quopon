@@ -1,57 +1,52 @@
+// lib/app/modules/vendor_menu/views/vendor_menu_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
-import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/vendor_add_menu/views/vendor_add_menu_view.dart';
-import 'package:quopon/app/modules/vendor_deals/views/vendor_deals_view.dart';
 import 'package:quopon/app/modules/vendor_menu/views/menu_card_view.dart';
-import 'package:quopon/app/modules/vendor_side_profile/views/vendor_side_profile_view.dart';
-
 import '../../../../common/customTextButton.dart';
-import '../../Search/views/search_view.dart';
-import '../../vendor_create_deal/views/vendor_create_deal_view.dart';
-import '../../vendor_dashboard/views/vendor_dashboard_view.dart';
 import '../controllers/vendor_menu_controller.dart';
 
 class VendorMenuView extends GetView<VendorMenuController> {
   const VendorMenuView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 3;
+    // Ensure controller is available
+    Get.put(VendorMenuController());
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 60.h, 16.w, 22.h),  // Use ScreenUtil for padding
+          padding: EdgeInsets.fromLTRB(16.w, 60.h, 16.w, 22.h),
           child: Column(
             children: [
+              // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: Icon(Icons.arrow_back, color: Color(0xFF020711), size: 24.sp,),
+                    child: Icon(Icons.arrow_back, color: const Color(0xFF020711), size: 24.sp),
                   ),
                   Text(
                     'My Menu',
                     style: TextStyle(
-                        color: Color(0xFF020711),
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500
+                      color: const Color(0xFF020711),
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox.shrink(),
+                  const SizedBox.shrink(),
                 ],
               ),
 
-              SizedBox(height: 20.h),  // Use ScreenUtil for height
+              SizedBox(height: 20.h),
 
-              // Search bar
+              // Search (kept as-is)
               GestureDetector(
-                onTap: () {
-                  Get.to(SearchView());
-                },
+                onTap: () {/* navigate to search if needed */},
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   decoration: BoxDecoration(
@@ -68,12 +63,11 @@ class VendorMenuView extends GetView<VendorMenuController> {
                   ),
                   child: Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: TextField(
-                          readOnly: true, // <<— prevent actual editing and avoid focus issues
+                          readOnly: true,
                           decoration: InputDecoration(
                             hintText: 'Search food...',
-                            hintStyle: TextStyle(color: Colors.grey[500]),
                             border: InputBorder.none,
                           ),
                         ),
@@ -84,116 +78,77 @@ class VendorMenuView extends GetView<VendorMenuController> {
                 ),
               ),
 
-              SizedBox(height: 20.h),  // Use ScreenUtil for height
+              SizedBox(height: 20.h),
 
-              Row(
-                children: [
-                  Text(
-                    'Breakfast',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,  // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
+              // ===== Dynamic content =====
+              Obx(() {
+                if (controller.loading.value) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 40.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.error.isNotEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 40.h),
+                    child: Text(
+                      controller.error.value,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
                     ),
-                  ),
-                  SizedBox.shrink(),
-                ],
-              ),
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
-
-              Row(
-                children: [
-                  Text(
-                    'Lunch',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,  // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
+                  );
+                }
+                if (controller.menusByCategory.isEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 40.h),
+                    child: Text(
+                      'No menu items found',
+                      style: TextStyle(fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
                     ),
-                  ),
-                  SizedBox.shrink(),
-                ],
-              ),
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
+                  );
+                }
 
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
-
-              Row(
-                children: [
-                  Text(
-                    'Dinner',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,  // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
+                final sections = <Widget>[];
+                controller.menusByCategory.forEach((category, items) {
+                  sections.addAll([
+                    Row(
+                      children: [
+                        Text(
+                          category,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
+                            color: const Color(0xFF020711),
+                          ),
+                        ),
+                        const SizedBox.shrink(),
+                      ],
                     ),
-                  ),
-                  SizedBox.shrink(),
-                ],
-              ),
-              SizedBox(height: 15.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
-              SizedBox(height: 7.5.h),  // Use ScreenUtil for height
-              MenuCardView(
-                image: 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                title: 'Custom Chicken Steak Hoagie',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-                price: 5.29,
-              ),
+                    SizedBox(height: 15.h),
+
+                    ...items.map((m) {
+                      final parsedPrice = double.tryParse(m.price) ?? 0.0;  // your model has price as String
+                      final imageUrl = m.logoImage;                         // full URL from API
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 7.5.h),
+                        child: MenuCardView(
+                          // if you already added `isNetworkImage` earlier, pass true; otherwise this arg is optional.
+                          image: imageUrl.isNotEmpty
+                              ? imageUrl
+                              : 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
+                          isNetworkImage: imageUrl.isNotEmpty, // safe if your widget added this optional param
+                          title: m.title,
+                          description: m.description,
+                          price: parsedPrice,
+                        ),
+                      );
+                    }),
+                    SizedBox(height: 15.h),
+                  ]);
+                });
+
+                return Column(children: sections);
+              }),
             ],
           ),
         ),
@@ -203,16 +158,14 @@ class VendorMenuView extends GetView<VendorMenuController> {
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 24.r)]
+          boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 24.r)],
         ),
         child: GradientButton(
           text: 'Add Menu Item',
-          onPressed: () {
-            Get.to(VendorAddMenuView());
-          },
-          borderColor: [Color(0xFFF44646), Color(0xFFC21414)],
-          boxShadow: [BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1.r)],
-          colors: [Color(0xFFD62828), Color(0xFFC21414)],
+          onPressed: () => Get.to(VendorAddMenuView()),
+          borderColor: const [Color(0xFFF44646), Color(0xFFC21414)],
+          boxShadow: [BoxShadow(color: const Color(0xFF9A0000), spreadRadius: 1.r)],
+          colors: const [Color(0xFFD62828), Color(0xFFC21414)],
         ),
       ),
     );

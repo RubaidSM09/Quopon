@@ -26,5 +26,17 @@ class Api {
 
   /// Profile
   static const followedVendors = "$baseUrl/discover/followed-vendors/";
-  static const menu = "$baseUrl/discover/menu/";
+  static const cart = "$baseUrl/discover/cart/";
+
+  static String menu(int userId) {
+    return "$baseUrl/discover/menu/1/name";
+  }
+
+  static String menuPatch(int menuId) {
+    return "$baseUrl/discover/menu/$menuId/update-item-selection/";
+  }
+
+  /// Orders
+  static const activeOrders = "$baseUrl/discover/my-orders/?status=active";
+  static const completedOrders = "$baseUrl/discover/my-orders/?status=completed";
 }

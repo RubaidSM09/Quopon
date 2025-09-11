@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_fail_vendor_view.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_success_vendor_view.dart';
@@ -16,6 +19,32 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
 
   int _selectedIndex = 2;
   bool _isScanned = false;
+
+  Future<void> _handleQRCode(String code) async {
+    // API endpoint URL
+    final String url = 'http://10.10.13.52:7000/discover/qr-scanner/';
+
+    try {
+      // Sending GET request to the API with the QR code
+      final response = await http.get(Uri.parse('$url?code=$code'));
+
+      if (response.statusCode == 200) {
+        // Parse the response
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['details'] == "No active offer found.") {
+          Get.dialog(QrFailVendorView());
+        } else {
+          Get.dialog(QrSuccessVendorView(dealTitle: '50% Off Any Grande Beverage', dealStoreName: 'Starbucks', brandLogo: 'assets/images/deals/details/Starbucks_Logo.png', time: '01:05 AM'));
+        }
+      } else {
+        // Handle unsuccessful API response
+        Get.snackbar("Error", "Failed to fetch data from API.");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "An error occurred: $e");
+    }
+  }
 
   void _showQRSuccess(BuildContext context, String dealTitle, String dealStoreName, String brandLogo, String time) {
     showDialog(
@@ -50,6 +79,9 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
                   _isScanned = true;
                   final String code = barcodes.first.rawValue!;
                   debugPrint('Scanned: $code');
+
+                  // Make the API call to validate QR code
+                  _handleQRCode(code);
 
                   // Reset after 3 seconds
                   Future.delayed(const Duration(seconds: 3), () {

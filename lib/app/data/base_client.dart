@@ -23,6 +23,10 @@ class BaseClient {
     return await _storage.read(key: 'refresh_token');
   }
 
+  static Future<String?> getUserId() async {
+    return await _storage.read(key: 'user_id');
+  }
+
   static Future<Map<String, String>> authHeaders() async {
     String? token = await getAccessToken();
     return {
@@ -35,18 +39,19 @@ class BaseClient {
     'Content-Type': 'application/json',
   };
 
-  static getRequest({required String api, Map<String, String>? params, Map<String, String>? headers}) async {
-
+  // GET
+  static Future<http.Response> getRequest({
+    required String api,
+    Map<String, String>? params,
+    Map<String, String>? headers,
+  }) async {
     debugPrint("API Hit: $api");
     debugPrint("Header: $headers");
 
-    final resolvedHeaders = headers != null ? await headers : null;
-
-    http.Response response = await http.get(
+    return http.get(
       Uri.parse(api).replace(queryParameters: params),
-      headers: resolvedHeaders,
+      headers: headers,
     );
-    return response;
   }
 
   static postRequest({required String api, body, headers}) async {
@@ -54,6 +59,7 @@ class BaseClient {
     debugPrint("API Hit: $api");
     debugPrint("body: $body");
     debugPrint("headers: $headers");
+    print('Rubaid');
     http.Response response = await http.post(
       Uri.parse(api),
       body: body,
@@ -63,16 +69,21 @@ class BaseClient {
 
     return response;
   }
-  static patchRequest({required String api, body,headers}) async {
 
+  // PATCH (JSON)
+  static Future<http.Response> patchRequest({
+    required String api,
+    dynamic body,
+    Map<String, String>? headers,
+  }) async {
     debugPrint("API Hit: $api");
     debugPrint("body: $body");
-    http.Response response = await http.patch(
+
+    return http.patch(
       Uri.parse(api),
-      body: body,
       headers: headers,
+      body: body == null ? null : jsonEncode(body),
     );
-    return response;
   }
 
   static putRequest({required String api, body,headers}) async {
@@ -103,6 +114,8 @@ class BaseClient {
 
   static handleResponse(http.Response response) async {
     try {
+      print(response.statusCode);
+
       if (response.statusCode >= 200 && response.statusCode <= 210) {
         debugPrint('SuccessCode: ${response.statusCode}');
         debugPrint('SuccessResponse: ${response.body}');

@@ -9,7 +9,7 @@ import '../../Cart/controllers/cart_controller.dart';
 import '../../Checkout/controllers/checkout_controller.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
-  final double subTotal;
+  final int? subTotal;
   final double deliveryCharge;
 
   const CheckoutView({

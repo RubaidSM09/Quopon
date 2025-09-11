@@ -317,9 +317,11 @@ class DealDetailView extends StatelessWidget {
                       onPressed: () {
                         Get.to(
                             VendorProfileView(
+                              vendorId: 0,
                               logo: brandLogo,
                               name: dealStoreName,
                               type: 'Cafe',
+                              address: 'Downtown',
                             )
                         );
                       },

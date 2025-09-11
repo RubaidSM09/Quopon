@@ -3,17 +3,20 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/signUpProcess/controllers/sign_up_process_vendor_controller.dart';
 
+import '../../../../common/customTextButton.dart';
+import '../../../data/model/vendor_category.dart';
+
 class BusinessProfileVendorView extends GetView<SignUpProcessVendorController> {
   final VoidCallback onNext;
   final VoidCallback onSkip;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  String _selectedCategory = 'Select';
 
   BusinessProfileVendorView({super.key, required this.onNext, required this.onSkip});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(SignUpProcessVendorController());
+    controller.fetchVendorCategories();
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
@@ -38,97 +41,75 @@ class BusinessProfileVendorView extends GetView<SignUpProcessVendorController> {
               ),
             ),
             SizedBox(height: 40.h), // Use ScreenUtil for height spacing
-            Center(
-              child: Column(
-                children: [
-                  Container(
-                    width: 80.w, // Use ScreenUtil for width
-                    height: 80.h, // Use ScreenUtil for height
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      'assets/images/CompleteProfile/Cloud.png',
-                      color: Color(0xFF020711),
-                      height: 30.h,
-                      width: 30.w,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Upload Profile Picture',
-                    style: TextStyle(
-                      fontSize: 14.sp, // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 40.h), // Use ScreenUtil for height spacing
             _buildTextField(
               'Store Name',
               'Enter store name',
-              _nameController,
+              controller.nameController,
             ),
             SizedBox(height: 20.h), // Use ScreenUtil for height spacing
             _buildTextField(
               'KVK Number',
               'Enter KVK number',
-              _nameController,
+              controller.kvkNumberController,
             ),
             SizedBox(height: 20.h), // Use ScreenUtil for height spacing
             _buildTextField(
               'Phone Number',
               'Enter phone number',
-              _phoneController,
+              controller.phoneController,
             ),
             SizedBox(height: 20.h), // Use ScreenUtil for height spacing
             _buildTextField(
               'Store Address',
               'Enter store address',
-              _nameController,
+              controller.addressController,
             ),
             SizedBox(height: 20.h), // Use ScreenUtil for height spacing
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Category',
-                  style: TextStyle(
-                    fontSize: 16.sp, // Use ScreenUtil for font size
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+            Obx(() {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Category',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8.h), // Use ScreenUtil for height spacing
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w), // Use ScreenUtil for padding
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8.r), // Use ScreenUtil for border radius
+                  SizedBox(height: 8.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: DropdownButton<int>(
+                      value: controller.selectedCategoryId.value == 0
+                          ? null
+                          : controller.selectedCategoryId.value,
+                      isExpanded: true,
+                      underline: Container(),
+                      items: [
+                        DropdownMenuItem<int>(
+                          value: 0,
+                          child: Text('Select'),
+                        ),
+                        ...controller.vendorCategories.map((VendorCategory category) {
+                          return DropdownMenuItem<int>(
+                            value: category.id, // Store the id
+                            child: Text(category.categoryTitle),
+                          );
+                        }),
+                      ],
+                      onChanged: (int? newValue) {
+                        controller.selectedCategoryId.value = newValue!;
+                      },
+                    ),
                   ),
-                  child: DropdownButton<String>(
-                    value: _selectedCategory,
-                    isExpanded: true,
-                    underline: Container(),
-                    items: ['Select',]
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      // setState(() {
-                      //   _selectedLanguage = newValue!;
-                      // });
-                    },
-                  ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ],
         ),
       ),

@@ -6,9 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUti
 class ItemCard extends GetView {
   final String title;
   final double price;
-  final double calory;
+  final int calory;
   final String description;
   final String? image;
+
+  // 🔹 NEW: tell the card whether to load from network or asset
+  final bool isNetworkImage;
 
   const ItemCard({
     required this.title,
@@ -16,6 +19,7 @@ class ItemCard extends GetView {
     required this.calory,
     required this.description,
     this.image,
+    this.isNetworkImage = false, // default keeps old behavior
     super.key,
   });
 
@@ -85,12 +89,13 @@ class ItemCard extends GetView {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.sp), // Apply ScreenUtil to borderRadius
-                  child: Image.network(
+                  child: isNetworkImage
+                      ? Image.network(
                     image!,
                     width: 84.w, // Apply ScreenUtil to width
                     height: 84.h, // Apply ScreenUtil to height
                     fit: BoxFit.cover,
-                  ),
+                  ) : Image.asset(image!),
                 ),
                 Positioned(
                   bottom: 5.h, // Apply ScreenUtil to height

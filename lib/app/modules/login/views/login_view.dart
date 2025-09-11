@@ -98,7 +98,7 @@ class LoginView extends GetView<LoginController> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  Get.to(ForgotPasswordView());
+                  Get.to(ForgotPasswordView(userType: 'user',));
                 },
                 child: Text(
                   'Forgot Password?',

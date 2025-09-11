@@ -5,126 +5,166 @@ import 'package:quopon/app/modules/Cart/views/cart_card_view.dart';
 import 'package:quopon/app/modules/Checkout/views/checkout_view.dart';
 
 import '../../../../common/customTextButton.dart';
+// ✅ Keep only the correct controller import (remove the other to avoid conflicts)
+import '../../../data/model/cart.dart';
 import '../../Cart/controllers/cart_controller.dart';
-import '../controllers/cart_controller.dart';
+// import '../controllers/cart_controller.dart'; // ❌ remove if duplicate
 
 class CartView extends GetView<CartController> {
   const CartView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Get.put(CartController());
+    // ❌ Don’t create controllers in build()
+    // Get.put(CartController());
+
+    String money(num v) => v.toStringAsFixed(2);
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(Icons.arrow_back, size: 24.sp), // ScreenUtil applied
-                  ),
-                  Text(
-                    'Cart',
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
-                  ),
-                  Image.asset("assets/images/Cart/Orders.png", width: 24.w, height: 24.h), // ScreenUtil applied
-                ],
-              ),
-              SizedBox(height: 20.h), // ScreenUtil applied
+      backgroundColor: const Color(0xFFF9FBFC),
 
-              Obx(() {
-                if(controller.cart.isEmpty){
-                  return const Text("No active add-ons available.");
-                }
+      body: Obx(() {
+        // Safely derive current cart and data
+        final current = controller.cart.isNotEmpty ? controller.cart.first : null;
+        final items = current?.items ?? const <Items>[];
+        final summary = current?.priceSummary;
 
-                return Container(
-                  width: 500.w, // ScreenUtil applied
+        final subTotal = (summary?.subTotalPrice ?? 0).toDouble();
+        final delivery = (summary?.deliveryCharges ?? 0).toDouble();
+        final total = (summary?.inTotalPrice ?? (subTotal + delivery)).toDouble();
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+            child: Column(
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: Get.back,
+                      child: Icon(Icons.arrow_back, size: 24.sp),
+                    ),
+                    Text(
+                      'Cart',
+                      style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
+                    ),
+                    Image.asset("assets/images/Cart/Orders.png", width: 24.w, height: 24.h),
+                  ],
+                ),
+
+                SizedBox(height: 20.h),
+
+                Container(
+                  height: 48.h, // ScreenUtil applied
+                  width: 398.w, // ScreenUtil applied
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
+                      borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
+                      color: Color(0xFFF1F3F4)
                   ),
-                  child: Column(
-                    children: controller.cart.asMap().entries.map((entry) {
-                      final option = entry.value;
-                      final index = entry.key;
-
-                      return Padding(
-                        padding: EdgeInsets.all(12.w), // ScreenUtil applied
-                        child: CartCardView(cart: option),
-                      );
-                    }).toList(),
-                  ),
-                );
-              }),
-
-              SizedBox(height: 20.h), // ScreenUtil applied
-
-              Container(
-                width: 500.w, // ScreenUtil applied
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(12.w), // ScreenUtil applied
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Sub Total',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                  child: Padding(
+                    padding: EdgeInsets.all(4.w), // ScreenUtil applied
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if(!controller.isDelivery.value) {
+                              controller.isDelivery.value = !controller.isDelivery.value;
+                            }
+                          },
+                          child: Container(
+                            height: 40.h, // ScreenUtil applied
+                            width: 185.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
+                              color: controller.isDelivery.value ? Color(0xFFD62828) : Color(0xFFF1F3F4),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Delivery',
+                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: controller.isDelivery.value ? Color(0xFFFFFFFF) : Color(0xFF6F7E8D)), // ScreenUtil applied
+                              ),
+                            ),
                           ),
-                          Text(
-                            '\$${controller.cart.fold(0.0, (sum, cartItem) => sum + cartItem.price).toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if(controller.isDelivery.value) {
+                              controller.isDelivery.value = !controller.isDelivery.value;
+                            }
+                          },
+                          child: Container(
+                            height: 40.h, // ScreenUtil applied
+                            width: 185.w, // ScreenUtil applied
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
+                                color: !controller.isDelivery.value ? Color(0xFFD62828) : Color(0xFFF1F3F4)
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Pickup',
+                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: !controller.isDelivery.value ? Color(0xFFFFFFFF) : Color(0xFF6F7E8D)), // ScreenUtil applied
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Delivery Charges',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
-                          ),
-                          Text(
-                            '\$1.99',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
-                          ),
-                        ],
-                      ),
-                      Divider(color: Color(0xFFEAECED), thickness: 1),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
-                          ),
-                          Text(
-                            '\$${(controller.cart.fold(0.0, (sum, cartItem) => sum + cartItem.price) + 1.99).toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              )
-            ],
+
+                SizedBox(height: 20.h),
+
+                // Items
+                if (items.isEmpty)
+                  const Text("Your cart is empty.")
+                else
+                  Container(
+                    width: 500.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Column(
+                      children: List.generate(items.length, (i) {
+                        return Padding(
+                          padding: EdgeInsets.all(12.w),
+                          child: CartCardView(items: items[i]),
+                        );
+                      }),
+                    ),
+                  ),
+
+                SizedBox(height: 20.h),
+
+                // Price summary (only when a cart exists)
+                if (current != null)
+                  Container(
+                    width: 500.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Column(
+                        children: [
+                          _priceRow('Sub Total', '\$${money(subTotal)}'),
+                          _priceRow('Delivery Charges', '\$${money(delivery)}'),
+                          const Divider(color: Color(0xFFEAECED), thickness: 1),
+                          _priceRow('Total', '\$${money(total)}'),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
 
       bottomNavigationBar: Container(
         color: Colors.white,
@@ -132,7 +172,7 @@ class CartView extends GetView<CartController> {
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
           child: GradientButton(
             onPressed: () {
-              Get.to(() => CheckoutView(subTotal: controller.cart.fold(0.0, (sum, cartItem) => sum + cartItem.price), deliveryCharge: 1.99));
+              Get.to(() => CheckoutView(subTotal: (controller.cart[0].priceSummary!.subTotalPrice)!.toInt(), deliveryCharge: 1.99));
             },
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],
@@ -152,4 +192,14 @@ class CartView extends GetView<CartController> {
       ),
     );
   }
+}
+
+Widget _priceRow(String left, String right) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(left, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xFF6F7E8D))),
+      Text(right, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711))),
+    ],
+  );
 }

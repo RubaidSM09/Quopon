@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:quopon/app/modules/forgot_password/views/set_new_password_view.dart';
+import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_vendor_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 
 import '../../../../common/customTextButton.dart';
@@ -16,16 +18,28 @@ import '../controllers/forgot_password_controller.dart';
 
 class MailVerificationCodeView extends GetView<ForgotPasswordController> {
   final String email;
+  final String password;
   final bool passwordForgot;
+  final String userType;
   final emailController = TextEditingController();
   bool isLoading = false;
 
   MailVerificationCodeView({
     required this.email,
+    this.password = '',
     required this.passwordForgot,
+    required this.userType,
     super.key
   }) {
     Get.put(ForgotPasswordController());
+  }
+
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  Future<void> storeTokens(String accessToken, String refreshToken, int userId) async {
+    await _storage.write(key: 'access_token', value: accessToken);
+    await _storage.write(key: 'refresh_token', value: refreshToken);
+    await _storage.write(key: 'user_id', value: userId.toString());
   }
 
   // API call to verify OTP
@@ -51,8 +65,62 @@ class MailVerificationCodeView extends GetView<ForgotPasswordController> {
       controller.setLoading(false); // Set loading to false
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        if (password != '') {
+          var body = {
+            'email': email,
+            'password': password,
+          };
+
+          var headers = {
+            'Content-Type': 'application/json',
+          };
+
+          final response = await BaseClient.postRequest(
+            api: Api.login,
+            body: jsonEncode(body),
+            headers: headers,
+          );
+
+          //final result = await BaseClient.handleResponse(response);
+
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            // Assuming the server responds with success on code 200 or 201
+            final responseBody = jsonDecode(response.body);
+            final accessToken = responseBody['access'];
+            final refreshToken = responseBody['refresh'];
+            final userId = responseBody['id'];
+
+            // Store the tokens securely
+            await storeTokens(accessToken, refreshToken, userId);
+
+            print(':::::::::::::::responseBody:::::::::::::::::::::$responseBody');
+            print(':::::::::::::::accessToken:::::::::::::::::::::$accessToken');
+            print(':::::::::::::::refreshToken:::::::::::::::::::::$refreshToken');
+
+            Get.snackbar('Success', 'Logged in successfully!');
+
+            //Get.off(() => VerifyOTPView());
+
+
+            // SharedPreferences
+
+            // final prefs = await SharedPreferences.getInstance();
+            // await prefs.setBool('isLoggedIn', true); // User is logged in
+
+            // Get.offAll(() => DashboardView());
+
+            // homeController.fetchProfileData();
+            // homeController.checkVerified(username);
+
+            // Get.to(LandingView());
+          } else {
+            final responseBody = jsonDecode(response.body);
+            Get.snackbar('Login failed', responseBody['message'] ?? 'Please use Correct UserName and Password');
+          }
+        }
+
         // If OTP verification is successful, navigate to the next screen
-        passwordForgot ? Get.to(SetNewPasswordView(email: email)) : Get.to(SignUpProcessView());
+        passwordForgot ? Get.to(SetNewPasswordView(email: email, userType: userType,)) : userType == 'user' ? Get.to(SignUpProcessView()) : Get.to(SignUpProcessVendorView());
       } else {
         // Show error message
         final responseData = json.decode(response.body);

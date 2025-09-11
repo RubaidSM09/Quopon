@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/login/views/login_vendor_view.dart';
+import 'package:quopon/app/modules/login/views/login_view.dart';
 import 'package:quopon/app/modules/signUpProcess/views/sign_up_process_view.dart';
 
 import '../../../data/api.dart';
@@ -43,7 +45,7 @@ class ForgotPasswordController extends GetxController {
     isLoading.value = value;
   }
 
-  Future<void> forgotPassword(String email) async {
+  Future<void> forgotPassword(String email, String userType) async {
 
     if (email.isEmpty) {
       // print('Please enter your email');
@@ -83,7 +85,7 @@ class ForgotPasswordController extends GetxController {
 
         Get.snackbar('Success', 'Account created successfully!');
         //Get.off(() => VerifyOTPView());
-        Get.to(MailVerificationCodeView(email: email, passwordForgot: true,));
+        Get.to(MailVerificationCodeView(email: email, passwordForgot: true, userType: userType,));
 
 
         // SharedPreferences
@@ -107,7 +109,7 @@ class ForgotPasswordController extends GetxController {
     }
   }
 
-  Future<void> setNewPassword(String email, String newPassword, String confirmPassword) async {
+  Future<void> setNewPassword(String email, String newPassword, String confirmPassword, String userType) async {
 
     if (newPassword.isEmpty) {
       // print('Please enter your email');
@@ -158,7 +160,7 @@ class ForgotPasswordController extends GetxController {
 
         Get.snackbar('Success', 'Account created successfully!');
         //Get.off(() => VerifyOTPView());
-        Get.to(SignUpProcessView());
+        userType == 'user' ? Get.to(LoginView()) : Get.to(LoginVendorView());
 
 
         // SharedPreferences

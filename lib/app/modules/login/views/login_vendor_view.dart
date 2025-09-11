@@ -9,6 +9,8 @@ import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.
 import 'package:quopon/common/custom_textField.dart';
 
 import '../../../../common/customTextButton.dart';
+import '../../forgot_password/views/forgot_password_view.dart';
+import '../controllers/login_controller.dart';
 import '../controllers/login_vendor_controller.dart';
 
 class LoginVendorView extends GetView<LoginVendorController> {
@@ -17,6 +19,7 @@ class LoginVendorView extends GetView<LoginVendorController> {
 
   @override
   Widget build(BuildContext context) {
+    final LoginController loginController = Get.put(LoginController());
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SafeArea(
@@ -73,7 +76,7 @@ class LoginVendorView extends GetView<LoginVendorController> {
                 headingText: 'Email Address',
                 fieldText: 'Enter email address',
                 iconImagePath: 'assets/images/login/Email.png',
-                controller: _emailController,
+                controller: loginController.emailController,
                 isRequired: true,
               ),
 
@@ -84,7 +87,7 @@ class LoginVendorView extends GetView<LoginVendorController> {
                 headingText: 'Password',
                 fieldText: '••••••••••••',
                 iconImagePath: 'assets/images/login/Password.png',
-                controller: _passwordController,
+                controller: loginController.passwordController,
                 isRequired: true,
                 isPassword: true,
               ),
@@ -95,7 +98,9 @@ class LoginVendorView extends GetView<LoginVendorController> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(ForgotPasswordView(userType: 'vendor',));
+                  },
                   child: Text(
                     'Forgot Password?',
                     style: TextStyle(
@@ -113,7 +118,7 @@ class LoginVendorView extends GetView<LoginVendorController> {
               GradientButton(
                 text: 'Log In',
                 onPressed: () {
-                  Get.to(LandingVendorView());
+                  loginController.userLogin();
                 },
                 colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                 boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],

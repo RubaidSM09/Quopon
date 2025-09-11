@@ -106,16 +106,28 @@ class VendorDealCard extends GetView {
     super.key,
   });
 
+  String _formatDate(String dateStr) {
+    try {
+      final dt = DateTime.parse(dateStr);
+      return DateFormat("dd MMM yyyy").format(dt);
+    } catch (_) {
+      return dateStr; // fallback if parsing fails
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final start = _formatDate(startValidTime);
+    final end = _formatDate(endValidTime);
+
     return GestureDetector(
       onTap: () {
         Get.to(VendorDealPerformanceView());
       },
       child: Container(
-        padding: EdgeInsets.only(right: 12.w, left: 8.w, top: 8.h, bottom: 8.h), // Use ScreenUtil for padding
+        padding: EdgeInsets.only(right: 12.w, left: 8.w, top: 8.h, bottom: 8.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
+          borderRadius: BorderRadius.circular(12.r),
           color: Colors.white,
           boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)],
         ),
@@ -125,8 +137,18 @@ class VendorDealCard extends GetView {
           children: [
             Row(
               children: [
-                Image.asset(image),
-                SizedBox(width: 10.w), // Use ScreenUtil for spacing
+                Container(
+                  width: 80.w,
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: Image.network(image, fit: BoxFit.cover, scale: 4),
+                  ),
+                ),
+                SizedBox(width: 10.w),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,8 +157,8 @@ class VendorDealCard extends GetView {
                       title,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.sp, // Use ScreenUtil for font size
-                        color: Color(0xFF020711),
+                        fontSize: 16.sp,
+                        color: const Color(0xFF020711),
                       ),
                     ),
                     Row(
@@ -145,24 +167,24 @@ class VendorDealCard extends GetView {
                           '${NumberFormat.decimalPattern().format(views)} Views    ',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 12.sp, // Use ScreenUtil for font size
-                            color: Color(0xFF6F7E8D),
+                            fontSize: 12.sp,
+                            color: const Color(0xFF6F7E8D),
                           ),
                         ),
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xFFCAD9E8),
                           ),
-                          height: 5.h, // Use ScreenUtil for height
-                          width: 5.w, // Use ScreenUtil for width
+                          height: 5.h,
+                          width: 5.w,
                         ),
                         Text(
                           '   ${NumberFormat.decimalPattern().format(redemptions)} Redemptions',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 12.sp, // Use ScreenUtil for font size
-                            color: Color(0xFF6F7E8D),
+                            fontSize: 12.sp,
+                            color: const Color(0xFF6F7E8D),
                           ),
                         ),
                       ],
@@ -173,16 +195,16 @@ class VendorDealCard extends GetView {
                           'Valid: ',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 12.sp, // Use ScreenUtil for font size
-                            color: Color(0xFFD62828),
+                            fontSize: 12.sp,
+                            color: const Color(0xFFD62828),
                           ),
                         ),
                         Text(
-                          '$startValidTime - $endValidTime',
+                          '$start - $end',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 12.sp, // Use ScreenUtil for font size
-                            color: Color(0xFF6F7E8D),
+                            fontSize: 12.sp,
+                            color: const Color(0xFF6F7E8D),
                           ),
                         ),
                       ],
@@ -195,7 +217,7 @@ class VendorDealCard extends GetView {
               onTap: () {
                 Get.bottomSheet(DealsOptionsView());
               },
-              child: Icon(Icons.more_vert),
+              child: const Icon(Icons.more_vert),
             ),
           ],
         ),

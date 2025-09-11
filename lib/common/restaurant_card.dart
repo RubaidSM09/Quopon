@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:quopon/app/modules/QuoponPlus/views/quopon_plus_view.dart';
 
 class RestaurantCard extends GetView {
@@ -911,6 +912,15 @@ class ActiveDealCard extends GetView {
     required this.dealValidity,
   });
 
+  String _formatDate(String dateStr) {
+    try {
+      final dt = DateTime.parse(dateStr);
+      return DateFormat("dd MMM yyyy").format(dt);
+    } catch (_) {
+      return dateStr; // fallback if parsing fails
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -956,7 +966,7 @@ class ActiveDealCard extends GetView {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(dealImg),
+                        image: NetworkImage(dealImg),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -1031,7 +1041,7 @@ class ActiveDealCard extends GetView {
                       ),
                     ),
                     Text(
-                      dealValidity,
+                      _formatDate(dealValidity),
                       style: TextStyle(
                         fontSize: 12.sp, // Use ScreenUtil for font size
                         fontWeight: FontWeight.w500,

@@ -6,28 +6,47 @@ import '../../../data/api.dart';
 import '../../../data/base_client.dart';
 
 class FollowedVendor {
-  final int id;
-  final String title;
-  final String category;
-  final String logoUrl;
-  final int activeDeals;
+  int id;
+  int menuCategory;
+  String title;
+  String category;
+  String logoUrl;
+  bool isFollowed;
+  String descriptions;
+  DateTime expiryDate;
 
   FollowedVendor({
     required this.id,
+    required this.menuCategory,
     required this.title,
     required this.category,
     required this.logoUrl,
-    this.activeDeals = 3,
+    required this.isFollowed,
+    required this.descriptions,
+    required this.expiryDate,
   });
 
-  factory FollowedVendor.fromJson(Map<String, dynamic> json) {
-    return FollowedVendor(
-      id: json['id'],
-      title: json['title'],
-      category: json['category'],
-      logoUrl: json['logo_url'],
-    );
-  }
+  factory FollowedVendor.fromJson(Map<String, dynamic> json) => FollowedVendor(
+    id: json["id"],
+    menuCategory: json["menu_category"],
+    title: json["title"],
+    category: json["category"],
+    logoUrl: json["logo_url"],
+    isFollowed: json["is_followed"],
+    descriptions: json["descriptions"],
+    expiryDate: DateTime.parse(json["expiry_date"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "menu_category": menuCategory,
+    "title": title,
+    "category": category,
+    "logo_url": logoUrl,
+    "is_followed": isFollowed,
+    "descriptions": descriptions,
+    "expiry_date": expiryDate.toIso8601String(),
+  };
 }
 
 class FollowVendorsController extends GetxController {

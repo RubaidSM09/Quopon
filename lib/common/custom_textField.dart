@@ -251,11 +251,15 @@ class CustomCategoryField extends GetView {
   final String selectedCategory;
   final List<String> categories;
 
+  /// 🔹 New: callback to notify parent about selection change
+  final ValueChanged<String>? onCategorySelected;
+
   const CustomCategoryField({
     required this.fieldName,
     required this.isRequired,
     this.selectedCategory = 'Select',
     this.categories = const ['Select'],
+    this.onCategorySelected, // 🔹 new (optional)
     super.key,
   });
 
@@ -269,7 +273,7 @@ class CustomCategoryField extends GetView {
             Text(
               fieldName,
               style: TextStyle(
-                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
@@ -278,40 +282,43 @@ class CustomCategoryField extends GetView {
                 ? Text(
               '*',
               style: TextStyle(
-                fontSize: 16.sp,  // Use ScreenUtil for font size
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFFD62828),
+                color: const Color(0xFFD62828),
               ),
             )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
         ),
-        SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
+        SizedBox(height: 8.h),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),  // Use ScreenUtil for padding
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
-            border: Border.all(color: Color(0xFFEAECED))
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: const Color(0xFFEAECED)),
           ),
           child: DropdownButton<String>(
             value: selectedCategory,
             isExpanded: true,
             underline: Container(),
-            items: categories
-                .map((String value) {
+            items: categories.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(
                   value,
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.sp,
+                    color: const Color(0xFF6F7E8D),
+                  ),
                 ),
               );
             }).toList(),
             onChanged: (String? newValue) {
-              // setState(() {
-              //   selectedLanguage = newValue!;
-              // });
+              if (newValue == null) return;
+              // 🔹 Let the parent handle state & id mapping
+              onCategorySelected?.call(newValue);
             },
           ),
         ),

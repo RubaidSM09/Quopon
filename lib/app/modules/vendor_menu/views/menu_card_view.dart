@@ -1,8 +1,7 @@
+// lib/app/modules/vendor_menu/views/menu_card_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
-
-import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/vendor_menu/views/menu_options_view.dart';
 
 class MenuCardView extends GetView {
@@ -11,37 +10,44 @@ class MenuCardView extends GetView {
   final String description;
   final double price;
 
+  // 🔹 NEW: tell the card whether to load from network or asset
+  final bool isNetworkImage;
+
   const MenuCardView({
     required this.image,
     required this.title,
     required this.description,
     required this.price,
-    super.key
+    this.isNetworkImage = false, // default keeps old behavior
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(right: 12.w, left: 8.w, top: 8.h, bottom: 8.h),  // Use ScreenUtil for padding
+      padding: EdgeInsets.only(right: 12.w, left: 8.w, top: 8.h, bottom: 8.h),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+        borderRadius: BorderRadius.circular(12.r),
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16.r)],  // Use ScreenUtil for blur radius
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16.r)],
       ),
       child: Row(
         children: [
           Container(
-            height: 88.h,  // Use ScreenUtil for height
-            width: 88.w,  // Use ScreenUtil for width
+            height: 88.h,
+            width: 88.w,
             decoration: BoxDecoration(
-              color: Color(0xFFF4F6F7),
-              borderRadius: BorderRadius.circular(8.r),  // Use ScreenUtil for radius
+              color: const Color(0xFFF4F6F7),
+              borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Image.asset(
-              image,
-            ),
+            child: isNetworkImage
+                ? ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Image.network(image, fit: BoxFit.cover),
+            )
+                : Image.asset(image),
           ),
-          SizedBox(width: 10.w),  // Use ScreenUtil for width
+          SizedBox(width: 10.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,38 +61,36 @@ class MenuCardView extends GetView {
                       title,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,  // Use ScreenUtil for font size
-                        color: Color(0xFF020711),
+                        fontSize: 16.sp,
+                        color: const Color(0xFF020711),
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Get.bottomSheet(MenuOptionsView());
-                      },
-                      child: Icon(Icons.more_vert),
+                      onTap: () => Get.bottomSheet(const MenuOptionsView()),
+                      child: const Icon(Icons.more_vert),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                width: 278.w,  // Use ScreenUtil for width
+                width: 278.w,
                 child: Text(
                   description,
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 12.sp,  // Use ScreenUtil for font size
-                    color: Color(0xFF6F7E8D),
+                    fontSize: 12.sp,
+                    color: const Color(0xFF6F7E8D),
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
               ),
               Text(
-                '\$${price.toStringAsFixed(2)}',  // Format price to two decimal points
+                '\$${price.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16.sp,  // Use ScreenUtil for font size
-                  color: Color(0xFFD62828),
+                  fontSize: 16.sp,
+                  color: const Color(0xFFD62828),
                 ),
               ),
             ],

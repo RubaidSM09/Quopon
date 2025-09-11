@@ -12,10 +12,12 @@ class SetNewPasswordView extends GetView<ForgotPasswordController> {
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final String email;
+  final String userType;
   final ForgotPasswordController forgotPasswordController = Get.put(ForgotPasswordController());
 
   SetNewPasswordView({
     required this.email,
+    required this.userType,
     super.key
   });
   @override
@@ -104,7 +106,7 @@ class SetNewPasswordView extends GetView<ForgotPasswordController> {
                   GradientButton(
                     text: 'Update Password',
                     onPressed: () {
-                      forgotPasswordController.setNewPassword(email, newPasswordController.text.trim(), confirmPasswordController.text.trim());
+                      forgotPasswordController.setNewPassword(email, newPasswordController.text.trim(), confirmPasswordController.text.trim(), userType);
                     },
                     colors: [
                       const Color(0xFFD62828),

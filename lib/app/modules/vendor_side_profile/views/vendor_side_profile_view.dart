@@ -15,7 +15,7 @@ import '../../../../common/profileCard.dart';
 import '../../login/views/login_vendor_view.dart';
 import '../controllers/vendor_side_profile_controller.dart';
 
-class VendorSideProfileView extends GetView {
+class VendorSideProfileView extends GetView<VendorSideProfileController> {
   const VendorSideProfileView({super.key});
   @override
   Widget build(BuildContext context) {
@@ -26,62 +26,56 @@ class VendorSideProfileView extends GetView {
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: Padding(
-        padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
+        padding: EdgeInsets.all(16.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                SizedBox(height: 20.h),  // Use ScreenUtil for spacing
-                Center(
-                  child: Text(
-                    "Profile",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),  // Use ScreenUtil for font size
+            // Profile Header
+            SizedBox(height: 20.h),
+            Center(
+              child: Text("Profile", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp)),
+            ),
+            // Avatar and Name
+            Obx(() {
+              final profile = controller.profileData.value;
+              return Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40.r,
+                    backgroundImage: profile['logo_image'] != null
+                        ? NetworkImage(profile['logo_image'])
+                        : AssetImage("assets/images/deals/details/Starbucks_Logo.png"),
                   ),
-                ),
-              ],
-            ),
-            CircleAvatar(
-              radius: 40.r,  // Use ScreenUtil for radius
-              backgroundImage: AssetImage("assets/images/deals/details/Starbucks_Logo.png"),
-            ),
-            Column(
-              children: [
-                Text(
-                  "Starbucks",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
-                ),
-                Text(
-                  "starbucks@email.com",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
-                ),
-              ],
-            ),
+                  SizedBox(height: 10.h),
+                  Text(profile['name'] ?? 'Business Name', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                  Text(profile['vendor_email'] ?? 'No email', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D))),
+                ],
+              );
+            }),
+
+            // Business Info Section
             Column(
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
+                    padding: EdgeInsets.all(16.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Business Info",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp),
-                        ),
-                        SizedBox(height: 16.h,),
+                        Text("Business Info", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp)),
+                        SizedBox(height: 16.h),
                         GestureDetector(
                           onTap: () {
-                            Get.to(EditBusinessProfileView());
+                            Get.to(EditBusinessProfileView()); // Navigate to edit page
                           },
                           child: ProfileCard(icon: 'assets/images/Profile/Edit.png', title: 'Edit Business Profile'),
                         ),
-                        SizedBox(height: 16.h,),
+                        SizedBox(height: 16.h),
                         GestureDetector(
                           onTap: () {
                             Get.to(VendorMenuView());

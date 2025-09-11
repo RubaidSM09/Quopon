@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quopon/app/data/model/menu.dart';
 import 'package:quopon/app/modules/ProductDetails/views/product_details_view.dart';
 import 'package:quopon/app/modules/VendorProfile/views/cart_bottom_view.dart';
 import 'package:quopon/common/ItemCard.dart';
@@ -9,20 +10,29 @@ import 'package:quopon/common/restaurant_card.dart';
 import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
-  final String logo;
+  final int vendorId;
+  final String? logo;
   final String name;
   final String type;
+  final String address;
 
   const VendorProfileView({
+    required this.vendorId,
     required this.logo,
     required this.name,
     required this.type,
+    required this.address,
     super.key
   });
 
   @override
   Widget build(BuildContext context) {
     Get.put(VendorProfileController());
+    print(vendorId);
+    controller.fetchDeals(vendorId);
+    controller.fetchMenus(vendorId);
+
+    final hasLogo = logo != null && logo!.trim().isNotEmpty;
 
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
@@ -54,9 +64,8 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           children: [
                             CircleAvatar(
                               radius: 30.h, // ScreenUtil applied
-                              backgroundImage: NetworkImage(
-                                logo,
-                              ),
+                              backgroundImage: hasLogo ? NetworkImage(logo!) : null,
+                              child: hasLogo ? null : const Icon(Icons.store),
                             ),
                             SizedBox(height: 10.h), // ScreenUtil applied
                             Text(
@@ -77,7 +86,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                 ),
                                 SizedBox(width: 5.w), // ScreenUtil applied
                                 Text(
-                                  'Downtown',
+                                  address,
                                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
                                 SizedBox(width: 5.w), // ScreenUtil applied
@@ -172,7 +181,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     ],
                   ),
                   Obx(() {
-                    if (controller.activeDeals.isEmpty) {
+                    if (controller.deals.isEmpty) {
                       return const Text("No active deals available.");
                     }
 
@@ -180,14 +189,14 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       height: 253.h, // ScreenUtil applied
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: controller.activeDeals.length,
+                        itemCount: controller.deals.length,
                         itemBuilder: (context, index) {
-                          final deal = controller.activeDeals[index];
+                          final deal = controller.deals[index];
                           return ActiveDealCard(
-                            dealImg: deal.dealImg,
-                            dealTitle: deal.dealTitle,
-                            dealDescription: deal.dealDescription,
-                            dealValidity: deal.dealValidity,
+                            dealImg: deal.imageUrl,
+                            dealTitle: deal.title,
+                            dealDescription: deal.description,
+                            dealValidity: deal.endDate,
                           );
                         },
                       ),
@@ -200,40 +209,158 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),
                   ),
                   SizedBox(height: 6.h), // ScreenUtil applied
+
                   Obx(() {
-                    if (controller.menu.isEmpty) {
-                      return const Text("No active deals available.");
+                    if (controller.loading.value) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
                     }
+                    if (controller.error.isNotEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: Text(
+                          controller.error.value,
+                          style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                        ),
+                      );
+                    }
+                    if (controller.menusByCategory.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: Text(
+                          'No menu items found',
+                          style: TextStyle(fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
+                        ),
+                      );
+                    }
+
+                    final sections = <Widget>[];
+                    controller.menusByCategory.forEach((category, items) {
+                      sections.addAll([
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(100.r), // ScreenUtil applied
+                            ),
+                            child: Center(
+                              child: Text(
+                                category,
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]);
+                    });
 
                     return SizedBox(
                       height: 32.h, // ScreenUtil applied
-                      child: Row(
-                        children: controller.menu.map((menu) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Container(
-                              width: 92.w, // ScreenUtil applied
-                              height: 32.h, // ScreenUtil applied
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(100.r), // ScreenUtil applied
-                              ),
-                              child: Center(
-                                child: Text(
-                                  menu.name!,
-                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: sections,
+                        ),
                       )
                     );
                   }),
 
-                  SizedBox(height: 20.h), // ScreenUtil applied
+                  SizedBox(height: 15.h,),
 
                   Obx(() {
+                    if (controller.loading.value) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    if (controller.error.isNotEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: Text(
+                          controller.error.value,
+                          style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                        ),
+                      );
+                    }
+                    if (controller.menusByCategory.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 40.h),
+                        child: Text(
+                          'No menu items found',
+                          style: TextStyle(fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
+                        ),
+                      );
+                    }
+
+                    final sections = <Widget>[];
+                    controller.menusByCategory.forEach((category, items) {
+                      sections.addAll([
+                        Row(
+                          children: [
+                            Text(
+                              category,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.sp,
+                                color: const Color(0xFF020711),
+                              ),
+                            ),
+                            const SizedBox.shrink(),
+                          ],
+                        ),
+                        SizedBox(height: 15.h),
+
+                        ...items.map((m) {
+                          final parsedPrice = double.tryParse(m.price) ?? 0.0;  // your model has price as String
+                          final imageUrl = m.logoImage;                         // full URL from API
+
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 7.5.h),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => ProductDetailsView(
+                                  id: m.id,
+                                  title: m.title,
+                                  price: double.parse(m.price),
+                                  calory: 5,
+                                  description: m.description,
+                                  image: imageUrl,
+                                  // item: Items(),
+                                ));
+                              },
+                              child: ItemCard(
+                                // if you already added `isNetworkImage` earlier, pass true; otherwise this arg is optional.
+                                image: imageUrl.isNotEmpty
+                                    ? imageUrl
+                                    : 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
+                                isNetworkImage: imageUrl.isNotEmpty, // safe if your widget added this optional param
+                                title: m.title,
+                                description: m.description,
+                                price: parsedPrice,
+                                calory: 5,
+                              ),
+                            ),
+                          );
+                        }),
+                        SizedBox(height: 15.h),
+                      ]);
+                    });
+
+                    return Column(children: sections);
+
+
+                  }),
+
+                  SizedBox(height: 20.h), // ScreenUtil applied
+
+
+
+                  /*Obx(() {
                     if (controller.menu.isEmpty) {
                       return const Text("No active deals available.");
                     }
@@ -266,9 +393,10 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                     child: GestureDetector(
                                       onTap: () {
                                         Get.to(() => ProductDetailsView(
+                                          id: menu.id!,
                                           title: items.name!,
                                           price: double.parse(items.price!),
-                                          calory: (items.calories ?? 0).toDouble(),
+                                          calory: items.calories!,
                                           description: items.description!,
                                           image: items.imageUrl,
                                           item: items,
@@ -277,7 +405,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                       child: ItemCard(
                                         title: items.name!,
                                         price: double.parse(items.price!),
-                                        calory: (items.calories ?? 0).toDouble(),
+                                        calory: items.calories!,
                                         description: items.description!,
                                         image: items.imageUrl,
                                       ),
@@ -287,7 +415,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                               },
                               ).toList(),
 
-                              /*return SizedBox(
+                              *//*return SizedBox(
                               height: boxHeight,
                               child: ListView.builder(
                                 scrollDirection: Axis.vertical,
@@ -323,7 +451,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                     ),
                                   );
                                 },
-                              ),*/
+                              ),*//*
                             ),
 
                             SizedBox(height: 20.h),
@@ -331,7 +459,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                         );
                       }).toList(),
                     );
-                  }),
+                  }),*/
 
 
 

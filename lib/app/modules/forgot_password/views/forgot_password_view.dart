@@ -11,9 +11,13 @@ import '../controllers/forgot_password_controller.dart';
 
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
   final emailController = TextEditingController();
+  final String userType;
   final ForgotPasswordController forgotPasswordController = Get.put(ForgotPasswordController());
 
-  ForgotPasswordView({super.key});
+  ForgotPasswordView({
+    required this.userType,
+    super.key
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +92,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                   GradientButton(
                     text: 'Send Verification Code',
                     onPressed: () {
-                      forgotPasswordController.forgotPassword(emailController.text.trim());
+                      forgotPasswordController.forgotPassword(emailController.text.trim(), userType);
                     },
                     colors: [
                       const Color(0xFFD62828),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/modules/landing/views/landing_vendor_view.dart';
 import 'package:quopon/app/modules/landing/views/landing_view.dart';
 
 import '../../../../common/app_constant/app_constant.dart';
@@ -22,9 +23,10 @@ class LoginController extends GetxController {
   final FlutterSecureStorage _storage = FlutterSecureStorage(); // For secure storage
 
   // Store tokens securely
-  Future<void> storeTokens(String accessToken, String refreshToken) async {
+  Future<void> storeTokens(String accessToken, String refreshToken, int userId) async {
     await _storage.write(key: 'access_token', value: accessToken);
     await _storage.write(key: 'refresh_token', value: refreshToken);
+    await _storage.write(key: 'user_id', value: userId.toString());
   }
 
   void togglePasswordVisibility() {
@@ -71,9 +73,11 @@ class LoginController extends GetxController {
         final responseBody = jsonDecode(response.body);
         final accessToken = responseBody['access'];
         final refreshToken = responseBody['refresh'];
+        final userId = responseBody['id'];
+        final userType = responseBody['user_type'];
 
         // Store the tokens securely
-        await storeTokens(accessToken, refreshToken);
+        await storeTokens(accessToken, refreshToken, userId);
 
         print(':::::::::::::::responseBody:::::::::::::::::::::$responseBody');
         print(':::::::::::::::accessToken:::::::::::::::::::::$accessToken');
@@ -94,7 +98,7 @@ class LoginController extends GetxController {
         // homeController.fetchProfileData();
         // homeController.checkVerified(username);
 
-        Get.to(LandingView());
+        userType == 'vendor' ? Get.to(LandingView()) : Get.to(LandingView());
       } else {
         final responseBody = jsonDecode(response.body);
         Get.snackbar('Login failed', responseBody['message'] ?? 'Please use Correct UserName and Password');

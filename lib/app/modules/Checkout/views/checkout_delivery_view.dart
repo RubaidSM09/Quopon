@@ -9,7 +9,7 @@ import '../../../../common/custom_textField.dart';
 import '../controllers/checkout_controller.dart';
 
 class CheckoutDeliveryView extends GetView {
-  final double subTotal;
+  final int? subTotal;
   final double deliveryCharge;
   final String mapLocationImg;
   final _addNoteController = TextEditingController();
@@ -275,7 +275,7 @@ class CheckoutDeliveryView extends GetView {
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
                     ),
                     Text(
-                      '\$${(subTotal + deliveryCharge).toStringAsFixed(2)}',
+                      '\$${(subTotal! + deliveryCharge).toStringAsFixed(2)}',
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
                     ),
                   ],

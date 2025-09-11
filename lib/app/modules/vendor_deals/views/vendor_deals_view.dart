@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/Search/views/search_view.dart';
-import 'package:quopon/app/modules/vendor_dashboard/views/vendor_dashboard_view.dart';
-
-import '../../../../common/my_deals_card.dart';
-import '../../vendor_create_deal/views/vendor_create_deal_view.dart';
-import '../../vendor_menu/views/vendor_menu_view.dart';
+import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
+import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
+import 'package:quopon/common/my_deals_card.dart';
 import '../controllers/vendor_deals_controller.dart';
 
 class VendorDealsView extends GetView<VendorDealsController> {
@@ -14,13 +12,13 @@ class VendorDealsView extends GetView<VendorDealsController> {
 
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 1;
+    Get.put(VendorDealsController());
 
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),  // Use ScreenUtil for padding
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
           child: Column(
             children: [
               Row(
@@ -32,23 +30,30 @@ class VendorDealsView extends GetView<VendorDealsController> {
                     children: [
                       Text(
                         'Active Deals',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp, color: Color(0xFF020711)),  // Use ScreenUtil for font size
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                          color: Color(0xFF020711),
+                        ),
                       ),
                       Text(
                         'Manage your currently active deals.',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),  // Use ScreenUtil for font size
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.sp,
+                          color: Color(0xFF6F7E8D),
+                        ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+                        padding: EdgeInsets.all(8.w),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
-                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
-                        ),
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]),
                         child: GestureDetector(
                           onTap: () {
                             Get.to(VendorCreateDealView());
@@ -56,21 +61,19 @@ class VendorDealsView extends GetView<VendorDealsController> {
                           child: Icon(Icons.add),
                         ),
                       ),
-                      SizedBox(width: 12.w,),
+                      SizedBox(width: 12.w),
                       Container(
-                        padding: EdgeInsets.all(8.r),  // Use ScreenUtil for padding
+                        padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
-                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]
-                        ),
+                            boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)]),
                         child: Image.asset('assets/images/Home/Notification.png'),
                       ),
                     ],
                   )
                 ],
               ),
-
               SizedBox(height: 20.h),
 
               // Search bar
@@ -79,10 +82,10 @@ class VendorDealsView extends GetView<VendorDealsController> {
                   Get.to(SearchView());
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),  // Use ScreenUtil for padding
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+                    borderRadius: BorderRadius.circular(12.r),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.1),
@@ -96,7 +99,7 @@ class VendorDealsView extends GetView<VendorDealsController> {
                     children: [
                       Expanded(
                         child: TextField(
-                          readOnly: true, // Prevent actual editing and avoid focus issues
+                          readOnly: true,
                           decoration: InputDecoration(
                             hintText: 'Search food, store, deals...',
                             hintStyle: TextStyle(color: Colors.grey[500]),
@@ -113,86 +116,25 @@ class VendorDealsView extends GetView<VendorDealsController> {
               SizedBox(height: 15.h),
 
               // Vendor Deal Cards
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
-              SizedBox(height: 7.5.h),
-              VendorDealCard(
-                image: 'assets/images/MyDeals/StarBucks.png',
-                title: '50% Off Any Grande Beverage',
-                views: 1245,
-                redemptions: 412,
-                startValidTime: '28 May 2025',
-                endValidTime: '10 Jun 2025',
-              ),
+              Obx(() {
+                return Column(
+                  spacing: 10.h,
+                  children: controller.deals.map((deal) {
+                    if (DateTime.now().isAfter(DateTime.parse(deal.endDate))) {
+                      return SizedBox.shrink();
+                    } else {
+                      return VendorDealCard(
+                        image: deal.imageUrl,
+                        title: deal.title,
+                        views: 1245,  // You can update the views and redemptions as needed
+                        redemptions: 412,
+                        startValidTime: deal.startDate,
+                        endValidTime: deal.endDate,
+                      );
+                    }
+                  }).toList(),
+                );
+              }),
             ],
           ),
         ),

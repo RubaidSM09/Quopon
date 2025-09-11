@@ -183,19 +183,20 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => VendorProfileView(logo: '', name: '', type: '',),
+      page: () => VendorProfileView(vendorId: 0, logo: '', name: '', type: '', address: '',),
       binding: VendorProfileBinding(),
     ),
     GetPage(
       name: _Paths.PRODUCT_DETAILS,
       page: () => ProductDetailsView(
+        id: 0,
         title: 'Blonde Roast - Sunsera',
         price: 3.15,
         calory: 0,
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text.',
         image: 'assets/images/VendorProfile/Shake.png',
-        item: Items(),
+        // item: Items(),
       ),
       binding: ProductDetailsBinding(),
     ),
@@ -207,7 +208,7 @@ class AppPages {
     GetPage(
       name: _Paths.CHECKOUT,
       page: () => const CheckoutView(
-        subTotal: 0.0,
+        subTotal: 0,
       ),
       binding: CheckoutBinding(),
     ),
@@ -318,7 +319,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FORGOT_PASSWORD,
-      page: () => ForgotPasswordView(),
+      page: () => ForgotPasswordView(userType: '',),
       binding: ForgotPasswordBinding(),
     ),
     GetPage(
