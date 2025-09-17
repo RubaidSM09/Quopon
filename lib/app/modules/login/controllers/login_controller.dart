@@ -98,7 +98,7 @@ class LoginController extends GetxController {
         // homeController.fetchProfileData();
         // homeController.checkVerified(username);
 
-        userType == 'vendor' ? Get.to(LandingView()) : Get.to(LandingView());
+        userType == 'vendor' ? Get.to(LandingVendorView()) : Get.to(LandingVendorView());
       } else {
         final responseBody = jsonDecode(response.body);
         Get.snackbar('Login failed', responseBody['message'] ?? 'Please use Correct UserName and Password');
