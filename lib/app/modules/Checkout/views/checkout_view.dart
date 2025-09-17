@@ -135,7 +135,8 @@ class CheckoutView extends GetView<CheckoutController> {
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
           child: GradientButton(
             onPressed: () {
-              Get.to(OrderDetailsView());
+              controller.foodPayment(amount: '20');
+             // Get.to(OrderDetailsView());
             },
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],
