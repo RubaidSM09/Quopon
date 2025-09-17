@@ -17,6 +17,7 @@ import 'package:quopon/app/modules/home/controllers/home_controller.dart';
 import 'package:quopon/common/Filter.dart';
 import 'package:quopon/common/restaurant_card.dart';
 
+import '../../../data/model/vendor_category.dart';
 import '../../Cart/views/cart_view.dart';
 import '../../deals/views/deals_view.dart';
 
@@ -177,7 +178,7 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       Obx(() {
                         // Check if categories are loaded
-                        if (controller.categories.isEmpty) {
+                        if (controller.vendorCategories.isEmpty) {
                           return Center(
                             child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
                           );
@@ -185,7 +186,7 @@ class HomeView extends GetView<HomeController> {
                           return SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: controller.categories.map((category) {
+                              children: controller.vendorCategories.map((category) {
                                 return _buildCategoryItem(category); // Use category object here
                               }).toList(),
                             ),
@@ -480,7 +481,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildCategoryItem(Category category) {
+  Widget _buildCategoryItem(VendorCategory category) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0.w),
       child: Column(
@@ -494,7 +495,7 @@ class HomeView extends GetView<HomeController> {
           ),
           SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
           Text(
-            category.name,
+            category.categoryTitle,
             style: TextStyle(
               fontSize: 12.sp,  // Use ScreenUtil for font size
               color: Colors.grey[700],

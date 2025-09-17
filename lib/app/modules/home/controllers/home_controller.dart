@@ -7,37 +7,48 @@ import 'package:quopon/app/data/model/nearShops.dart';
 import 'package:quopon/app/data/model/speedyDeliveries.dart';
 
 import '../../../data/api.dart';
+import '../../../data/model/vendor_category.dart';
 
 class HomeController extends GetxController {
   RxBool deliveryHighToLow = true.obs;
 
   // Reactive list to store categories
-  var categories = <Category>[].obs;
+  RxList<VendorCategory> vendorCategories = <VendorCategory>[].obs;
   var beyondNeighbourhood = <BeyondNeighbourhood>[].obs;
   var nearShops = <NearShops>[].obs;
   var speedyDeliveries = <SpeedyDeliveries>[].obs;
 
   // Fetch categories from the API
-  Future<void> fetchCategories() async {
+  Future<void> fetchVendorCategories() async {
     try {
-      // Call the API to get the categories
-      final response = await BaseClient.getRequest(api: Api.categories);
+      String? userId = await BaseClient.getUserId();
 
-      // Decode the response body from JSON
-      final decodedResponse = json.decode(response.body);
-
-      // Check if the response contains categories
-      if (decodedResponse != null && decodedResponse is List) {
-        // Map the response to Category objects and update the list
-        categories.value = decodedResponse
-            .map((categoryJson) => Category.fromJson(categoryJson))
-            .toList();
-      } else {
-        print('No categories found or incorrect response format.');
+      if (userId == null) {
+        throw "User ID not found. Please log in again.";
       }
-    } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error appropriately (e.g., show a Snackbar or error message)
+
+      final apiUrl = 'http://10.10.13.52:7000/vendors/vendor-categories/';
+      final headers = await BaseClient.authHeaders();
+
+      final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
+
+      if (response.statusCode >= 200 && response.statusCode <= 210) {
+        final responseBody = json.decode(response.body);
+
+        print(responseBody);
+
+        List<VendorCategory> categories = vendorCategoryFromJson(responseBody);
+
+        vendorCategories.value = categories;
+
+        print(vendorCategories.value);
+      } else {
+        final responseBody = json.decode(response.body);
+        throw responseBody['message'] ?? 'Failed to fetch vendor categories';
+      }
+    } catch (error) {
+      print('Error ${error.toString()}');
+      Get.snackbar('Error', error.toString());
     }
   }
 
@@ -152,7 +163,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchCategories();  // Call the API to fetch categories on controller init
+    fetchVendorCategories();  // Call the API to fetch categories on controller init
     fetchBeyondNeighbourhood();
     fetchNearShops();
     fetchSpeedyDeliveries();

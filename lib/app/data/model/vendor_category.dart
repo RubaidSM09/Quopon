@@ -13,19 +13,23 @@ String vendorCategoryToJson(List<VendorCategory> data) =>
 class VendorCategory {
   int id;
   String categoryTitle;
+  String imageUrl;
 
   VendorCategory({
     required this.id,
     required this.categoryTitle,
+    required this.imageUrl,
   });
 
   factory VendorCategory.fromJson(Map<String, dynamic> json) => VendorCategory(
     id: json["id"],
     categoryTitle: json["name"],
+    imageUrl: json["logo_image"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": categoryTitle,
+    "logo_image": imageUrl
   };
 }
