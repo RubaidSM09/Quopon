@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:quopon/app/modules/OrderDetails/views/order_details_view.dart';
 
+import '../../../data/base_client.dart';
 import '../views/checkout_web_view.dart';
 
 class CheckoutController extends GetxController {
@@ -20,18 +21,18 @@ class CheckoutController extends GetxController {
   }) async {
     try {
       // Call the API with only the amount in the form data
+      final headers = await BaseClient.authHeadersFormData();
+
       final response = await http.post(
         Uri.parse('http://10.10.13.52:7000/discover/payment/'), // Replace with your actual API URL
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          // Add any additional headers like authorization if needed
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4MTM4MjY0LCJpYXQiOjE3NTgxMDk0NjQsImp0aSI6ImNjZjZmMjU5NTliNTQ0Njk5MTlkY2NkOTlmOTUwOGMzIiwidXNlcl9pZCI6IjIyIn0.nYfA0VGV1GX2XkQUleBZ5iTGb1NeTHB03VwwdXqDLJI',
-        },
+        headers: headers,
         body: {
           'amount': amount,
           // Add any other required form fields if needed
         },
       );
+
+      print(response.statusCode);
 
       if (response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);

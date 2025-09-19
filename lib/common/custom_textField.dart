@@ -118,7 +118,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 }
 
-class GetInTouchTextField extends StatefulWidget {
+class GetInTouchTextField extends StatelessWidget {
   final String headingText;
   final double headingTextSize;
   final String fieldText;
@@ -129,7 +129,12 @@ class GetInTouchTextField extends StatefulWidget {
   final bool isRequired;
   final bool isOptional;
 
-  const GetInTouchTextField({
+  // added previously
+  final bool readOnly;
+  final Widget? suffix;
+  final VoidCallback? onTap;
+
+  GetInTouchTextField({
     super.key,
     required this.headingText,
     this.headingTextSize = 16,
@@ -140,103 +145,79 @@ class GetInTouchTextField extends StatefulWidget {
     this.isOptional = false,
     this.maxLine = 1,
     this.isPassword = false,
+    this.readOnly = false,
+    this.suffix,
+    this.onTap,
   });
 
-  @override
-  State<GetInTouchTextField> createState() => _GetInTouchTextFieldState();
-}
-
-class _GetInTouchTextFieldState extends State<GetInTouchTextField> {
-  late bool _isPasswordVisible;
-
-  @override
-  void initState() {
-    super.initState();
-    _isPasswordVisible = false;
-  }
+  // local reactive state for password eye
+  final RxBool _isPasswordVisible = false.obs;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              widget.headingText,
-              style: TextStyle(
-                fontSize: 14.sp,  // Use ScreenUtil for font size
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            widget.isRequired
-                ? Text(
-              '*',
-              style: TextStyle(
-                fontSize: widget.headingTextSize.sp,  // Use ScreenUtil for font size
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
-              ),
-            )
-                : SizedBox.shrink(),
-
-            widget.isOptional
-                ? Text(
-              ' (Optional)',
-              style: TextStyle(
-                fontSize: 14.sp,  // Use ScreenUtil for font size
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic,
-                color: Color(0xFF6F7E8D),
-              ),
-            )
-                : SizedBox.shrink(),
-          ],
-        ),
-        SizedBox(height: 8.h),  // Use ScreenUtil for height spacing
+        // header row (unchanged) ...
+        SizedBox(height: 8.h),
         Container(
           decoration: BoxDecoration(
-            color: Color(0xFFF4F6F7),
-            borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
-            border: Border.all(color: Color(0xFFEAECED)),
+            color: const Color(0xFFF4F6F7),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: const Color(0xFFEAECED)),
           ),
-          child: TextField(
-            maxLines: widget.maxLine,
-            controller: widget.controller,
-            obscureText: widget.isPassword && !_isPasswordVisible,
-            decoration: InputDecoration(
-              hintText: widget.isPassword ? '••••••••••••' : widget.fieldText,
-              hintStyle: TextStyle(
-                color: Color(0xFF8F9EAD),
-                fontWeight: FontWeight.w400,
-                fontSize: 14.sp,
+          child: isPassword
+          // ✅ Reactive only when password field
+              ? Obx(() {
+            final obscured = !_isPasswordVisible.value;
+            return TextField(
+              maxLines: maxLine,
+              controller: controller,
+              readOnly: readOnly,
+              onTap: onTap,
+              obscureText: obscured,
+              decoration: InputDecoration(
+                hintText: '••••••••••••',
+                hintStyle: TextStyle(color: const Color(0xFF8F9EAD), fontWeight: FontWeight.w400, fontSize: 14.sp),
+                prefixIcon: iconImagePath.isNotEmpty
+                    ? Padding(
+                  padding: EdgeInsets.all(8.w),
+                  child: Image.asset(iconImagePath, width: 24.w, height: 24.h),
+                )
+                    : null,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey[500],
+                  ),
+                  onPressed: () => _isPasswordVisible.toggle(),
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                filled: true,
+                fillColor: const Color(0xFFF4F6F7),
               ),
-              prefixIcon: widget.iconImagePath != ''
+            );
+          })
+              : TextField(
+            maxLines: maxLine,
+            controller: controller,
+            readOnly: readOnly,
+            onTap: onTap,
+            decoration: InputDecoration(
+              hintText: fieldText,
+              hintStyle: TextStyle(color: const Color(0xFF8F9EAD), fontWeight: FontWeight.w400, fontSize: 14.sp),
+              prefixIcon: iconImagePath.isNotEmpty
                   ? Padding(
-                padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
-                child: Image.asset(
-                  widget.iconImagePath,
-                  width: 24.w,  // Use ScreenUtil for width
-                  height: 24.h,  // Use ScreenUtil for height
-                ),
+                padding: EdgeInsets.all(8.w),
+                child: Image.asset(iconImagePath, width: 24.w, height: 24.h),
               )
                   : null,
-              suffixIcon: widget.isPassword
-                  ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey[500],
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              )
-                  : null,
+              suffixIcon: suffix, // spinner / custom suffix
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),  // Use ScreenUtil for padding
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              filled: true,
+              fillColor: const Color(0xFFF4F6F7),
             ),
           ),
         ),

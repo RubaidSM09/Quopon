@@ -35,6 +35,14 @@ class BaseClient {
     };
   }
 
+  static Future<Map<String, String>> authHeadersFormData() async {
+    String? token = await getAccessToken();
+    return {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer ${token ?? ''}',
+    };
+  }
+
   static Future<Map<String, String>> get basicHeaders async => {
     'Content-Type': 'application/json',
   };

@@ -1,7 +1,7 @@
 class Api {
   /// base url
 
-  static const baseUrl = "http://10.10.13.52:7000";
+  static const baseUrl = "https://intensely-optimal-unicorn.ngrok-free.app/";
   //static const socket = "https://socket.thirdshotslot.co.uk/";
 
 

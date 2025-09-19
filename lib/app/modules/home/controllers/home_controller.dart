@@ -27,7 +27,7 @@ class HomeController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/vendors/vendor-categories/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendor-categories/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -82,7 +82,7 @@ class HomeController extends GetxController {
 
       // Hit the new vendors endpoint
       final response = await BaseClient.getRequest(
-        api: 'http://10.10.13.52:7000/vendors/all-business-profile/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
       );
 

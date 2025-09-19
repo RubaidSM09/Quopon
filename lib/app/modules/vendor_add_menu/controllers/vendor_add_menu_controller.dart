@@ -37,7 +37,7 @@ class VendorAddMenuController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.52:7000/vendors/categories/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/categories/',
         headers: headers,
       );
 
@@ -88,7 +88,7 @@ class VendorAddMenuController extends GetxController {
       // Let MultipartRequest set its own content-type with boundary
       headers.remove('Content-Type');
 
-      final uri = Uri.parse('http://10.10.13.52:7000/vendors/deals/');
+      final uri = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
 
       String? userId = await BaseClient.getUserId();
