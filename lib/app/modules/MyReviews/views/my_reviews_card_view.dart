@@ -131,9 +131,16 @@ class MyReviewsCardView extends GetView<MyReviewsController> {
           review.review != '' ? SizedBox(height: 10.h) : SizedBox.shrink(),
 
           review.review != '' ?
-          Text(
-            review.review,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                review.review,
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+              ),
+
+              SizedBox.shrink()
+            ],
           ) : SizedBox.shrink(),
 
           review.review != '' ? SizedBox(height: 10.h) : SizedBox.shrink(),
