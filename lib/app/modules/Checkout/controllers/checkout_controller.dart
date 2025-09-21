@@ -1,87 +1,143 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:quopon/app/modules/OrderDetails/views/order_details_view.dart';
 
 import '../../../data/base_client.dart';
+import '../../Cart/controllers/cart_controller.dart';
+import '../../OrderDetails/views/order_details_view.dart';
 import '../views/checkout_web_view.dart';
 
 class CheckoutController extends GetxController {
-  var selectedPaymentMethod = "" .obs;
-  var selectedPaymentMethodLogo = "" .obs;
+  // UI state
+  final selectedPaymentMethod = "".obs;
+  final selectedPaymentMethodLogo = "".obs;
+
+  // Delivery address pulled from profile for DELIVERY
+  final deliveryAddress = "".obs;
+
+  // Shared note for both Delivery & Pickup screens
+  final TextEditingController noteController = TextEditingController();
 
   void updatePaymentMethod(String method, String logo) {
     selectedPaymentMethod.value = method;
     selectedPaymentMethodLogo.value = logo;
   }
 
-  Future<void> foodPayment({
-    required String amount,
+  @override
+  void onInit() {
+    super.onInit();
+    // Preload profile address so Delivery card shows it right away.
+    _fetchProfileAddress();
+  }
+
+  Future<void> _fetchProfileAddress() async {
+    try {
+      final headers = await BaseClient.authHeaders();
+      final res = await http.get(
+        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/"),
+        headers: headers,
+      );
+      if (res.statusCode == 200) {
+        final profile = json.decode(res.body);
+        deliveryAddress.value = (profile["address"] ?? "").toString();
+      } else {
+        // Non-fatal; user can still place a PICKUP order.
+        deliveryAddress.value = "";
+      }
+    } catch (_) {
+      deliveryAddress.value = "";
+    }
+  }
+
+  /// Place order with new body, then redirect to Mollie payment checkout.
+  /// New body spec:
+  /// {
+  ///   "delivery_type": "DELIVERY" | "PICKUP",
+  ///   "delivery_address": "123 Main St" | "N/A",
+  ///   "order_type": "STANDARD",
+  ///   "note": "Please deliver ASAP"
+  /// }
+  Future<void> placeOrderAndPay({
+    required bool isDelivery,
+    required String note, // we still accept it but will also read from noteController
   }) async {
     try {
-      // Call the API with only the amount in the form data
+      final headers = await BaseClient.authHeaders();
+
+      // If delivery, make sure we have an address (we already fetched on init).
+      final String addressToSend =
+      isDelivery ? (deliveryAddress.value.isEmpty ? "Unknown Address" : deliveryAddress.value) : "N/A";
+
+      final String finalNote = (noteController.text.isNotEmpty ? noteController.text : (note.isEmpty ? "No notes" : note));
+
+      final body = {
+        "delivery_type": isDelivery ? "DELIVERY" : "PICKUP",
+        "delivery_address": addressToSend,
+        "order_type": "STANDARD",
+        "note": finalNote,
+      };
+
+      final orderRes = await http.post(
+        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/order/orders/create/"),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      print("Order API => ${orderRes.statusCode}");
+      print("Order Body => ${orderRes.body}");
+
+      if (orderRes.statusCode == 200 || orderRes.statusCode == 201) {
+        // use actual total from cart for payment amount
+        final cart = Get.find<CartController>().currentCart;
+        final total = cart?.priceSummary.inTotalPrice ?? 0.0;
+
+        await foodPayment(amount: total.toStringAsFixed(2));
+      } else {
+        Get.snackbar("Order Failed", orderRes.body);
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  /// Mollie payment call (unchanged except amount now from cart total)
+  Future<void> foodPayment({required String amount}) async {
+    try {
       final headers = await BaseClient.authHeadersFormData();
 
       final response = await http.post(
-        Uri.parse('http://10.10.13.52:7000/discover/payment/'), // Replace with your actual API URL
+        Uri.parse("http://10.10.13.52:7000/discover/payment/"),
         headers: headers,
-        body: {
-          'amount': amount,
-          // Add any other required form fields if needed
-        },
+        body: {"amount": amount},
       );
 
-      print(response.statusCode);
+      print("Payment API => ${response.statusCode}");
 
       if (response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
         final checkoutUrl = responseBody['checkout_url'];
-        final message = responseBody['Message'];
 
-        if (message != null && message.isNotEmpty) {
-          Get.snackbar('Message', message);
-        } else if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
-          print(':::::::::checkout_url:::::::::::::::::::::::::::::$checkoutUrl');
+        if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
           Get.off(() => WebViewScreen(
             url: checkoutUrl,
             onUrlMatched: (bool isCancelled) {
               if (!isCancelled) {
-                // Since packageName and packageType are not passed, avoid referencing them
-                Get.snackbar('success'.tr, 'package_purchased_successfully'.tr);
+                Get.snackbar("Success", "Order placed successfully!");
               } else {
-                Get.snackbar('cancelled'.tr, 'package_purchase_cancelled'.tr);
+                Get.snackbar("Cancelled", "Payment cancelled");
               }
               Get.offAll(() => OrderDetailsView());
             },
           ));
         } else {
-          Get.snackbar('warning'.tr, 'unexpected_response_please_try_again'.tr);
+          Get.snackbar("Warning", "No checkout url received");
         }
       } else {
-        Get.snackbar('warning'.tr, 'failed_to_purchase_subscription'.tr);
+        Get.snackbar("Payment Failed", response.body);
       }
     } catch (e) {
-      print('$e');
-      Get.snackbar('warning'.tr, '$e');
+      Get.snackbar("Error", e.toString());
     }
   }
-
-  // final count = 0.obs;
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
-  //
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  // }
-  //
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  // }
-  //
-  // void increment() => count.value++;
 }

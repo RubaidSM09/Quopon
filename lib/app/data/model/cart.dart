@@ -1,252 +1,104 @@
+// lib/app/data/model/cart.dart
 class Cart {
-  int? id;
-  String? userEmail;
-  int? user;
-  String? deliveryType;
-  List<Items>? items;
-  PriceSummary? priceSummary;
+  final int id;
+  final int totalItems;
+  final List<Items> items;
 
-  Cart(
-      {this.id,
-        this.userEmail,
-        this.user,
-        this.deliveryType,
-        this.items,
-        this.priceSummary});
+  /// Adapter so old UI keeps working:
+  final PriceSummary priceSummary;
 
-  Cart.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userEmail = json['user_email'];
-    user = json['user'];
-    deliveryType = json['delivery_type'];
-    if (json['items'] != null) {
-      items = <Items>[];
-      json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
-      });
+  Cart({
+    required this.id,
+    required this.totalItems,
+    required this.items,
+    required this.priceSummary,
+  });
+
+  factory Cart.fromJson(Map<String, dynamic> json) {
+    // Backend sends numbers as strings — normalize safely
+    double _num(dynamic v) {
+      if (v == null) return 0.0;
+      if (v is num) return v.toDouble();
+      return double.tryParse(v.toString()) ?? 0.0;
     }
-    priceSummary = json['price_summary'] != null
-        ? new PriceSummary.fromJson(json['price_summary'])
-        : null;
+
+    final itemsJson = (json['items'] as List? ?? []);
+    final items = itemsJson.map((e) => Items.fromJson(e as Map<String, dynamic>)).toList();
+
+    final summary = PriceSummary(
+      subTotalPrice: _num(json['subtotal']),
+      deliveryCharges: _num(json['delivery_fee']),
+      totalDiscount: _num(json['total_discount']),
+      inTotalPrice: _num(json['final_total']),
+    );
+
+    return Cart(
+      id: json['id'] ?? 0,
+      totalItems: json['total_items'] ?? items.length,
+      items: items,
+      priceSummary: summary,
+    );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_email'] = this.userEmail;
-    data['user'] = this.user;
-    data['delivery_type'] = this.deliveryType;
-    if (this.items != null) {
-      data['items'] = this.items!.map((v) => v.toJson()).toList();
-    }
-    if (this.priceSummary != null) {
-      data['price_summary'] = this.priceSummary!.toJson();
-    }
-    return data;
-  }
+/// What your UI reads in Cart/CartBottom:
+class PriceSummary {
+  final double subTotalPrice;
+  final double deliveryCharges;
+  final double totalDiscount;
+  final double inTotalPrice;
+
+  PriceSummary({
+    required this.subTotalPrice,
+    required this.deliveryCharges,
+    required this.totalDiscount,
+    required this.inTotalPrice,
+  });
 }
 
 class Items {
-  int? id;
-  MenuItem? menuItem;
-  int? quantity;
-  List<SelectedOptions>? selectedOptions;
-  String? addToCartPrice;
+  final int id;
+  final int quantity;
+  final String specialInstructions;
+  final double itemTotal;
 
-  Items(
-      {this.id,
-        this.menuItem,
-        this.quantity,
-        this.selectedOptions,
-        this.addToCartPrice});
+  // Flattened deal fields for Card UI
+  final int dealId;
+  final String title;
+  final String description;
+  final double unitPrice;
+  final String image;
 
-  Items.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    menuItem = json['menu_item'] != null
-        ? new MenuItem.fromJson(json['menu_item'])
-        : null;
-    quantity = json['quantity'];
-    if (json['selected_options'] != null) {
-      selectedOptions = <SelectedOptions>[];
-      json['selected_options'].forEach((v) {
-        selectedOptions!.add(new SelectedOptions.fromJson(v));
-      });
+  Items({
+    required this.id,
+    required this.quantity,
+    required this.specialInstructions,
+    required this.itemTotal,
+    required this.dealId,
+    required this.title,
+    required this.description,
+    required this.unitPrice,
+    required this.image,
+  });
+
+  factory Items.fromJson(Map<String, dynamic> json) {
+    final deal = (json['deal'] as Map<String, dynamic>? ?? const {});
+    double _num(dynamic v) {
+      if (v == null) return 0.0;
+      if (v is num) return v.toDouble();
+      return double.tryParse(v.toString()) ?? 0.0;
     }
-    addToCartPrice = json['add_to_cart_price'];
-  }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.menuItem != null) {
-      data['menu_item'] = this.menuItem!.toJson();
-    }
-    data['quantity'] = this.quantity;
-    if (this.selectedOptions != null) {
-      data['selected_options'] =
-          this.selectedOptions!.map((v) => v.toJson()).toList();
-    }
-    data['add_to_cart_price'] = this.addToCartPrice;
-    return data;
-  }
-}
-
-class MenuItem {
-  int? id;
-  String? name;
-  String? description;
-  String? price;
-  int? calories;
-  String? imageUrl;
-  bool? addedToCart;
-  double? totalPrice;
-  List<OptionTitle>? optionTitle;
-
-  MenuItem(
-      {this.id,
-        this.name,
-        this.description,
-        this.price,
-        this.calories,
-        this.imageUrl,
-        this.addedToCart,
-        this.totalPrice,
-        this.optionTitle});
-
-  MenuItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    price = json['price'];
-    calories = json['calories'];
-    imageUrl = json['image_url'];
-    addedToCart = json['added_to_cart'];
-    totalPrice = json['total_price'];
-    if (json['option_title'] != null) {
-      optionTitle = <OptionTitle>[];
-      json['option_title'].forEach((v) {
-        optionTitle!.add(new OptionTitle.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['price'] = this.price;
-    data['calories'] = this.calories;
-    data['image_url'] = this.imageUrl;
-    data['added_to_cart'] = this.addedToCart;
-    data['total_price'] = this.totalPrice;
-    if (this.optionTitle != null) {
-      data['option_title'] = this.optionTitle!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class OptionTitle {
-  int? id;
-  String? title;
-  bool? isRequired;
-  List<Options>? options;
-
-  OptionTitle({this.id, this.title, this.isRequired, this.options});
-
-  OptionTitle.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    isRequired = json['is_required'];
-    if (json['options'] != null) {
-      options = <Options>[];
-      json['options'].forEach((v) {
-        options!.add(new Options.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['is_required'] = this.isRequired;
-    if (this.options != null) {
-      data['options'] = this.options!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Options {
-  int? id;
-  String? name;
-  String? price;
-  bool? isSelected;
-
-  Options({this.id, this.name, this.price, this.isSelected});
-
-  Options.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    price = json['price'];
-    isSelected = json['is_selected'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['is_selected'] = this.isSelected;
-    return data;
-  }
-}
-
-class SelectedOptions {
-  int? id;
-  String? name;
-  String? price;
-  bool? isSelected;
-
-  SelectedOptions({this.id, this.name, this.price, this.isSelected});
-
-  SelectedOptions.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    price = json['price'];
-    isSelected = json['is_selected'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['is_selected'] = this.isSelected;
-    return data;
-  }
-}
-
-class PriceSummary {
-  double? subTotalPrice;
-  double? deliveryCharges;
-  double? inTotalPrice;
-
-  PriceSummary({this.subTotalPrice, this.deliveryCharges, this.inTotalPrice});
-
-  PriceSummary.fromJson(Map<String, dynamic> json) {
-    subTotalPrice = json['sub_total_price'];
-    deliveryCharges = json['delivery_charges'];
-    inTotalPrice = json['in_total_price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['sub_total_price'] = this.subTotalPrice;
-    data['delivery_charges'] = this.deliveryCharges;
-    data['in_total_price'] = this.inTotalPrice;
-    return data;
+    return Items(
+      id: json['id'] ?? 0,
+      quantity: json['quantity'] ?? 0,
+      specialInstructions: (json['special_instructions'] ?? '').toString(),
+      itemTotal: _num(json['item_total']),
+      dealId: deal['id'] ?? 0,
+      title: (deal['title'] ?? '').toString(),
+      description: (deal['description'] ?? '').toString(),
+      unitPrice: _num(deal['price']),
+      image: (deal['image'] ?? '').toString(),
+    );
   }
 }
