@@ -10,6 +10,7 @@ import 'package:quopon/app/modules/my_orders_vendors/views/delivery/delivery_in_
 import 'package:quopon/app/modules/my_orders_vendors/views/delivery/delivery_order_received_view.dart';
 import 'package:quopon/app/modules/my_orders_vendors/views/delivery/out_for_delivery_view.dart';
 
+import '../controllers/my_orders_vendors_controller.dart';
 import 'my_orders_vendor_card_view.dart';
 
 class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryController> {
@@ -40,7 +41,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Order Received (03)',
+                      'Order Received (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && (o.status == "PENDING_PAYMENT" || o.status == "RECEIVED")).length})',
                       style: TextStyle(
                         color: controller.filters[0].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -65,7 +66,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'In Preparation (04)',
+                      'In Preparation (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && o.status == "PREPARING").length})',
                       style: TextStyle(
                         color: controller.filters[1].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -90,7 +91,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Out for Delivery (03)',
+                      'Out for Delivery (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && o.status == "OUT_FOR_DELIVERY").length})',
                       style: TextStyle(
                         color: controller.filters[2].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -115,7 +116,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Delivered (02)',
+                      'Delivered (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && o.status == "DELIVERED").length})',
                       style: TextStyle(
                         color: controller.filters[3].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -140,7 +141,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Completed (51)',
+                      'Completed (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && o.status == "COMPLETED").length})',
                       style: TextStyle(
                         color: controller.filters[4].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -165,7 +166,7 @@ class MyOrdersVendorDeliveryView extends GetView<MyOrdersVendorDeliveryControlle
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Cancelled (05)',
+                      'Cancelled (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType == "DELIVERY" && o.status == "CANCELLED").length})',
                       style: TextStyle(
                         color: controller.filters[5].value ? Colors.white : Color(0xFF6F7E8D),
                       ),

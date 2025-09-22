@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/discover/views/discover_filter_card_view.dart';
+import 'package:intl/intl.dart';
 import 'package:quopon/app/modules/my_orders_vendors/controllers/my_orders_vendors_controller.dart';
-import 'package:quopon/app/modules/my_orders_vendors/views/my_order_details_vendor_view.dart';
 import 'package:quopon/common/customTextButton.dart';
+
+import 'my_order_details_vendor_view.dart';
 
 class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
   final String itemImg;
@@ -19,6 +19,8 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
   final double totalAmount;
   final String orderTime;
   final String orderStatus;
+  final String note;
+  final String orderId; // Changed to String to use order_id (UUID)
 
   const MyOrdersVendorCardView({
     required this.itemImg,
@@ -32,6 +34,8 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
     required this.totalAmount,
     required this.orderTime,
     required this.orderStatus,
+    this.note = '',
+    required this.orderId,
     super.key,
   });
 
@@ -42,7 +46,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.r),
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)]
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)],
       ),
       child: Column(
         children: [
@@ -50,15 +54,15 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),
-                child: Image.asset(
+                child: Image.network(
                   itemImg,
                   height: 62.h,
                   width: 62.w,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                 ),
               ),
-
-              SizedBox(width: 12.w,),
-
+              SizedBox(width: 12.w),
               SizedBox(
                 width: 300.w,
                 child: Column(
@@ -76,7 +80,8 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                         ),
                         Row(
                           children: [
-                            isNew ? Container(
+                            isNew
+                                ? Container(
                               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6.r),
@@ -90,10 +95,9 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                                   fontSize: 12.sp,
                                 ),
                               ),
-                            ) : SizedBox.shrink(),
-
-                            SizedBox(width: 6.w,),
-
+                            )
+                                : SizedBox.shrink(),
+                            SizedBox(width: 6.w),
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                               decoration: BoxDecoration(
@@ -110,13 +114,10 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-
-                    SizedBox(height: 8.h,),
-
-                    // Dynamically build addon rows for cheese and spreads
+                    SizedBox(height: 8.h),
                     ...itemAddons.entries.map((entry) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 6.h),
@@ -144,12 +145,10 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                     }),
                   ],
                 ),
-              )
+              ),
             ],
           ),
-
-          SizedBox(height: 16.h,),
-
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -175,7 +174,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               SizedBox(
                 width: 169.w,
                 child: Text(
-                  '#Q12345',
+                  '#$orderId',
                   style: TextStyle(
                     color: Color(0xFF020711),
                     fontSize: 14.sp,
@@ -185,7 +184,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h,),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -221,7 +220,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h,),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +247,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               SizedBox(
                 width: 169.w,
                 child: Text(
-                  'Italian Panini x1, Blonde Roast x1, Cold Coffee x1',
+                  orderItem,
                   style: TextStyle(
                     color: Color(0xFF020711),
                     fontSize: 14.sp,
@@ -258,7 +257,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h,),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -294,7 +293,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h,),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -330,7 +329,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h,),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +356,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               SizedBox(
                 width: 169.w,
                 child: Text(
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                  note,
                   style: TextStyle(
                     color: Color(0xFF020711),
                     fontSize: 14.sp,
@@ -367,15 +366,11 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           ),
-
-          orderStatus == "Order Received" ? SizedBox(height: 16.h,) : SizedBox.shrink(),
-
-          orderStatus == "Order Received" ? Divider(color: Color(0xFFF2F4F5),) : SizedBox.shrink(),
-
-          orderStatus == "Order Received" ? SizedBox(height: 16.h,) : SizedBox.shrink(),
-
-          orderStatus == "Order Received" ?
-          Row(
+          orderStatus == "RECEIVED" ? SizedBox(height: 16.h) : SizedBox.shrink(),
+          orderStatus == "RECEIVED" ? Divider(color: Color(0xFFF2F4F5)) : SizedBox.shrink(),
+          orderStatus == "RECEIVED" ? SizedBox(height: 16.h) : SizedBox.shrink(),
+          orderStatus == "RECEIVED"
+              ? Row(
             children: [
               Text(
                 'When will this order be ready?',
@@ -385,24 +380,26 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox.shrink()
+              SizedBox.shrink(),
             ],
-          ) : SizedBox.shrink(),
-          orderStatus == "Order Received" ? SizedBox(height: 12.h,) : SizedBox.shrink(),
-          orderStatus == "Order Received" ?
-          Row(
+          )
+              : SizedBox.shrink(),
+          orderStatus == "RECEIVED" ? SizedBox(height: 12.h) : SizedBox.shrink(),
+          orderStatus == "RECEIVED"
+              ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TimeCardView(time: 15, index: 0),
-              TimeCardView(time: 30, index: 1),
-              TimeCardView(time: 45, index: 2),
-              TimeCardView(time: 60, index: 3),
-              TimeCardView(time: 90, index: 4),
+              TimeCardView(time: 15, index: 0, orderId: orderId),
+              TimeCardView(time: 30, index: 1, orderId: orderId),
+              TimeCardView(time: 45, index: 2, orderId: orderId),
+              TimeCardView(time: 60, index: 3, orderId: orderId),
+              TimeCardView(time: 90, index: 4, orderId: orderId),
             ],
-          ) : SizedBox.shrink(),
-          orderStatus == "Order Received" ? SizedBox(height: 12.h,) : SizedBox.shrink(),
-          orderStatus == "Order Received" ?
-          Row(
+          )
+              : SizedBox.shrink(),
+          orderStatus == "RECEIVED" ? SizedBox(height: 12.h) : SizedBox.shrink(),
+          orderStatus == "RECEIVED"
+              ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -411,7 +408,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                     'assets/images/my_orders/ready_time.png',
                     scale: 4,
                   ),
-                  SizedBox(width: 8.w,),
+                  SizedBox(width: 8.w),
                   Obx(() {
                     return Text(
                       'Ready at ${DateTime.now().add(Duration(minutes: controller.time.value)).hour}:${DateTime.now().add(Duration(minutes: controller.time.value)).minute.toString().padLeft(2, '0')}',
@@ -421,16 +418,20 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                         fontWeight: FontWeight.normal,
                       ),
                     );
-                  })
+                  }),
                 ],
-              )
+              ),
             ],
-          ) : SizedBox.shrink(),
-
-          SizedBox(height: 16.h,),
-
-          orderStatus == "Order Received" || orderStatus == "In Preparation" || orderStatus == "Ready for Pickup" || orderStatus == "Picked Up" || orderStatus == "Out for Delivery" || orderStatus == "Delivered" ?
-          Row(
+          )
+              : SizedBox.shrink(),
+          SizedBox(height: 16.h),
+          orderStatus == "RECEIVED" ||
+              orderStatus == "PREPARING" ||
+              orderStatus == "READY_FOR_PICKUP" ||
+              orderStatus == "Picked Up" ||
+              orderStatus == "OUT_FOR_DELIVERY" ||
+              orderStatus == "Delivered"
+              ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GradientButton(
@@ -459,17 +460,16 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                 child: Text(
                   'View Details',
                   style: TextStyle(
-                    fontSize: 14.sp,  // Use ScreenUtil for font size
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF020711),
                   ),
                 ),
               ),
-
               GradientButton(
-                text: 'Start Preparation',
+                text: _getButtonText(),
                 onPressed: () {
-
+                  _handleStatusUpdate();
                 },
                 colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                 boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
@@ -478,13 +478,9 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                 height: 42.h,
                 borderRadius: 12.r,
                 child: Text(
-                  orderStatus == "Order Received" ? 'Start Preparation'
-                      : orderStatus == "In Preparation" ? status == "Pickup" ? "Ready for Pickup" : "Out for Delivery"
-                      : orderStatus == "Ready for Pickup" ? "Picked Up"
-                      : orderStatus == "Out for Delivery" ? "Mark as Delivered"
-                      : "Mark as Completed",
+                  _getButtonText(),
                   style: TextStyle(
-                    fontSize: 14.sp,  // Use ScreenUtil for font size
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
@@ -492,8 +488,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               ),
             ],
           )
-              :
-          GradientButton(
+              : GradientButton(
             text: 'View Details',
             onPressed: () {
               Get.dialog(MyOrderDetailsVendorView(
@@ -518,7 +513,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
             child: Text(
               'View Details',
               style: TextStyle(
-                fontSize: 14.sp,  // Use ScreenUtil for font size
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF020711),
               ),
@@ -528,41 +523,79 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
       ),
     );
   }
+
+  String _getButtonText() {
+    if (orderStatus == "RECEIVED") {
+      return 'Start Preparation';
+    } else if (orderStatus == "PREPARING") {
+      return status == "Pickup" ? "Ready for Pickup" : "Out for Delivery";
+    } else if (orderStatus == "READY_FOR_PICKUP") {
+      return "Picked Up";
+    } else if (orderStatus == "OUT_FOR_DELIVERY") {
+      return "Mark as Delivered";
+    } else if (orderStatus == "Delivered" || orderStatus == "Picked Up") {
+      return "Mark as Completed";
+    }
+    return '';
+  }
+
+  void _handleStatusUpdate() {
+    if (orderStatus == "RECEIVED") {
+      controller.updateOrderStatus(orderId, 'PREPARING');
+    } else if (orderStatus == "PREPARING") {
+      if (status == "Pickup") {
+        controller.updateOrderStatus(orderId, 'READY_FOR_PICKUP');
+      } else {
+        print('Rubaid');
+        controller.updateOrderStatus(orderId, 'OUT_FOR_DELIVERY');
+      }
+    } else if (orderStatus == "READY_FOR_PICKUP") {
+      controller.updateOrderStatus(orderId, 'PICKED_UP');
+    } else if (orderStatus == "OUT_FOR_DELIVERY") {
+      controller.updateOrderStatus(orderId, 'DELIVERED');
+    } else if (orderStatus == "Delivered" || orderStatus == "Picked Up") {
+      controller.updateOrderStatus(orderId, 'COMPLETED');
+    }
+  }
 }
 
 class TimeCardView extends GetView<MyOrdersVendorsController> {
   final int time;
   final int index;
+  final String orderId;
 
   const TimeCardView({
     required this.time,
     required this.index,
-    super.key
+    required this.orderId,
+    super.key,
   });
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return GestureDetector(
         onTap: () {
-          for (int i=0;i<5;i++){
+          for (int i = 0; i < 5; i++) {
             controller.selectedTime[i].value = false;
           }
           controller.selectedTime[index].value = true;
           switch (index) {
             case 0:
               controller.time.value = 15;
-
+              break;
             case 1:
               controller.time.value = 30;
-
+              break;
             case 2:
               controller.time.value = 45;
-
+              break;
             case 3:
               controller.time.value = 60;
-
+              break;
             case 4:
               controller.time.value = 90;
+              break;
           }
         },
         child: Container(
@@ -570,17 +603,13 @@ class TimeCardView extends GetView<MyOrdersVendorsController> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: controller.selectedTime[index].value
-                  ? Color(0xFFD62828)
-                  : Color(0xFFEAECED),
+              color: controller.selectedTime[index].value ? Color(0xFFD62828) : Color(0xFFEAECED),
             ),
           ),
           child: Text(
             '$time min',
             style: TextStyle(
-              color: controller.selectedTime[index].value
-                  ? Color(0xFFD62828)
-                  : Color(0xFF6F7E8D),
+              color: controller.selectedTime[index].value ? Color(0xFFD62828) : Color(0xFF6F7E8D),
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),

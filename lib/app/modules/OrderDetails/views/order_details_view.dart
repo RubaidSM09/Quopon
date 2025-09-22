@@ -113,7 +113,6 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(8.r),
                                         child: Image.network(
-                                          // API doesn't return image; keep your placeholder
                                           image,
                                           width: 62.w,
                                           height: 62.h,
@@ -313,7 +312,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                 ),
               ),
               GradientButton(
-                onPressed: () => Get.to(const TrackOrderView()),
+                onPressed: () => Get.to(TrackOrderView(), arguments: controller.orderId),
                 text: "Follow",
                 colors: const [Color(0xFFD62828), Color(0xFFC21414)],
                 width: 200.w,
