@@ -4,400 +4,329 @@ import 'package:quopon/app/modules/OrderDetails/views/track_order_view.dart';
 import 'package:quopon/app/modules/OrderDetails/views/view_receipt_view.dart';
 import '../../../../../../common/customTextButton.dart';
 import '../controllers/order_details_controller.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderDetailsView extends GetView<OrderDetailsController> {
   const OrderDetailsView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    Get.put(OrderDetailsController());
     RxBool isDelivery = true.obs;
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(Icons.arrow_back),
-                  ),
-                  Text(
-                    'Order Details',
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-                  ),
-                  SizedBox(),
-                ],
-              ),
+      backgroundColor: const Color(0xFFF9FBFC),
+      body: Obx(() {
+        if (controller.error.value != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Get.snackbar("Order", controller.error.value!);
+          });
+        }
 
-              SizedBox(height: 40.h),
-
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.r), // ScreenUtil applied
-                child: Image.asset(
-                  'assets/images/OrderDetails/OrderConfirmed.gif',
-                  height: 80.h,
-                  width: 80.w,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Get.back(),
+                      child: const Icon(Icons.arrow_back),
+                    ),
+                    Text(
+                      'Order Details',
+                      style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
+                    ),
+                    const SizedBox(),
+                  ],
                 ),
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                'Your Order is Confirmed!',
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                'Your order has been placed successfully. We\'ll notify you when it\'s on the way.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-              ),
 
-              SizedBox(height: 20.h),
+                SizedBox(height: 40.h),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Order Details',
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Image.asset(
+                    'assets/images/OrderDetails/OrderConfirmed.gif',
+                    height: 80.h,
+                    width: 80.w,
                   ),
-                  SizedBox.shrink()
-                ],
-              ),
-
-              SizedBox(height: 10.h),
-
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                    color: Colors.white
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(16.w), // ScreenUtil applied
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 5.h),
+                Text(
+                  'Your Order is Confirmed!',
+                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  'Your order has been placed successfully. We\'ll notify you when it\'s on the way.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xFF6F7E8D)),
+                ),
+
+                SizedBox(height: 20.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Order Details',
+                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
+                    ),
+                    const SizedBox.shrink()
+                  ],
+                ),
+
+                SizedBox(height: 10.h),
+
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      children: [
+                        /// ---------- ALL ORDER ITEMS ----------
+                        ...List.generate(controller.items.length, (index) {
+                          final it = controller.items[index];
+                          final name = it['item_name']?.toString() ?? '—';
+                          final qty = (it['quantity'] is int)
+                              ? it['quantity'] as int
+                              : int.tryParse('${it['quantity']}') ?? 0;
+                          final price = it['total_price']?.toString() ?? '0.00';
+                          final desc = it['item_description']?.toString() ?? '';
+                          final image = it['item_image']?.toString() ?? 'assets/images/Cart/Italian Panini.png';
+
+                          return Column(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
-                                child: Image.asset(
-                                  'assets/images/Cart/Italian Panini.png',
-                                  width: 62.w, // ScreenUtil applied
-                                  height: 62.h, // ScreenUtil applied
-                                ),
-                              ),
-                              SizedBox(width: 10.w),
-                              Column(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Italian Panini',
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp), // ScreenUtil applied
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        child: Image.network(
+                                          // API doesn't return image; keep your placeholder
+                                          image,
+                                          width: 62.w,
+                                          height: 62.h,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                       SizedBox(width: 10.w),
-                                      Text(
-                                        'x2',
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                name,
+                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              Text(
+                                                'x$qty',
+                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+                                              ),
+                                            ],
+                                          ),
+                                          if (desc.isNotEmpty) ...[
+                                            SizedBox(height: 6.h),
+                                            Text(
+                                              desc,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12.sp,
+                                                color: const Color(0xFF6F7E8D),
+                                              ),
+                                            ),
+                                          ],
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Select Cheese: ',
-                                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                                            ),
-                                            Text(
-                                              'a, b, c, d',
-                                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Select Spreads: ',
-                                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                                            ),
-                                            Text(
-                                              'Mayo, Ranch, Chipotle',
-                                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                                            ),
-                                          ],
-                                        ),
-                                      ]
+                                  Text(
+                                    '\$$price',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
                                   ),
                                 ],
-                              )
+                              ),
+                              // Divider between items (but not after the last one)
+                              if (index != controller.items.length - 1) ...[
+                                SizedBox(height: 8.h),
+                                const Divider(color: Color(0xFFEAECED), thickness: 1),
+                                SizedBox(height: 8.h),
+                              ],
                             ],
-                          ),
-                          Text(
-                            '\$9.0',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp), // ScreenUtil applied
-                          ),
-                        ],
-                      ),
+                          );
+                        }),
 
-                      SizedBox(height: 2.5.h),
-                      Divider(color: Color(0xFFEAECED), thickness: 1),
+                        SizedBox(height: 8.h),
+                        const Divider(color: Color(0xFFEAECED), thickness: 1),
+                        SizedBox(height: 8.h),
 
-                      SizedBox(height: 2.5.h),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Order#',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                        /// ---------- META FIELDS ----------
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Order#'),
+                            _strong(controller.orderId.isEmpty ? '#—' : controller.orderId),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Order Date'),
+                            _strong(controller.orderDate),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Order Time'),
+                            _strong(controller.orderTime),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Order Type'),
+                            _strong(controller.deliveryType.isEmpty ? '—' : controller.deliveryType),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Estimated Time'),
+                            _strong('10 - 15 mins'),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _muted('Delivery Address'),
+                            SizedBox(
+                              width: 171.w,
+                              child: Text(
+                                controller.deliveryAddress.isEmpty ? '—' : controller.deliveryAddress,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: const Color(0xFF020711)),
                               ),
-                              Text(
-                                '#ORD-57321',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Order Date',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                              Text(
-                                '20 June, 2025',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Order Time',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                              Text(
-                                '01: 09 AM',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Order Type',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                              Text(
-                                'Delivery',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Estimated Time',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                              Text(
-                                '10 - 15 mins',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Delivery Address',
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                              ),
-                              SizedBox(
-                                width: 171.w, // ScreenUtil applied
-                                child: Text(
-                                  textAlign: TextAlign.right,
-                                  'Jan van Galenstraat 92, 1056 CC Amsterdam',
-                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)), // ScreenUtil applied
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 10.h),
+                SizedBox(height: 10.h),
 
-              Container(
-                width: 500.w, // ScreenUtil applied
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(12.w), // ScreenUtil applied
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Sub Total',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                          ),
-                          Text(
-                            '\$36.00',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Delivery Charges',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                          ),
-                          Text(
-                            '\$1.99',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Applied Deal Discount',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                          ),
-                          Text(
-                            '50% OFF',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-                          ),
-                        ],
-                      ),
-                      Divider(color: Color(0xFFEAECED), thickness: 1),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total',
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 16.h, // ScreenUtil applied
-                                width: 36.w, // ScreenUtil applied
-                                decoration: BoxDecoration(
-                                    color: Color(0xFF2ECC71),
-                                    borderRadius: BorderRadius.circular(4.r) // ScreenUtil applied
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Paid',
-                                    style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500, color: Colors.white), // ScreenUtil applied
+                // totals (bound to API)
+                Container(
+                  width: 500.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12.w),
+                    child: Column(
+                      children: [
+                        _totalRow('Sub Total', '\$${controller.subtotal}'),
+                        _totalRow('Delivery Charges', '\$${controller.deliveryFee}'),
+                        _totalRow('Applied Deal Discount', '\$${controller.discountAmount}'),
+                        const Divider(color: Color(0xFFEAECED), thickness: 1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _muted('Total'),
+                            Row(
+                              children: [
+                                Container(
+                                  height: 16.h,
+                                  width: 36.w,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF2ECC71),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                  child: Center(
+                                    child: Text('Paid',
+                                        style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500, color: Colors.white)),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 5.w), // ScreenUtil applied
-                              Text(
-                                '\$9.99',
-                                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                                SizedBox(width: 5.w),
+                                _strong('\$${controller.totalAmount}'),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
 
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GradientButton(
-                onPressed: () {
-                  Get.dialog(ViewReceiptView());
-                },
+                onPressed: () => Get.dialog(const ViewReceiptView()),
                 text: "View Receipt",
-                colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                width: 200.w, // ScreenUtil applied
-                borderRadius: 12.r, // ScreenUtil applied
+                colors: const [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
+                width: 200.w,
+                borderRadius: 12.r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                        'assets/images/OrderDetails/Download.png'
-                    ),
-                    SizedBox(width: 5.w), // ScreenUtil applied
+                    Image.asset('assets/images/OrderDetails/Download.png'),
+                    SizedBox(width: 5.w),
                     Text(
                       "View Receipt",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
+                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
                     )
                   ],
                 ),
               ),
               GradientButton(
-                onPressed: () {
-                  Get.to(TrackOrderView());
-                },
+                onPressed: () => Get.to(const TrackOrderView()),
                 text: "Follow",
-                colors: [Color(0xFFD62828), Color(0xFFC21414)],
-                width: 200.w, // ScreenUtil applied
-                borderRadius: 12.r, // ScreenUtil applied
+                colors: const [Color(0xFFD62828), Color(0xFFC21414)],
+                width: 200.w,
+                borderRadius: 12.r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                        'assets/images/OrderDetails/Track.png'
-                    ),
-                    SizedBox(width: 5.w), // ScreenUtil applied
+                    Image.asset('assets/images/OrderDetails/Track.png'),
+                    SizedBox(width: 5.w),
                     Text(
                       "Track Order",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.white), // ScreenUtil applied
+                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.white),
                     )
                   ],
                 ),
@@ -408,4 +337,22 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
       ),
     );
   }
+
+  Widget _muted(String s) => Text(
+    s,
+    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
+  );
+
+  Widget _strong(String s) => Text(
+    s,
+    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: const Color(0xFF020711)),
+  );
+
+  Widget _totalRow(String l, String r) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      _muted(l),
+      _strong(r),
+    ],
+  );
 }

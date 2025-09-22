@@ -5,8 +5,9 @@ class WebViewScreen extends StatefulWidget {
   final String url;
   final Function(bool isCancelled) onUrlMatched;
   final bool isCancel;
+  final String orderId;
 
-  const WebViewScreen({super.key, required this.url, required this.onUrlMatched, this.isCancel = false});
+  const WebViewScreen({super.key, required this.url, required this.onUrlMatched, required this.orderId, this.isCancel = false});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -31,7 +32,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           },
           onUrlChange: (UrlChange change) {
             print('::::::::::::::::::::::::::::::URL::::${change.url}');
-            if (change.url == 'https://your-frontend-app.com/payment-success/') {
+            if (change.url == 'https://dummy.org/orders/${widget.orderId}/confirmation/') {
               // Navigate back to the previous screen
               Navigator.pop(context);
               widget.onUrlMatched(false);

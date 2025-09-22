@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../data/base_client.dart';
 import '../../Cart/controllers/cart_controller.dart';
+import '../../OrderDetails/controllers/order_details_controller.dart';
 import '../../OrderDetails/views/order_details_view.dart';
 import '../views/checkout_web_view.dart';
 
@@ -17,7 +18,7 @@ class CheckoutController extends GetxController {
   final deliveryAddress = "".obs;
 
   // Shared note for both Delivery & Pickup screens
-  final TextEditingController noteController = TextEditingController();
+  final noteController = TextEditingController();
 
   void updatePaymentMethod(String method, String logo) {
     selectedPaymentMethod.value = method;
@@ -27,13 +28,14 @@ class CheckoutController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Preload profile address so Delivery card shows it right away.
     _fetchProfileAddress();
   }
 
   Future<void> _fetchProfileAddress() async {
     try {
       final headers = await BaseClient.authHeaders();
+      headers['ngrok-skip-browser-warning'] = 'true';
+
       final res = await http.get(
         Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/"),
         headers: headers,
@@ -42,7 +44,6 @@ class CheckoutController extends GetxController {
         final profile = json.decode(res.body);
         deliveryAddress.value = (profile["address"] ?? "").toString();
       } else {
-        // Non-fatal; user can still place a PICKUP order.
         deliveryAddress.value = "";
       }
     } catch (_) {
@@ -50,26 +51,21 @@ class CheckoutController extends GetxController {
     }
   }
 
-  /// Place order with new body, then redirect to Mollie payment checkout.
-  /// New body spec:
-  /// {
-  ///   "delivery_type": "DELIVERY" | "PICKUP",
-  ///   "delivery_address": "123 Main St" | "N/A",
-  ///   "order_type": "STANDARD",
-  ///   "note": "Please deliver ASAP"
-  /// }
+  /// Place order with API (new body), then redirect to Mollie payment flow.
   Future<void> placeOrderAndPay({
     required bool isDelivery,
-    required String note, // we still accept it but will also read from noteController
+    required String note,
   }) async {
     try {
       final headers = await BaseClient.authHeaders();
+      headers['ngrok-skip-browser-warning'] = 'true';
+      headers['Content-Type'] = 'application/json';
 
-      // If delivery, make sure we have an address (we already fetched on init).
       final String addressToSend =
       isDelivery ? (deliveryAddress.value.isEmpty ? "Unknown Address" : deliveryAddress.value) : "N/A";
 
-      final String finalNote = (noteController.text.isNotEmpty ? noteController.text : (note.isEmpty ? "No notes" : note));
+      final String finalNote =
+      (noteController.text.isNotEmpty ? noteController.text : (note.isEmpty ? "No notes" : note));
 
       final body = {
         "delivery_type": isDelivery ? "DELIVERY" : "PICKUP",
@@ -84,15 +80,20 @@ class CheckoutController extends GetxController {
         body: json.encode(body),
       );
 
-      print("Order API => ${orderRes.statusCode}");
-      print("Order Body => ${orderRes.body}");
+      print("ORDER STATUS: ${orderRes.statusCode}");
+      print("ORDER BODY: ${orderRes.body}");
 
       if (orderRes.statusCode == 200 || orderRes.statusCode == 201) {
-        // use actual total from cart for payment amount
-        final cart = Get.find<CartController>().currentCart;
-        final total = cart?.priceSummary.inTotalPrice ?? 0.0;
+        final parsed = json.decode(orderRes.body) as Map<String, dynamic>;
+        final orderId = parsed['order_id']?.toString();
 
-        await foodPayment(amount: total.toStringAsFixed(2));
+        if (orderId == null || orderId.isEmpty) {
+          Get.snackbar("Order Error", "Missing order_id in response");
+          return;
+        }
+
+        // ✅ Call new Mollie API
+        await foodPayment(orderId: orderId);
       } else {
         Get.snackbar("Order Failed", orderRes.body);
       }
@@ -101,25 +102,29 @@ class CheckoutController extends GetxController {
     }
   }
 
-  /// Mollie payment call (unchanged except amount now from cart total)
-  Future<void> foodPayment({required String amount}) async {
+  /// Mollie payment call (NEW endpoint)
+  Future<void> foodPayment({required String orderId}) async {
     try {
-      final headers = await BaseClient.authHeadersFormData();
+      final headers = await BaseClient.authHeaders();
+      headers['ngrok-skip-browser-warning'] = 'true';
+      headers['Content-Type'] = 'application/json';
 
       final response = await http.post(
-        Uri.parse("http://10.10.13.52:7000/discover/payment/"),
+        Uri.parse(
+            "https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/process-payment/"),
         headers: headers,
-        body: {"amount": amount},
       );
 
-      print("Payment API => ${response.statusCode}");
+      print("PAYMENT STATUS: ${response.statusCode}");
+      print("PAYMENT BODY: ${response.body}");
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
         final checkoutUrl = responseBody['checkout_url'];
 
         if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
-          Get.off(() => WebViewScreen(
+          Get.to(() => WebViewScreen(
+            orderId: orderId,
             url: checkoutUrl,
             onUrlMatched: (bool isCancelled) {
               if (!isCancelled) {
@@ -127,7 +132,8 @@ class CheckoutController extends GetxController {
               } else {
                 Get.snackbar("Cancelled", "Payment cancelled");
               }
-              Get.offAll(() => OrderDetailsView());
+              Get.offAll(() => const OrderDetailsView(),
+                  arguments: {"order_id": orderId});
             },
           ));
         } else {
