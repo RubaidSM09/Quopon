@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_fail_vendor_view.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_success_vendor_view.dart';
 
 import '../../../../common/customTextButton.dart';
+import '../../../data/model/vendor_order.dart';
+import '../../my_orders_vendors/controllers/my_orders_vendors_controller.dart';
 import '../controllers/qr_scanner_vendor_controller.dart';
 
 class VerificationCodeView extends GetView<QrScannerVendorController> {
@@ -28,7 +32,7 @@ class VerificationCodeView extends GetView<QrScannerVendorController> {
                 children: [
                   SizedBox.shrink(),
                   Text(
-                    'Enter 6-Digit Verification Code',
+                    "Enter 6-Digit Verification Code",
                     style: TextStyle(
                       color: Color(0xFF020711),
                       fontWeight: FontWeight.w500,
@@ -93,12 +97,36 @@ class VerificationCodeView extends GetView<QrScannerVendorController> {
                 width: double.infinity,
                 child: GradientButton(
                   text: 'Verify',
-                  onPressed: () {
-                    print("Verification Code: ${controller.code}");
-                    // Do your verification logic here...
-                    Get.back(); // close dialog
-                    Get.delete<QrScannerVendorController>();
-                    Get.dialog(QrSuccessVendorView(dealTitle: '50% Off Any Grande Beverage', dealStoreName: 'Starbucks', brandLogo: 'assets/images/deals/details/Starbucks_Logo.png', time: '01:05 AM'));
+                  onPressed: () async {
+                    final String code = controller.code;
+                    if (code.length != 6) {
+                      Get.snackbar('Error', 'Enter a valid 6-digit code');
+                      return;
+                    }
+                    final ordersCtrl = Get.find<MyOrdersVendorsController>();
+                    final VendorOrder? order = ordersCtrl.orders.firstWhereOrNull((o) => o.deliveryCode == code);
+
+                    if (order == null || order.status != 'OUT_FOR_DELIVERY' || order.deliveryCodeUsed) {
+                      Get.back();
+                      Get.dialog(const QrFailVendorView());
+                      return;
+                    }
+
+                    final success = await ordersCtrl.verifyDelivery(order.orderId, code);
+                    Get.back(); // Close dialog
+                    Get.delete<QrScannerVendorController>(); // Clean up
+
+                    if (success) {
+                      final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+                      Get.dialog(QrSuccessOrderView(
+                        invoiceNumber: order.orderId,
+                        customerName: 'User ${order.user}',
+                        orderItems: order.items.map((i) => '${i.quantity} x ${i.itemName}').join(', '),
+                        timestamp: 'Verified at $currentTime',
+                      ));
+                    } else {
+                      Get.dialog(const QrFailVendorView());
+                    }
                   },
                   colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                   boxShadow: [
@@ -107,7 +135,7 @@ class VerificationCodeView extends GetView<QrScannerVendorController> {
                   child: Text(
                     'Verify',
                     style: TextStyle(
-                      fontSize: 16.sp, // Use ScreenUtil for font size
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),

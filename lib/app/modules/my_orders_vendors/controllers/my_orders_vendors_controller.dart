@@ -39,7 +39,6 @@ class MyOrdersVendorsController extends GetxController {
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/status/');
     try {
-
       final response = await http.post(
         url,
         headers: await ApiClient.authHeaders(),
@@ -62,6 +61,28 @@ class MyOrdersVendorsController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Failed to update order status: $e');
       print('Error: $e');
+    }
+  }
+
+  Future<bool> verifyDelivery(String orderId, String code) async {
+    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/verify-delivery/');
+    try {
+      final response = await http.post(
+        url,
+        headers: await ApiClient.authHeaders(),
+        body: json.encode({'delivery_code': code}),
+      );
+      if (response.statusCode == 200) {
+        Get.snackbar('Success', 'Order verified successfully');
+        await fetchOrders();
+        return true;
+      } else {
+        Get.snackbar('Error', 'Failed to verify order: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Error verifying order: $e');
+      return false;
     }
   }
 

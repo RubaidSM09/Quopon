@@ -6,60 +6,80 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:intl/intl.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:quopon/app/data/api_client.dart';
+import 'package:quopon/app/modules/my_orders_vendors/controllers/my_orders_vendors_controller.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_fail_vendor_view.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/qr_success_vendor_view.dart';
 import 'package:quopon/app/modules/qr_scanner_vendor/views/verification_code_view.dart';
 import 'package:quopon/common/customTextButton.dart';
 
+import '../../../data/model/vendor_order.dart';
 import '../controllers/qr_scanner_vendor_controller.dart';
 
 class QrScannerVendorView extends GetView<QrScannerVendorController> {
-  final MobileScannerController _scannerController = MobileScannerController();
+  QrScannerVendorView({super.key});
 
-  int _selectedIndex = 2;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? scannerController;
+
   bool _isScanned = false;
 
+  @override
+  void dispose() {
+    scannerController?.dispose();
+    // super.dispose(); // No super.dispose() in GetView
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    scannerController = controller;
+    controller.scannedDataStream.listen((scanData) {
+      if (_isScanned) return;
+
+      final String? code = scanData.code;
+      if (code != null) {
+        _isScanned = true;
+        debugPrint('Scanned: $code');
+        _handleQRCode(code);
+        Future.delayed(const Duration(seconds: 3), () {
+          _isScanned = false;
+        });
+      }
+    });
+  }
+
   Future<void> _handleQRCode(String code) async {
-    // API endpoint URL
-    final String url = 'http://10.10.13.52:7000/discover/qr-scanner/';
+    final ordersCtrl = Get.find<MyOrdersVendorsController>();
+    final VendorOrder? order = ordersCtrl.orders.firstWhereOrNull((o) => o.deliveryCode == code);
 
+    if (order == null || order.status != 'OUT_FOR_DELIVERY' || order.deliveryCodeUsed) {
+      Get.dialog(const QrFailVendorView());
+      return;
+    }
+
+    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/${order.orderId}/verify-delivery/');
     try {
-      // Sending GET request to the API with the QR code
-      final response = await http.get(Uri.parse('$url?code=$code'));
-
+      final response = await http.post(
+        url,
+        headers: await ApiClient.authHeaders(),
+        body: json.encode({'delivery_code': code}),
+      );
       if (response.statusCode == 200) {
-        // Parse the response
-        final Map<String, dynamic> data = json.decode(response.body);
-
-        if (data['details'] == "No active offer found.") {
-          Get.dialog(QrFailVendorView());
-        } else {
-          Get.dialog(QrSuccessVendorView(dealTitle: '50% Off Any Grande Beverage', dealStoreName: 'Starbucks', brandLogo: 'assets/images/deals/details/Starbucks_Logo.png', time: '01:05 AM'));
-        }
+        final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+        Get.dialog(QrSuccessOrderView(
+          invoiceNumber: order.orderId,
+          customerName: 'User ${order.user}',
+          orderItems: order.items.map((i) => '${i.quantity} x ${i.itemName}').join(', '),
+          timestamp: 'Verified at $currentTime',
+        ));
+        ordersCtrl.fetchOrders();
       } else {
-        // Handle unsuccessful API response
-        Get.snackbar("Error", "Failed to fetch data from API.");
+        Get.dialog(const QrFailVendorView());
       }
     } catch (e) {
-      Get.snackbar("Error", "An error occurred: $e");
+      Get.dialog(const QrFailVendorView());
     }
-  }
-
-  void _showQRSuccess(BuildContext context, String dealTitle, String dealStoreName, String brandLogo, String time) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: QrSuccessVendorView(dealTitle: dealTitle, dealStoreName: dealStoreName, brandLogo: brandLogo, time: time),
-        );
-      },
-    );
-  }
-
-  void _showQRFail(BuildContext context) {
-    Get.dialog(QrFailVendorView());
   }
 
   @override
@@ -69,26 +89,16 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
         children: [
           // Camera View (disable on Web)
           if (!kIsWeb)
-            MobileScanner(
-              controller: _scannerController,
-              onDetect: (BarcodeCapture capture) {
-                if (_isScanned) return;
-
-                final List<Barcode> barcodes = capture.barcodes;
-                if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
-                  _isScanned = true;
-                  final String code = barcodes.first.rawValue!;
-                  debugPrint('Scanned: $code');
-
-                  // Make the API call to validate QR code
-                  _handleQRCode(code);
-
-                  // Reset after 3 seconds
-                  Future.delayed(const Duration(seconds: 3), () {
-                    _isScanned = false;
-                  });
-                }
-              },
+            QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: Colors.white,
+                borderRadius: 8.r,
+                borderLength: 30.w,
+                borderWidth: 2.w,
+                cutOutSize: 200.w,
+              ),
             )
           else
             const Center(
@@ -122,18 +132,6 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
             ),
           ),
 
-          // QR Scan overlay box and label
-          Center(
-            child: Container(
-              width: 200.w,
-              height: 200.h,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 2.w),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-          ),
-
           // Bottom action buttons (Flash & Camera flip)
           Positioned(
             bottom: 100.h,
@@ -143,22 +141,12 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () => _scannerController.toggleTorch(),
+                  onTap: () => scannerController?.toggleFlash(),
                   child: _actionButton(Icons.flash_on),
                 ),
                 SizedBox(width: 32.w),
                 GestureDetector(
-                  onTap: () => _scannerController.switchCamera(),
-                  child: _actionButton(Icons.cameraswitch),
-                ),
-                SizedBox(width: 32.w),
-                GestureDetector(
-                  onTap: () => Get.dialog(QrSuccessVendorView(dealTitle: '50% Off Any Grande Beverage', dealStoreName: 'Starbucks', brandLogo: 'assets/images/deals/details/Starbucks_Logo.png', time: '01:05 AM')),
-                  child: _actionButton(Icons.flash_on),
-                ),
-                SizedBox(width: 32.w),
-                GestureDetector(
-                  onTap: () => _showQRFail(context),
+                  onTap: () => scannerController?.flipCamera(),
                   child: _actionButton(Icons.cameraswitch),
                 ),
               ],
@@ -180,7 +168,7 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
           child: Text(
             'Use 6 Digit Code',
             style: TextStyle(
-              fontSize: 16.sp,  // Use ScreenUtil for font size
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
@@ -196,7 +184,7 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
         color: Colors.black.withOpacity(0.3),
         shape: BoxShape.circle,
       ),
-      padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
+      padding: EdgeInsets.all(12.w),
       child: Icon(icon, color: Colors.white),
     );
   }
