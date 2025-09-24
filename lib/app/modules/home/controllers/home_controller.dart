@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/data/base_client.dart';
 import 'package:quopon/app/data/model/beyondNeighbourhood.dart';
@@ -55,24 +56,50 @@ class HomeController extends GetxController {
   // Fetch categories from the API
   Future<void> fetchBeyondNeighbourhood() async {
     try {
-      // Call the API to get the categories
-      final response = await BaseClient.getRequest(api: Api.beyondNeighbourhood, );
+      final headers = await BaseClient.authHeaders();
 
-      // Decode the response body from JSON
-      final decodedResponse = json.decode(response.body);
-
-      // Check if the response contains categories
-      if (decodedResponse != null && decodedResponse is List) {
-        // Map the response to Category objects and update the list
-        beyondNeighbourhood.value = decodedResponse
-            .map((beyondNeighbourhoodJson) => BeyondNeighbourhood.fromJson(beyondNeighbourhoodJson))
-            .toList();
-      } else {
-        print('No categories found or incorrect response format.');
+      // 1) Fetch deals
+      final dealsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-deals/',
+        headers: headers,
+      );
+      if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
+        throw 'Failed to fetch deals (${dealsRes.statusCode})';
       }
+      final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
+
+      // 2) Fetch vendors (to map user_id -> vendor info)
+      final vendorsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
+        headers: headers,
+      );
+
+      // Build a lookup: vendor_id -> vendor json
+      final Map<int, Map<String, dynamic>> vendorById = {};
+      if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
+        final List<dynamic> vendors = json.decode(vendorsRes.body) as List<dynamic>;
+        for (final v in vendors) {
+          final vm = v as Map<String, dynamic>;
+          final vid = vm['vendor_id'];
+          if (vid is int) vendorById[vid] = vm;
+        }
+      }
+
+      // 3) Adapt to BeyondNeighbourhood list
+      final items = deals.map<BeyondNeighbourhood>((raw) {
+        final deal = raw as Map<String, dynamic>;
+        final vendor = vendorById[deal['user_id'] as int? ?? -1];
+        return BeyondNeighbourhood.fromDealJson(deal, vendorJson: vendor);
+      }).toList();
+
+      // 4) Publish to UI
+      beyondNeighbourhood.assignAll(items);
+
+      // (Optional) quick logs
+      debugPrint('BeyondNeighbourhood loaded: ${items.length} items');
     } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error appropriately (e.g., show a Snackbar or error message)
+      debugPrint('Error fetching beyond neighbourhood: $e');
+      Get.snackbar('Error', 'Failed to load deals beyond your neighbourhood');
     }
   }
 

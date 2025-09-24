@@ -264,6 +264,7 @@ class HomeView extends GetView<HomeController> {
                                         onTap: () {
                                           !beyondNeighbourhood.isPremium ? Get.dialog(
                                               DealDetailView(
+                                                dealId: beyondNeighbourhood.id,
                                                 dealImage: beyondNeighbourhood.coverImageUrl!,
                                                 dealTitle: beyondNeighbourhood.offers,
                                                 dealDescription: beyondNeighbourhood.description,
@@ -438,6 +439,7 @@ class HomeView extends GetView<HomeController> {
                                         onTap: () {
                                           !speedyDeliveries.isPremium ? Get.dialog(
                                               DealDetailView(
+                                                dealId: speedyDeliveries.id,
                                                 dealImage: speedyDeliveries.coverImageUrl!,
                                                 dealTitle: speedyDeliveries.offers,
                                                 dealDescription: speedyDeliveries.description,

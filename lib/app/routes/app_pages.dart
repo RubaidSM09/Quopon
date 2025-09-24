@@ -10,6 +10,7 @@ import '../modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
 import '../modules/Error404/bindings/error404_binding.dart';
 import '../modules/Error404/views/error404_view.dart';
 import '../modules/MyDeals/bindings/my_deals_binding.dart';
+import '../modules/MyDeals/controllers/my_deals_controller.dart';
 import '../modules/MyDeals/views/my_deals_view.dart';
 import '../modules/MyDealsDetails/bindings/my_deals_details_binding.dart';
 import '../modules/MyDealsDetails/views/my_deals_details_view.dart';
@@ -132,6 +133,7 @@ class AppPages {
     GetPage(
       name: _Paths.DEAL_DETAIL,
       page: () => DealDetailView(
+        dealId: 0,
         dealImage: '',
         dealTitle: '',
         dealDescription: '',
@@ -161,7 +163,24 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MY_DEALS_DETAILS,
-      page: () => const MyDealsDetailsView(),
+      page: () => MyDealsDetailsView(
+        data: MyDealViewData(
+          wishlistId: 0,
+          dealId: 0,
+          title: '',
+          description: '',
+          imageUrl: '',
+          startDate: DateTime.now(),
+          endDate: DateTime.now(),
+          isActive: false,
+          redemptionType: '',
+          deliveryFee: '',
+          minOrder: 0,
+          vendorId: 0,
+          vendorName: '', // fallback to deal email
+          vendorLogoUrl: '', // fallback to deal image
+        ),
+      ),
       binding: MyDealsDetailsBinding(),
     ),
     GetPage(

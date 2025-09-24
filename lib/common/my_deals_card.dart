@@ -5,78 +5,131 @@ import 'package:intl/intl.dart';
 import 'package:quopon/app/modules/vendor_deal_performance/views/vendor_deal_performance_view.dart';
 import 'package:quopon/app/modules/vendor_deals/views/deals_options_view.dart';
 
-class MyDealsCard extends StatefulWidget {
-  const MyDealsCard({super.key});
+class MyDealsCard extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String statusText;
 
-  @override
-  State<MyDealsCard> createState() => _MyDealsCardState();
-}
+  const MyDealsCard({
+    super.key,
+    required this.imageUrl,
+    required this.title,
+    required this.startDate,
+    required this.endDate,
+    required this.statusText,
+  });
 
-class _MyDealsCardState extends State<MyDealsCard> {
+  String _fmt(DateTime dt) {
+    // dd MMM yyyy
+    final months = [
+      'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+    ];
+    return '${dt.day.toString().padLeft(2, '0')} ${months[dt.month-1]} ${dt.year}';
+  }
+
+  Color _statusBg() {
+    switch (statusText) {
+      case 'Active': return const Color(0xFFECFDF5);
+      case 'Upcoming': return const Color(0xFFEEF3FF);
+      default: return const Color(0xFFFFEEEE);
+    }
+  }
+
+  Color _statusFg() {
+    switch (statusText) {
+      case 'Active': return const Color(0xFF2ECC71);
+      case 'Upcoming': return const Color(0xFF1E92FF);
+      default: return const Color(0xFFD62828);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h), // Use ScreenUtil for bottom padding
+      padding: EdgeInsets.only(bottom: 10.h),
       child: Container(
-        width: 398.w, // Use ScreenUtil for width
-        height: 82.h, // Use ScreenUtil for height
+        width: 398.w,
+        height: 82.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
+          borderRadius: BorderRadius.circular(12.r),
           color: Colors.white,
         ),
         child: Padding(
-          padding: EdgeInsets.all(12.w), // Use ScreenUtil for padding
+          padding: EdgeInsets.all(12.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset(
-                  'assets/images/MyDeals/StarBucks.png'
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.network(
+                  imageUrl,
+                  width: 58.w,
+                  height: 58.h,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const Icon(Icons.local_offer),
+                ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '50% Off Any Grande Beverage',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.sp, // Use ScreenUtil for font size
-                      color: Color(0xFF020711),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        color: const Color(0xFF020711),
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Valid: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp, // Use ScreenUtil for font size
-                          color: Color(0xFFD62828),
+                    Row(
+                      children: [
+                        Text(
+                          'Valid: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                            color: const Color(0xFFD62828),
+                          ),
                         ),
-                      ),
-                      Text(
-                        '28 May 2025 - 10 Jun 2025',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp, // Use ScreenUtil for font size
-                          color: Color(0xFF6F7E8D),
+                        Expanded(
+                          child: Text(
+                            '${_fmt(startDate)} - ${_fmt(endDate)}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.sp,
+                              color: const Color(0xFF6F7E8D),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(width: 10.w),
               Container(
-                height: 26.h, // Use ScreenUtil for height
-                width: 58.w, // Use ScreenUtil for width
+                height: 26.h,
+                width: 58.w,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6.r), // Use ScreenUtil for radius
-                  color: Color(0xFFECFDF5),
+                  borderRadius: BorderRadius.circular(6.r),
+                  color: _statusBg(),
                 ),
                 child: Center(
                   child: Text(
-                    'Active',
-                    style: TextStyle(color: Color(0xFF2ECC71), fontSize: 12.sp, fontWeight: FontWeight.w400),
+                    statusText,
+                    style: TextStyle(
+                      color: _statusFg(),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
