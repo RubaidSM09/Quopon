@@ -14,6 +14,7 @@ class QRScannerView extends GetView<QRScannerController> {
   @override
   Widget build(BuildContext context) {
     // NOTE: controller is provided by your Binding. Don't Get.put here.
+    Get.put(QRScannerController());
     final cameraSupported = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
     return Scaffold(
