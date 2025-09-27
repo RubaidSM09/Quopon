@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../../../services/fcmServices.dart';
 import '../../login/views/login_view.dart';
 
 class ProfileController extends GetxController {
@@ -39,6 +40,9 @@ class ProfileController extends GetxController {
 
   Future<void> userLogout() async {
     try {
+      final FCMService fcmService = FCMService();
+      await fcmService.removeFCMToken();
+
       await FlutterSecureStorage().deleteAll();
       await _storage.delete(key: 'access_token');
       await _storage.delete(key: 'refresh_token');

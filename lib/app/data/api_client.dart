@@ -76,6 +76,7 @@ class ApiClient {
         String authScheme = 'Bearer',
       }) async {
     final uri = Uri.parse('$_base$path');
+
     return http.post(uri,
         headers: await authHeaders(),
         body: jsonEncode(body))

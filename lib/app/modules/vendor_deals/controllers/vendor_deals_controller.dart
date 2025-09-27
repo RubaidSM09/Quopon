@@ -24,7 +24,7 @@ class VendorDealsController extends GetxController {
 
       // Fetch the deals
       final response = await http.get(
-        Uri.parse('http://10.10.13.52:7000/vendors/create-deals/?user_id=$userId'),
+        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/create-deals/?user_id=$userId'),
         headers: headers,
       );
 

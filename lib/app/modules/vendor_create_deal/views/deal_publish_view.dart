@@ -6,7 +6,13 @@ import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_v
 import 'package:quopon/common/customTextButton.dart';
 
 class DealPublishView extends GetView {
-  const DealPublishView({super.key});
+  final int dealId;
+
+  const DealPublishView({
+    required this.dealId,
+    super.key
+  });
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -49,7 +55,7 @@ class DealPublishView extends GetView {
                   text: 'Send Push Notification',
                   onPressed: () {
                     Get.back();
-                    Get.dialog(SendPushNotificationsView());
+                    Get.dialog(SendPushNotificationsView(dealId: dealId));
                   },
                   colors: [Color(0xFFD62828), Color(0xFFC21414)],
                 ),

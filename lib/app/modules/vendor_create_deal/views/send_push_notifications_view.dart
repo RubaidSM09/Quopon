@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUtil
+import 'package:quopon/app/modules/vendor_create_deal/controllers/send_push_notifications_controller.dart';
 import 'package:quopon/common/custom_textField.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../controllers/vendor_create_deal_controller.dart';
 
-class SendPushNotificationsView extends GetView {
+class SendPushNotificationsView extends GetView<SendPushNotificationsController> {
+  final int dealId;
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final VendorCreateDealController checkboxController = Get.put(VendorCreateDealController());
 
-  SendPushNotificationsView({super.key});
+  SendPushNotificationsView({
+    required this.dealId,
+    super.key
+  });
+
   @override
   Widget build(BuildContext context) {
+    Get.put(SendPushNotificationsController());
+
     return Dialog(
         backgroundColor: Color(0xFFFFFFFF),
         child: SingleChildScrollView(
@@ -121,8 +129,7 @@ class SendPushNotificationsView extends GetView {
                 GradientButton(
                   text: 'Send Push Notification',
                   onPressed: () {
-                    Get.back();
-                    Get.back();
+                    controller.pushNotifications(dealId, _titleController.text, _descriptionController.text);
                   },
                   colors: [Color(0xFFD62828), Color(0xFFC21414)],
                 ),

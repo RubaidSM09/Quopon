@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/landing/views/landing_vendor_view.dart';
 import 'package:quopon/app/modules/landing/views/landing_view.dart';
+import 'package:quopon/app/services/fcmServices.dart';
 
 import '../../../../common/app_constant/app_constant.dart';
 import '../../../../common/helper/local_store.dart';
@@ -82,6 +83,9 @@ class LoginController extends GetxController {
         print(':::::::::::::::responseBody:::::::::::::::::::::$responseBody');
         print(':::::::::::::::accessToken:::::::::::::::::::::$accessToken');
         print(':::::::::::::::refreshToken:::::::::::::::::::::$refreshToken');
+
+        final FCMService fcmService = FCMService();
+        await fcmService.setFCMToken();
 
         Get.snackbar('Success', 'Logged in successfully!');
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:quopon/app/modules/vendor_create_deal/views/deal_publish_view.dart';
 
 import '../../../../common/deliveryCostForm.dart';
 import '../../../data/base_client.dart';
@@ -63,7 +64,7 @@ class VendorCreateDealController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.52:7000/vendors/deals/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/',
         params: {'user_id': userId},
         headers: headers,
       );
@@ -171,13 +172,24 @@ class VendorCreateDealController extends GetxController {
       print(body);
 
       final res = await BaseClient.postRequest(
-        api: 'http://10.10.13.52:7000/vendors/create-deals/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/create-deals/',
         headers: headers,
         body: json.encode(body),
       );
 
-      await BaseClient.handleResponse(res);
-      Get.snackbar('Success', 'Deal created successfully');
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        final resBody = jsonDecode(res.body);
+        final dealId = resBody['id'];
+
+        await BaseClient.handleResponse(res);
+        Get.snackbar('Success', 'Deal created successfully');
+
+        Get.dialog(DealPublishView(dealId: dealId,));
+      }
+      else {
+        final resBody = jsonDecode(res.body);
+        Get.snackbar('Deal creation failed', resBody['message'] ?? 'Please give correct information');
+      }
     } catch (e) {
       print('Error => ${e.toString()}');
       Get.snackbar('Error', e.toString());
@@ -187,7 +199,7 @@ class VendorCreateDealController extends GetxController {
   // Helper method to upload image and return URL
   Future<String> uploadImage(File imageFile, Map<String, String> headers) async {
     try {
-      final uri = Uri.parse('http://10.10.13.52:7000/vendors/upload/');
+      final uri = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/upload/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
 
       // File
