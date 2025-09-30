@@ -18,9 +18,13 @@ class DealDetailView extends GetView<DealDetailController> {
   final String dealValidity;
   final String dealStoreName;
   final String brandLogo;
+  final String address;
   final String redemptionType;
   final String deliveryCost;
   final int minOrder;
+  final bool userType;
+  final String freeDiscount;   // ← NEW
+  final String plusDiscount;   // ← NEW
 
   const DealDetailView({
     super.key,
@@ -31,9 +35,13 @@ class DealDetailView extends GetView<DealDetailController> {
     required this.dealValidity,
     required this.dealStoreName,
     required this.brandLogo,
+    required this.address,
     required this.redemptionType,
     required this.deliveryCost,
     required this.minOrder,
+    required this.userType,
+    required this.freeDiscount,
+    required this.plusDiscount,
   });
 
   @override
@@ -188,7 +196,7 @@ class DealDetailView extends GetView<DealDetailController> {
                               ),
 
                               Text(
-                                'Restaurant Mario',
+                                dealStoreName,
                                 style: TextStyle(
                                   color: Color(0xFF6F7E8D),
                                   fontSize: 12.sp,
@@ -214,7 +222,7 @@ class DealDetailView extends GetView<DealDetailController> {
                               ),
 
                               Text(
-                                'Utrecht',
+                                address,
                                 style: TextStyle(
                                   color: Color(0xFF6F7E8D),
                                   fontSize: 12.sp,
@@ -382,7 +390,7 @@ class DealDetailView extends GetView<DealDetailController> {
 
                     SizedBox(height: 20.h),
 
-                    GradientButton(
+                    userType ? GradientButton(
                       text: 'Order Now',
                       onPressed: () {
                         Get.to(
@@ -406,6 +414,272 @@ class DealDetailView extends GetView<DealDetailController> {
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
+                      ),
+                    ) :
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: Color(0xFFF3F5F6),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  spacing: 20.h,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      spacing: 12.w,
+                                      children: [
+                                        Text(
+                                          'Free Users',
+                                          style: TextStyle(
+                                            color: Color(0xFF020711),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                      
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 12.w,
+                                            vertical: 5.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFEAECED),
+                                            borderRadius: BorderRadius.circular(6.r),
+                                          ),
+                                          child: Text(
+                                            'FREE',
+                                            style: TextStyle(
+                                              color: Color(0xFF6F7E8D),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          freeDiscount.isNotEmpty ? freeDiscount : '—',
+                                          style: TextStyle(
+                                            color: Color(0xFF020711),
+                                            fontSize: 32.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          freeDiscount.contains('+') ? ' Offer' : ' Discount',
+                                          style: TextStyle(
+                                            color: Color(0xFF6F7E8D),
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                      
+                                GestureDetector(
+                                  onTap: () { },
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.r),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFF44646),
+                                          Color(0xFFC21414),
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0xFF9A0000),
+                                          spreadRadius: 1.r,
+                                        )
+                                      ],
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 12.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFD62828),
+                                            Color(0xFFC21414),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Grab Free',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                      
+                          Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: Color(0xFF020711),
+                            ),
+                            child: Column(
+                              spacing: 32.h,
+                              children: [
+                                Column(
+                                  spacing: 20.h,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      spacing: 10.w,
+                                      children: [
+                                        Text(
+                                          'Qoupon+ Users',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                      
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 5.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFFA3652A),
+                                                Color(0xFFEFB06E),
+                                                Color(0xFFFFD4A6),
+                                                Color(0xFFF9C176),
+                                                Color(0xFFE77B33),
+                                                Color(0xFFDC702A),
+                                                Color(0xFF733D19),
+                                              ],
+                                              begin: AlignmentGeometry.topLeft,
+                                              end: AlignmentGeometry.bottomRight
+                                            ),
+                                            borderRadius: BorderRadius.circular(6.r),
+                                          ),
+                                          child: Text(
+                                            'Qoupon+',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                      
+                                    Column(
+                                      spacing: 8.h,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              plusDiscount.isNotEmpty ? plusDiscount : '—',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 32.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Text(
+                                              plusDiscount.contains('+') ? ' Offer' : ' Discount',
+                                              style: TextStyle(
+                                                color: Color(0xFF8A99A8),
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                      
+                                        Text(
+                                          'Always better deals with\nQoupon+',
+                                          style: TextStyle(
+                                            color: Color(0xFF8A99A8),
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12.sp,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                      
+                                GestureDetector(
+                                  onTap: () { },
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.r),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFF44646),
+                                          Color(0xFFC21414),
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0xFF9A0000),
+                                          spreadRadius: 1.r,
+                                        )
+                                      ],
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 12.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFD62828),
+                                            Color(0xFFC21414),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Unlock Plus',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
