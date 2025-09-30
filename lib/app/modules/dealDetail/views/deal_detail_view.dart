@@ -168,6 +168,64 @@ class DealDetailView extends GetView<DealDetailController> {
                         color: Colors.grey[600],
                       ),
                     ),
+                    SizedBox(height: 8.h),
+
+                    Row(
+                      spacing: 8.w,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF3F5F6),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            spacing: 8.w,
+                            children: [
+                              Image.asset(
+                                'assets/images/deals/details/vendor_icon.png',
+                                scale: 4,
+                              ),
+
+                              Text(
+                                'Restaurant Mario',
+                                style: TextStyle(
+                                  color: Color(0xFF6F7E8D),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF3F5F6),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            spacing: 8.w,
+                            children: [
+                              Image.asset(
+                                'assets/images/deals/details/vendor_location.png',
+                                scale: 4,
+                              ),
+
+                              Text(
+                                'Utrecht',
+                                style: TextStyle(
+                                  color: Color(0xFF6F7E8D),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 12.h),
 
                     // Deal Store Name and Validity

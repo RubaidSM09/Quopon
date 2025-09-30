@@ -58,9 +58,21 @@ class HomeController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
 
-      // 1) Fetch deals
+      // A) Who is the user?
+      final profileRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/',
+        headers: headers,
+      );
+      bool isUserPremium = false;
+      if (profileRes.statusCode >= 200 && profileRes.statusCode < 300) {
+        final Map<String, dynamic> p = json.decode(profileRes.body) as Map<String, dynamic>;
+        final sub = (p['subscription_status'] ?? '').toString().trim().toLowerCase();
+        isUserPremium = sub == 'active'; // subscribed = premium
+      }
+
+      // B) Deals
       final dealsRes = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-deals/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
         headers: headers,
       );
       if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
@@ -68,13 +80,11 @@ class HomeController extends GetxController {
       }
       final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
 
-      // 2) Fetch vendors (to map user_id -> vendor info)
+      // C) Vendors
       final vendorsRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
       );
-
-      // Build a lookup: vendor_id -> vendor json
       final Map<int, Map<String, dynamic>> vendorById = {};
       if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
         final List<dynamic> vendors = json.decode(vendorsRes.body) as List<dynamic>;
@@ -85,18 +95,37 @@ class HomeController extends GetxController {
         }
       }
 
-      // 3) Adapt to BeyondNeighbourhood list
-      final items = deals.map<BeyondNeighbourhood>((raw) {
-        final deal = raw as Map<String, dynamic>;
-        final vendor = vendorById[deal['user_id'] as int? ?? -1];
-        return BeyondNeighbourhood.fromDealJson(deal, vendorJson: vendor);
-      }).toList();
+      // D) Map ALL deals (no paid filtering) and compute per-user isPremium
+      String normDealType(Object? v) {
+        final s = (v ?? '').toString().trim().toLowerCase();
+        if (s == 'paid') return 'paid';
+        if (s == 'free') return 'free';
+        if (s == 'both') return 'both';
+        return ''; // unknown/null
+      }
 
-      // 4) Publish to UI
+      final items = <BeyondNeighbourhood>[];
+      for (final raw in deals) {
+        final m = raw as Map<String, dynamic>;
+        // Optional: hide completely inactive deals, or expired ones (keep if you want them shown)
+        final active = m['is_active'] == true;
+        if (!active) continue;
+
+        final vendor = vendorById[m['user_id'] as int? ?? -1];
+
+        final bn = BeyondNeighbourhood.fromDealJson(
+          m,
+          vendorJson: vendor,
+          isUserPremium: isUserPremium, // <- critical for blur logic
+        );
+        items.add(bn);
+      }
+
+      // Optional: sort by newest first (or however you like)
+      items.sort((a, b) => b.startDate.compareTo(a.startDate));
+
       beyondNeighbourhood.assignAll(items);
-
-      // (Optional) quick logs
-      debugPrint('BeyondNeighbourhood loaded: ${items.length} items');
+      debugPrint('BeyondNeighbourhood loaded: ${items.length} (userPremium=$isUserPremium)');
     } catch (e) {
       debugPrint('Error fetching beyond neighbourhood: $e');
       Get.snackbar('Error', 'Failed to load deals beyond your neighbourhood');
