@@ -14,9 +14,11 @@ class DiscoverView extends GetView<DiscoverController> {
 
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
-      body: Obx(() {
-        return controller.isMap.value ? DiscoverMapView() : DiscoverListView();
-      }),
+      body: SafeArea(
+        child: Obx(() {
+          return controller.isMap.value ? DiscoverMapView() : DiscoverListView();
+        }),
+      ),
     );
   }
 }

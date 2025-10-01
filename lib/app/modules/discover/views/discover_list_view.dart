@@ -13,7 +13,7 @@ class DiscoverListView extends GetView<DiscoverController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 60, bottom: 16),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 16),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -175,31 +175,43 @@ class DiscoverListView extends GetView<DiscoverController> {
             SizedBox(height: 20.h,),
 
             Obx(() {
-              if (controller.discoverList.isEmpty) {
-                return Center(
-                  child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
-                );
-              } else {
-                return Column(
-                  children: controller.discoverList.map((discoverList) {
-                    double rating = double.tryParse(discoverList.rating) ?? 0.0;
-                    int review = discoverList.reviewCount;
-                    double distance = double.tryParse(discoverList.distanceKm) ?? 0.0;
-
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0.h),
-                      child: DiscoverListCardView(
-                        title: discoverList.name,
-                        image: discoverList.logoUrl,
-                        rating: rating,
-                        review: review,
-                        distance: distance,
-                        offer: discoverList.discountPercentage.toString(),
-                      ),
-                    );
-                  }).toList(),
+              final pins = controller.nearbyPins;
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (controller.error.value != null) {
+                return Center(child: Text(controller.error.value!));
+              }
+              if (pins.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 40.h),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.location_off, size: 48, color: Colors.grey),
+                      SizedBox(height: 8.h),
+                      const Text('No vendors near you within the selected radius.', textAlign: TextAlign.center),
+                    ],
+                  ),
                 );
               }
+
+              return Column(
+                children: pins.map((p) {
+                  // Your DiscoverListCardView requires: title, image, rating, review, distance, offer
+                  // We don't have rating/review/offer yet from this API—so pass sane placeholders.
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0.h),
+                    child: DiscoverListCardView(
+                      title: p.vendor.name,
+                      image: p.vendor.logoImage ?? '',
+                      rating: 0.0,
+                      review: 0,
+                      distance: p.distanceKm,
+                      offer: '0',
+                    ),
+                  );
+                }).toList(),
+              );
             }),
           ],
         ),

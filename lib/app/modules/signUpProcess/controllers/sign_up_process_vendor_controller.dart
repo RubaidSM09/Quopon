@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:quopon/app/data/model/vendor_category.dart';
 
+import '../../../data/api_client.dart';
 import '../../../data/base_client.dart';
 import '../../../data/model/business_hour.dart';
 
@@ -15,6 +17,13 @@ class SignUpProcessVendorController extends GetxController {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   var selectedCategory = ''.obs; // Observing the selected category
+
+  // 🔹 image picker state
+  final ImagePicker _picker = ImagePicker();
+  final Rxn<XFile> profileImage = Rxn<XFile>(); // null = not picked yet
+
+  static const String _profileUploadPath = '/vendors/upload/';
+  static const String _profileImageField = 'image'; // <-- must be "image"
 
   var selectedCategoryId = RxInt(0);
 
@@ -38,7 +47,7 @@ class SignUpProcessVendorController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/vendors/vendor-categories/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendor-categories/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -75,7 +84,7 @@ class SignUpProcessVendorController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/home/users/$userId/business-hours/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -102,6 +111,69 @@ class SignUpProcessVendorController extends GetxController {
       }
     } catch (error) {
       Get.snackbar('Error', error.toString());
+    }
+  }
+
+  Future<void> pickProfileImage() async {
+    try {
+      final XFile? img = await _picker.pickImage(
+
+        source: ImageSource.gallery,
+        imageQuality: 85, // smaller file size
+      );
+      if (img != null) {
+        profileImage.value = img;
+        // If your backend later needs an URL, you'll upload this file and set profile_picture_url
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to pick image: $e');
+    }
+  }
+
+  Future<String?> _uploadProfileImageAndGetUrl() async {
+    final xfile = profileImage.value;
+    if (xfile == null) return null;
+
+    try {
+      // read bytes
+      final bytes = await xfile.readAsBytes();
+
+      // guess mime from extension
+      final lower = xfile.name.toLowerCase();
+      final mime = lower.endsWith('.png')
+          ? 'image/png'
+          : lower.endsWith('.webp')
+          ? 'image/webp'
+          : 'image/jpeg';
+
+      final streamed = await ApiClient.uploadMultipart(
+        path: _profileUploadPath,
+        fieldName: _profileImageField,
+        bytes: bytes,
+        filename: xfile.name,
+        mimeType: mime,
+        // Optionally add extra fields if your backend needs them
+        // fields: {'folder': 'profile_pictures'},
+      );
+
+      final resp = await http.Response.fromStream(streamed);
+      print(resp.statusCode);
+
+      if (resp.statusCode >= 200 && resp.statusCode < 300) {
+        final body = json.decode(resp.body);
+        if (body is Map && body['image'] != null) {
+          final url = body['image'].toString();
+          return url;
+        }
+        Get.snackbar('Upload', 'Upload succeeded but no image URL found.');
+        return null;
+      } else {
+        Get.snackbar('Upload failed', 'Status ${resp.statusCode}\n${resp.body}');
+        return null;
+      }
+    } catch (e) {
+      Get.snackbar('Upload error', e.toString());
+      return null;
     }
   }
 
@@ -141,7 +213,7 @@ class SignUpProcessVendorController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/home/users/$userId/business-hours/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
       headers['Content-Type'] = 'application/json';
 
@@ -209,25 +281,37 @@ class SignUpProcessVendorController extends GetxController {
         throw "Unauthorized access. Please log in again.";
       }
 
+      String? photoUrl;
+      if (profileImage.value != null) {
+        photoUrl = await _uploadProfileImageAndGetUrl();
+        if (photoUrl == null) {
+          // optional: let user proceed without image
+          Get.snackbar('Profile picture', 'Using default picture (upload failed).');
+        }
+      }
+
       final requestBody = {
         "name": nameController.text,
         "kvk_number": kvkNumberController.text,
         "phone_number": phoneController.text,
         "address": addressController.text,
         "category": selectedCategoryId.value, // Use the category id
+        'logo': photoUrl,
       };
 
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.postRequest(
-        api: 'http://10.10.13.52:7000/vendors/business-profile/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/business-profile/',
         body: json.encode(requestBody),
         headers: headers,
       );
 
       final responseBody = json.decode(response.body);
 
-      if (response.statusCode == 200) {
+      print(responseBody.statusCode);
+
+      if (response.statusCode == 201) {
         Get.snackbar('Success', 'Business profile updated successfully');
 
         // Get.to(); // Example: Navigate to next page
