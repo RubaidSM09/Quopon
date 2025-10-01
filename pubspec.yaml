@@ -54,6 +54,7 @@ dependencies:
   latlong2: ^0.9.1
   qr_code_scanner_plus: ^2.0.12
   geolocator: ^14.0.2
+  geocoding: ^4.0.0
 
 dev_dependencies:
   flutter_test:
