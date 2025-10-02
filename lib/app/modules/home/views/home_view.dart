@@ -368,8 +368,8 @@ class HomeView extends GetView<HomeController> {
 
                                           Get.to(
                                             VendorProfileView(
-                                              vendorUserId: nearShops.vendorId,   // <- user_id (for deals/menus)
-                                              vendorProfileId: nearShops.id,      // <- id (for follow/unfollow)
+                                              id: nearShops.id,
+                                              vendorId: nearShops.vendorId,
                                               logo: safeLogo,                 // <- never null
                                               name: nearShops.name,           // assuming non-null in model
                                               type: safeType,                 // readable label, never "null"

@@ -176,6 +176,7 @@ class AppPages {
           redemptionType: '',
           deliveryFee: '',
           minOrder: 0,
+          vendorProfileId: 0,
           vendorId: 0,
           vendorName: '', // fallback to deal email
           vendorLogoUrl: '', // fallback to deal image
@@ -202,7 +203,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => VendorProfileView(vendorId: 0, logo: '', name: '', type: '', address: '',),
+      page: () => VendorProfileView(id: 0, vendorId: 0, logo: '', name: '', type: '', address: '',),
       binding: VendorProfileBinding(),
     ),
     GetPage(

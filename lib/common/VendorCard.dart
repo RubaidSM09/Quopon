@@ -5,12 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 
 class VendorCard extends GetView {
+  final int id;
+  final int vendorId;
   final String brandLogo;
   final String dealStoreName;
   final String dealType;
   final int activeDeals;
 
   const VendorCard({
+    required this.id,
+    required this.vendorId,
     required this.brandLogo,
     required this.dealStoreName,
     required this.dealType,
@@ -83,7 +87,8 @@ class VendorCard extends GetView {
             GestureDetector(
               onTap: () {
                 Get.to(VendorProfileView(
-                  vendorId: 0,
+                  id: id,
+                  vendorId: vendorId,
                   logo: brandLogo,
                   name: dealStoreName,
                   type: dealType,

@@ -26,50 +26,53 @@ class Deal {
 
 class VendorProfileController extends GetxController {
   var deals = <DealItem>[].obs;
+  final RxList<RxBool> isOptionsSelected = [false.obs, false.obs].obs;
+  RxDouble total_price = 0.00.obs;
 
   final RxBool loading = false.obs;
   final RxString error = ''.obs;
   final RxMap<String, List<MenuItem>> menusByCategory = <String, List<MenuItem>>{}.obs;
 
-  // follow state
-  final RxBool isFollowed = false.obs;
-  final RxBool followBusy = false.obs;
-  int? _loadedForProfileId;
+  /// FOLLOW/UNFOLLOW STATE
+  final isFollowed = false.obs;
+  final followBusy = false.obs;
 
-  Future<void> ensureFollowState(int vendorProfileId) async {
-    if (_loadedForProfileId == vendorProfileId) return;
-    _loadedForProfileId = vendorProfileId;
-    await _loadFollowState(vendorProfileId);
-  }
-
-  Future<void> _loadFollowState(int vendorProfileId) async {
+  /// Initialize follow state for this vendor (use the *business profile* id)
+  Future<void> loadFollowState(int vendorProfileId) async {
     try {
       final headers = await BaseClient.authHeaders();
-      final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/customers/followed-vendors/',
+      final res = await http.get(
+        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/customers/followed-vendors/'),
         headers: headers,
       );
-
-      if (res.statusCode >= 200 && res.statusCode < 300) {
-        final data = json.decode(res.body);
-        if (data is List) {
-          final followed = data.cast<Map<String, dynamic>>();
-          final found = followed.any((e) => (e['id'] as int?) == vendorProfileId);
-          isFollowed.value = found;
-        } else {
-          isFollowed.value = false;
-        }
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        debugPrint('followed-vendors status: ${res.statusCode} ${res.body}');
+        isFollowed.value = false;
+        return;
+      }
+      final body = json.decode(res.body);
+      if (body is List) {
+        // API returns objects that include: id, vendor_email, vendor_id, name, ...
+        // We match by business-profile id
+        isFollowed.value = body.any((e) {
+          final m = e as Map<String, dynamic>;
+          final id = m['id'];
+          return id is int ? id == vendorProfileId : int.tryParse('$id') == vendorProfileId;
+        });
       } else {
         isFollowed.value = false;
       }
-    } catch (_) {
+    } catch (e) {
+      debugPrint('loadFollowState error: $e');
       isFollowed.value = false;
     }
   }
 
+  /// Toggle follow/unfollow using the *business profile* id in the endpoint
   Future<void> toggleFollow(int vendorProfileId) async {
+    if (followBusy.value) return;
+    followBusy.value = true;
     try {
-      followBusy.value = true;
       final headers = await BaseClient.authHeaders();
       final base = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendors/$vendorProfileId';
       final uri = Uri.parse(isFollowed.value ? '$base/unfollow/' : '$base/follow/');
@@ -79,13 +82,12 @@ class VendorProfileController extends GetxController {
         isFollowed.toggle();
         Get.snackbar('Success', isFollowed.value ? 'Vendor followed' : 'Vendor unfollowed');
       } else {
-        final body = res.body;
-        Get.snackbar('Error', 'Failed to ${isFollowed.value ? 'unfollow' : 'follow'} vendor (${res.statusCode})');
-        debugPrint('Follow/unfollow error: ${res.statusCode} $body');
+        debugPrint('Follow/unfollow error: ${res.statusCode} ${res.body}');
+        Get.snackbar('Error', 'Failed to ${isFollowed.value ? 'unfollow' : 'follow'} vendor');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Network error while updating follow status');
       debugPrint('toggleFollow error: $e');
+      Get.snackbar('Error', 'Network error while updating follow status');
     } finally {
       followBusy.value = false;
     }

@@ -42,6 +42,7 @@ class MyDealViewData {
   final int minOrder;       // parsed int
 
   // Vendor enrichment
+  final int? vendorProfileId;
   final int? vendorId;
   final String vendorName;          // fallback to deal email if unknown
   final String? vendorLogoUrl;      // fallback to deal image if missing
@@ -58,6 +59,7 @@ class MyDealViewData {
     required this.redemptionType,
     required this.deliveryFee,
     required this.minOrder,
+    required this.vendorProfileId,
     required this.vendorId,
     required this.vendorName,
     required this.vendorLogoUrl,
@@ -124,11 +126,13 @@ class MyDealsController extends GetxController {
         for (final v in vendors) {
           final vm = v as Map<String, dynamic>;
           final vid = vm['vendor_id'];
-          if (vid is int) vendorById[vid] = vm;
+          if (vid is int) {
+            vendorById[vid] = vm; // store full map with both vendor_id and id
+          }
         }
       }
 
-      // 4) Join → view data (NULL-SAFE)
+      // 4) Join → view data
       final joined = <MyDealViewData>[];
       for (final w in entries) {
         final djson = dealById[w.dealId];
@@ -137,7 +141,7 @@ class MyDealsController extends GetxController {
         final userId = djson['user_id'] as int?;
         final vendor = userId != null ? vendorById[userId] : null;
 
-        // --- Safe strings
+        // safe string helper
         String _s(dynamic v) => v is String ? v : (v?.toString() ?? '');
 
         final title = _s(djson['title']);
@@ -146,7 +150,7 @@ class MyDealsController extends GetxController {
         final redemptionType = _s(djson['redemption_type']);
         final emailFallback = _s(djson['email']);
 
-        // --- Safe dates
+        // dates
         DateTime _parseDate(dynamic v, {DateTime? fallback}) {
           final s = _s(v);
           final parsed = s.isNotEmpty ? DateTime.tryParse(s) : null;
@@ -156,7 +160,7 @@ class MyDealsController extends GetxController {
         final start = _parseDate(djson['start_date']);
         final end   = _parseDate(djson['end_date'], fallback: start);
 
-        // --- Delivery (first rule)
+        // delivery costs
         String deliveryFee = '0';
         int minOrder = 0;
         final costs = djson['delivery_costs'] as List<dynamic>?;
@@ -167,23 +171,27 @@ class MyDealsController extends GetxController {
           minOrder = (double.tryParse(mo) ?? 0).round();
         }
 
-        // --- Vendor enrichment
+        // vendor enrichment
         final vName = _s(vendor?['name']).trim();
         final vLogo = _s(vendor?['logo_image']).trim();
+
+        final vendorProfileId = vendor?['id'] as int?;       // business profile id
+        final vendorId = vendor?['vendor_id'] as int?;       // vendor_id from JSON
 
         joined.add(MyDealViewData(
           wishlistId: w.id,
           dealId: w.dealId,
           title: title,
-          description: description,        // <- now guaranteed non-null String
-          imageUrl: imageUrl,              // <- non-null String (may be '')
+          description: description,
+          imageUrl: imageUrl,
           startDate: start,
           endDate: end,
           isActive: djson['is_active'] == true,
           redemptionType: redemptionType,
           deliveryFee: deliveryFee,
           minOrder: minOrder,
-          vendorId: userId,
+          vendorProfileId: vendorProfileId,                  // <-- correct now
+          vendorId: vendorId,                                // <-- also correct
           vendorName: vName.isNotEmpty ? vName : emailFallback,
           vendorLogoUrl: vLogo.isNotEmpty ? vLogo : (imageUrl.isNotEmpty ? imageUrl : null),
         ));

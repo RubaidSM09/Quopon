@@ -7,20 +7,20 @@ import '../../../data/api.dart';
 import '../../../data/base_client.dart';
 
 class FollowedVendor {
-  final int id;                 // follow row id
-  final int vendorId;           // vendor_id
+  final int id;
   final String vendorEmail;
+  final int vendorId;
   final String name;
-  final String? logoImage;      // logo_image (nullable)
+  final String logoImage;   // URL
   final String kvkNumber;
   final String phoneNumber;
   final String address;
-  final int? category;          // category id
+  final int category;       // category id
 
   FollowedVendor({
     required this.id,
-    required this.vendorId,
     required this.vendorEmail,
+    required this.vendorId,
     required this.name,
     required this.logoImage,
     required this.kvkNumber,
@@ -29,41 +29,71 @@ class FollowedVendor {
     required this.category,
   });
 
-  factory FollowedVendor.fromJson(Map<String, dynamic> json) => FollowedVendor(
-    id: json['id'] as int,
-    vendorId: json['vendor_id'] as int,
-    vendorEmail: (json['vendor_email'] ?? '').toString(),
-    name: (json['name'] ?? '').toString(),
-    logoImage: (json['logo_image'] ?? '').toString().trim().isEmpty
-        ? null
-        : (json['logo_image'] as String),
-    kvkNumber: (json['kvk_number'] ?? '').toString(),
-    phoneNumber: (json['phone_number'] ?? '').toString(),
-    address: (json['address'] ?? '').toString(),
-    category: json['category'] is int ? json['category'] as int : int.tryParse('${json['category']}'),
+  factory FollowedVendor.fromJson(Map<String, dynamic> j) => FollowedVendor(
+    id: j['id'] ?? 0,
+    vendorEmail: (j['vendor_email'] ?? '').toString(),
+    vendorId: j['vendor_id'] ?? 0,
+    name: (j['name'] ?? '').toString(),
+    logoImage: (j['logo_image'] ?? '').toString(),
+    kvkNumber: (j['kvk_number'] ?? '').toString(),
+    phoneNumber: (j['phone_number'] ?? '').toString(),
+    address: (j['address'] ?? '').toString(),
+    category: j['category'] ?? 0,
   );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'vendor_email': vendorEmail,
+    'vendor_id': vendorId,
+    'name': name,
+    'logo_image': logoImage,
+    'kvk_number': kvkNumber,
+    'phone_number': phoneNumber,
+    'address': address,
+    'category': category,
+  };
 }
 
 class FollowVendorsController extends GetxController {
-  var followedVendors = <FollowedVendor>[].obs;
+  final isLoading = false.obs;
+  final error = RxnString();
+  final followedVendors = <FollowedVendor>[].obs;
 
   Future<void> fetchFollowedVendors() async {
     try {
-      final headers = await BaseClient.authHeaders();
-      final res = await BaseClient.getRequest(api: Api.followedVendors, headers: headers);
-      final decoded = json.decode(res.body);
+      isLoading.value = true;
+      error.value = null;
 
-      if (res.statusCode >= 200 && res.statusCode < 300 && decoded is List) {
-        followedVendors.value = decoded
-            .map<FollowedVendor>((e) => FollowedVendor.fromJson(e as Map<String, dynamic>))
-            .toList();
+      final headers = await BaseClient.authHeaders(); // includes Bearer + JSON
+      final res = await BaseClient.getRequest(
+        api: Api.followedVendors, // should point to /vendors/customers/followed-vendors/
+        headers: headers,
+      );
+
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        error.value =
+        'Failed to load followed vendors (${res.statusCode}).';
+        followedVendors.clear();
+        debugPrint('followed-vendors error: ${res.statusCode} ${res.body}');
+        return;
+      }
+
+      final body = json.decode(res.body);
+      if (body is List) {
+        followedVendors.assignAll(
+          body.map<FollowedVendor>((e) => FollowedVendor.fromJson(e)).toList(),
+        );
       } else {
-        debugPrint('Unexpected response for followed vendors: ${res.statusCode} $decoded');
+        error.value = 'Unexpected response format.';
         followedVendors.clear();
       }
     } catch (e) {
-      debugPrint('Error fetching followed vendors: $e');
+      print(e.toString());
+      error.value = 'Network error while loading followed vendors.';
       followedVendors.clear();
+      debugPrint('fetchFollowedVendors error: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
