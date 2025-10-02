@@ -256,6 +256,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> _primeBusinessHoursAndStatuses() async {
+    print('Rubaid');
     // Fetch hours for any userIds we don't have yet
     for (final userId in _vendorDistanceKm.keys) {
       if (_hoursCache.containsKey(userId)) continue;
@@ -325,21 +326,27 @@ class HomeController extends GetxController {
             default: return 'Other';
           }
         }
-
         const placeholderLogo = 'https://via.placeholder.com/120';
+
+        // get a clean logo string
+        final rawLogo = (m['logo_image'] ?? '').toString().trim();
+        final logo = rawLogo.isNotEmpty ? rawLogo : placeholderLogo;
+
         final adapted = <String, dynamic>{
           'id': m['id'],
-          // 📌 expose user_id as vendor_id in the NearShops model so UI keys match
+          // expose user_id as vendor_id (unchanged)
           'vendor_id': userIdKey,
           'vendor_email': m['vendor_email'],
-          'logo_url': (m['logo_image'] ?? placeholderLogo),
+          // ✅ KEY FIX: must be "logo_image" to match NearShops.fromJson
+          'logo_image': logo,
           'name': m['name'] ?? 'Unknown',
-          'category_name': mapCategory(m['category']),
-          'shop_title': m['name'] ?? 'Unknown',
-          'status_text': '—',        // initial placeholder
+          'category': m['category'],
           'address': m['address'],
           'phone_number': m['phone_number'],
           'kvk_number': m['kvk_number'],
+          // optional fields you already add:
+          'shop_title': m['name'] ?? 'Unknown',
+          'status_text': '—',
           'distance_km': double.parse(km.toStringAsFixed(2)),
         };
 
@@ -441,24 +448,161 @@ class HomeController extends GetxController {
 
   Future<void> fetchSpeedyDeliveries() async {
     try {
-      // Call the API to get the categories
-      final response = await BaseClient.getRequest(api: Api.speedyDeliveries, );
+      final headers = await BaseClient.authHeaders();
 
-      // Decode the response body from JSON
-      final decodedResponse = json.decode(response.body);
+      // A) user location (for distance/ETA)
+      await _ensureLocationPermission();
+      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      final userLL = LatLng(pos.latitude, pos.longitude);
+      final dist = Distance();
 
-      // Check if the response contains categories
-      if (decodedResponse != null && decodedResponse is List) {
-        // Map the response to Category objects and update the list
-        speedyDeliveries.value = decodedResponse
-            .map((speedyDeliveriesJson) => SpeedyDeliveries.fromJson(speedyDeliveriesJson))
-            .toList();
-      } else {
-        print('No categories found or incorrect response format.');
+      // B) who is the user? (premium affects blur)
+      final profileRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/',
+        headers: headers,
+      );
+      bool isUserPremium = false;
+      if (profileRes.statusCode >= 200 && profileRes.statusCode < 300) {
+        final Map<String, dynamic> p = json.decode(profileRes.body) as Map<String, dynamic>;
+        final sub = (p['subscription_status'] ?? '').toString().trim().toLowerCase();
+        isUserPremium = sub == 'active';
       }
+
+      // C) deals (we only want ones that can be delivered quickly)
+      final dealsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
+        headers: headers,
+      );
+      if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
+        throw 'Failed to fetch deals (${dealsRes.statusCode})';
+      }
+      final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
+
+      // D) vendors (for name/logo/address/coords)
+      final vendorsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
+        headers: headers,
+      );
+      final Map<int, Map<String, dynamic>> vendorByUserId = {};
+      if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
+        final List<dynamic> vendors = json.decode(vendorsRes.body) as List<dynamic>;
+        for (final v in vendors) {
+          final vm = v as Map<String, dynamic>;
+          final uid = (vm['user_id'] is int)
+              ? vm['user_id'] as int
+              : (vm['vendor_id'] is int ? vm['vendor_id'] as int : -1);
+          if (uid != -1) vendorByUserId[uid] = vm;
+        }
+      }
+
+      // E) map to SpeedyDeliveries with computed distance/ETA
+      final items = <SpeedyDeliveries>[];
+      for (final raw in deals) {
+        final m = raw as Map<String, dynamic>;
+
+        // must be active and deliverable
+        final active = m['is_active'] == true;
+        if (!active) continue;
+        final redem = (m['redemption_type'] ?? '').toString().trim().toUpperCase();
+        if (!(redem == 'DELIVERY' || redem == 'BOTH')) continue;
+
+        final userId = (m['user_id'] is int) ? m['user_id'] as int : -1;
+        if (userId == -1) continue;
+        final vendor = vendorByUserId[userId];
+        if (vendor == null) continue;
+
+        // vendor coords (or geocode address)
+        LatLng? vendorLL;
+        if (vendor['lat'] is num && vendor['lng'] is num) {
+          vendorLL = LatLng((vendor['lat'] as num).toDouble(), (vendor['lng'] as num).toDouble());
+        } else {
+          final address = (vendor['address'] ?? '').toString().trim();
+          if (address.isEmpty) continue;
+          vendorLL = _geoCache[address];
+          vendorLL ??= await _geocodeAddressMulti(address, bias: userLL);
+          if (vendorLL != null) _geoCache[address] = vendorLL;
+          await Future.delayed(const Duration(milliseconds: 150));
+        }
+        if (vendorLL == null) continue;
+
+        // distance + ETA
+        final meters = dist.distance(userLL, vendorLL);
+        final km = meters / 1000.0;
+        final etaMin = _estimateDeliveryMinutes(km);
+
+        // (optional) focus on truly “speedy” ones within radius
+        if (km > _nearRadiusKm) continue;
+
+        // normalize costs
+        final List<dynamic> rawCosts = (m['delivery_costs'] as List<dynamic>? ?? []);
+        final costs = rawCosts
+            .map((e) => DeliveryCostBN.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        // paid/free logic (blur for free users)
+        String _normDealType(Object? v) {
+          final s = (v ?? '').toString().trim().toLowerCase();
+          if (s == 'paid') return 'Paid';
+          if (s == 'free') return 'Free';
+          if (s == 'both') return 'Both';
+          return '';
+        }
+        final normalizedDealType = _normDealType(m['deal_type']);
+        final isPaidDeal = normalizedDealType == 'Paid';
+        final computedIsPremium = isPaidDeal && !isUserPremium;
+
+        String _norm(Object? v) => (v ?? '').toString().trim();
+
+        // build item (set distance/ETA explicitly)
+        final miles = (km * 0.621371).toStringAsFixed(1);
+
+        items.add(
+          SpeedyDeliveries(
+            id: m['id'] as int,
+            userId: userId,
+            email: _norm(m['email'] ?? vendor['vendor_email']),
+            linkedMenuItem: (m['linked_menu_item'] ?? 0) as int,
+            title: _norm(m['title'] ?? m['offers']),
+            description: _norm(m['description']),
+            imageUrl: _norm(m['image_url']),
+            discountValue: _norm(m['discount_value'] ?? m['discount_value_free'] ?? '0'),
+            startDate: DateTime.parse(m['start_date'].toString()),
+            endDate: DateTime.parse(m['end_date'].toString()),
+            redemptionType: redem,
+            dealType: normalizedDealType,
+            maxCouponsTotal: (m['max_coupons_total'] ?? 0) as int,
+            maxCouponsPerCustomer: (m['max_coupons_per_customer'] ?? 0) as int,
+            deliveryCosts: costs,
+            isActive: true,
+            qrImage: _norm(m['qrimage']),
+            vendorName: _norm(vendor['name']),
+            vendorLogoUrl: _norm(vendor['logo_image']),
+            vendorAddress: _norm(vendor['address']),
+            rating: '4.6',
+            distanceMiles: miles,
+            deliveryTimeMinutes: etaMin,
+            isPremium: computedIsPremium,
+            isFavourite: false,
+            priceRange: 2,
+          ),
+        );
+      }
+
+      // F) sort by fastest ETA, then by distance
+      items.sort((a, b) {
+        final c = a.deliveryTimeMinutes.compareTo(b.deliveryTimeMinutes);
+        if (c != 0) return c;
+        final da = double.tryParse(a.distanceMiles) ?? 0;
+        final db = double.tryParse(b.distanceMiles) ?? 0;
+        return da.compareTo(db);
+      });
+
+      // (optional) take top N
+      final top = items.take(_nearLimit).toList();
+
+      speedyDeliveries.assignAll(top);
     } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error appropriately (e.g., show a Snackbar or error message)
+      debugPrint('Error fetching speedy deliveries: $e');
     }
   }
 
