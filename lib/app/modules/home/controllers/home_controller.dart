@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ import 'package:quopon/app/data/model/nearShops.dart';
 import 'package:quopon/app/data/model/speedyDeliveries.dart';
 
 import '../../../data/api.dart';
+import '../../../data/model/business_hour.dart';
 import '../../../data/model/vendor_category.dart';
 
 class HomeController extends GetxController {
@@ -26,6 +28,14 @@ class HomeController extends GetxController {
   var beyondNeighbourhood = <BeyondNeighbourhood>[].obs;
   var nearShops = <NearShops>[].obs;
   var speedyDeliveries = <SpeedyDeliveries>[].obs;
+
+  // Live, reactive status by user_id
+  final RxMap<int, String> vendorStatus = <int, String>{}.obs;
+
+// Caches
+  final Map<int, BusinessHour> _hoursCache = {};     // user_id -> hours
+  final Map<int, double> _vendorDistanceKm = {};     // user_id -> distance
+  Timer? _statusTicker;
 
   // Fetch categories from the API
   Future<void> fetchVendorCategories() async {
@@ -140,16 +150,131 @@ class HomeController extends GetxController {
     }
   }
 
+  String _fmtEtaRange(int minutes) {
+    int lower = minutes - 5;
+    int upper = minutes + 5;
+    if (lower < 10) lower = 10;
+    if (upper < lower + 4) upper = lower + 4;
+    if (upper > 90) upper = 90;
+    return '$lower–$upper min';
+  }
+
+  int _estimateDeliveryMinutes(double km) {
+    // Simple: 12 min base + ~6 min per km, clamped
+    final m = (12 + km * 6).round();
+    return m.clamp(10, 90);
+  }
+
+  Duration? _parseHms(String? s) {
+    if (s == null || s.isEmpty) return null;
+    final p = s.split(':');
+    if (p.length < 2) return null;
+    final h = int.tryParse(p[0]) ?? 0;
+    final m = int.tryParse(p[1]) ?? 0;
+    final sec = (p.length > 2 ? int.tryParse(p[2]) : null) ?? 0;
+    return Duration(hours: h, minutes: m, seconds: sec);
+  }
+
+  bool _isOpenNow(String? openHms, String? closeHms, DateTime now) {
+    final open = _parseHms(openHms);
+    final close = _parseHms(closeHms);
+    if (open == null || close == null) return false;
+    final nowSec = now.hour * 3600 + now.minute * 60 + now.second;
+    final o = open.inSeconds;
+    final c = close.inSeconds;
+    if (c == o) return false;                 // zero window -> closed
+    if (c > o) {
+      return nowSec >= o && nowSec < c;       // same-day window
+    } else {
+      return nowSec >= o || nowSec < c;       // crosses midnight
+    }
+  }
+
+  int? _minutesUntilOpenToday(String? openHms, DateTime now) {
+    final open = _parseHms(openHms);
+    if (open == null) return null;
+    final nowSec = now.hour * 3600 + now.minute * 60 + now.second;
+    final o = open.inSeconds;
+    if (nowSec <= o) return ((o - nowSec) / 60).ceil();
+    return null; // today’s open already passed
+  }
+
+  String _statusFromSchedule(Schedule s, double km, DateTime now) {
+    if (s.isClosed) return 'Closed';
+
+    final open = s.openTime;
+    final close = s.closeTime;
+    if (_isOpenNow(open, close, now)) {
+      final eta = _estimateDeliveryMinutes(km);
+      return _fmtEtaRange(eta);
+    } else {
+      final mins = _minutesUntilOpenToday(open, now);
+      if (mins != null && mins <= 30) return 'Opens in $mins min';
+      return 'Closed';
+    }
+  }
+
+  Schedule _scheduleForDay(BusinessHour hours, int weekdayIdx) {
+    // weekdayIdx: 0=Mon...6=Sun
+    final list = hours.schedule;
+    if (weekdayIdx >= 0 && weekdayIdx < list.length) return list[weekdayIdx];
+    return Schedule(day: 'Monday', dayDisplay: 'Monday', openTime: null, closeTime: null, isClosed: true);
+  }
+
+  Future<BusinessHour?> _fetchVendorHours(int userId) async {
+    try {
+      final headers = await BaseClient.authHeaders();
+      final res = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/',
+        headers: headers,
+      );
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        final j = json.decode(res.body) as Map<String, dynamic>;
+        return BusinessHour.fromJson(j);
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  void _recomputeStatuses() {
+    final now = DateTime.now();
+    final weekdayIdx = now.weekday - 1; // 0..6
+    final newMap = <int, String>{};
+
+    for (final e in _vendorDistanceKm.entries) {
+      final userId = e.key;
+      final km = e.value;
+      final hours = _hoursCache[userId];
+      String status = 'Closed';
+      if (hours != null) {
+        final today = _scheduleForDay(hours, weekdayIdx);
+        status = _statusFromSchedule(today, km, now);
+      }
+      newMap[userId] = status;
+    }
+    vendorStatus.assignAll(newMap); // reactive
+  }
+
+  Future<void> _primeBusinessHoursAndStatuses() async {
+    // Fetch hours for any userIds we don't have yet
+    for (final userId in _vendorDistanceKm.keys) {
+      if (_hoursCache.containsKey(userId)) continue;
+      final h = await _fetchVendorHours(userId);
+      if (h != null) _hoursCache[userId] = h;
+    }
+    _recomputeStatuses();
+    _statusTicker?.cancel();
+    _statusTicker = Timer.periodic(const Duration(seconds: 30), (_) => _recomputeStatuses());
+  }
+
   Future<void> fetchNearShops() async {
     try {
       final headers = await BaseClient.authHeaders();
 
-      // 1) Get user's current location (with permission)
       await _ensureLocationPermission();
       final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       final userLL = LatLng(pos.latitude, pos.longitude);
 
-      // 2) Fetch all vendor profiles
       final response = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
@@ -161,7 +286,6 @@ class HomeController extends GetxController {
         return;
       }
 
-      // 3) Build (distance, adaptedJson) list
       final d = Distance();
       final List<_NearTmp> candidates = [];
 
@@ -170,7 +294,6 @@ class HomeController extends GetxController {
         final address = (m['address'] ?? '').toString().trim();
         if (address.isEmpty) continue;
 
-        // (a) If backend starts returning lat/lng, use them; else geocode
         LatLng? vendorLL;
         if (m['lat'] is num && m['lng'] is num) {
           vendorLL = LatLng((m['lat'] as num).toDouble(), (m['lng'] as num).toDouble());
@@ -178,16 +301,23 @@ class HomeController extends GetxController {
           vendorLL = _geoCache[address];
           vendorLL ??= await _geocodeAddressMulti(address, bias: userLL);
           if (vendorLL != null) _geoCache[address] = vendorLL;
-          await Future.delayed(const Duration(milliseconds: 200)); // be polite to free endpoints
+          await Future.delayed(const Duration(milliseconds: 200));
         }
-
         if (vendorLL == null) continue;
 
-        final meters = d.distance(userLL, vendorLL); // <- correct usage
+        final meters = d.distance(userLL, vendorLL);
         final km = meters / 1000.0;
         if (km > _nearRadiusKm) continue;
 
-        // Map to your NearShops JSON shape (UI unchanged)
+        // 📌 KEY: prefer user_id for hours endpoint; fallback to vendor_id
+        final int userIdKey = (m['user_id'] is int)
+            ? m['user_id'] as int
+            : (m['vendor_id'] is int ? m['vendor_id'] as int : -1);
+        if (userIdKey == -1) continue;
+
+        // 📌 keep distance keyed by user_id
+        _vendorDistanceKm[userIdKey] = km;
+
         String mapCategory(dynamic id) {
           switch (id) {
             case 1: return 'Restaurant';
@@ -199,28 +329,30 @@ class HomeController extends GetxController {
         const placeholderLogo = 'https://via.placeholder.com/120';
         final adapted = <String, dynamic>{
           'id': m['id'],
-          'vendor_id': m['vendor_id'],
+          // 📌 expose user_id as vendor_id in the NearShops model so UI keys match
+          'vendor_id': userIdKey,
           'vendor_email': m['vendor_email'],
           'logo_url': (m['logo_image'] ?? placeholderLogo),
           'name': m['name'] ?? 'Unknown',
           'category_name': mapCategory(m['category']),
           'shop_title': m['name'] ?? 'Unknown',
-          'status_text': m['address'] ?? 'Address unavailable',
+          'status_text': '—',        // initial placeholder
           'address': m['address'],
           'phone_number': m['phone_number'],
           'kvk_number': m['kvk_number'],
-          // (Optional) if your NearShops model supports, you can add distance too.
-          // 'distance_km': double.parse(km.toStringAsFixed(2)),
+          'distance_km': double.parse(km.toStringAsFixed(2)),
         };
 
         candidates.add(_NearTmp(distanceKm: km, json: adapted));
       }
 
-      // 4) Sort by nearest, limit, then push to observable
       candidates.sort((a, b) => a.distanceKm.compareTo(b.distanceKm));
       final limited = candidates.take(_nearLimit).map((e) => e.json).toList();
 
       nearShops.value = limited.map<NearShops>((j) => NearShops.fromJson(j)).toList();
+
+      // 📌 fetch hours + compute live statuses
+      await _primeBusinessHoursAndStatuses();
     } catch (e) {
       debugPrint('Error fetching near shops: $e');
     }
@@ -346,6 +478,7 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    _statusTicker?.cancel();
     super.onClose();
   }
 }

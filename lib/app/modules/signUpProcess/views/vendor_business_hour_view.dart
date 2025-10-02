@@ -55,7 +55,7 @@ class VendorBusinessHourView extends GetView<SignUpProcessVendorController> {
                     final schedule = controller.businessSchedule[index];
                     return VendorBusinessHourRowView(
                       isActive: !schedule.isClosed,
-                      day: schedule.dayDisplay,
+                      day: schedule.day,
                       startTimeRx: controller.startTimes[index],
                       // 🔧 pass the RxString and index instead of a plain String
                       endTimeRx: controller.endTimes[index],
@@ -87,6 +87,33 @@ class VendorBusinessHourView extends GetView<SignUpProcessVendorController> {
         ),
       ),
     );
+  }
+
+  String? _NumberToDay (int day) {
+    if(day == 0) {
+      return 'Monday';
+    }
+    else if (day == 1) {
+      return 'Tuesday';
+    }
+    else if (day == 2) {
+      return 'Wednesday';
+    }
+    else if (day == 3) {
+      return 'Thursday';
+    }
+    else if (day == 4) {
+      return 'Friday';
+    }
+    else if (day == 5) {
+      return 'Saturday';
+    }
+    else if (day == 6) {
+      return 'Sunday';
+    }
+    else {
+      return null;
+    }
   }
 }
 

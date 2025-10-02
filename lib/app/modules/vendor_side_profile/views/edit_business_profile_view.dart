@@ -131,27 +131,19 @@ class EditBusinessProfileView extends GetView<VendorSideProfileController> {
 
               Obx(() {
                 return Container(
-                  padding: EdgeInsets.all(16.r), // Use ScreenUtil for padding
+                  padding: EdgeInsets.all(16.r),  // Use ScreenUtil for padding
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      12.r,
-                    ), // Use ScreenUtil for radius
+                    borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(15),
-                        blurRadius: 16,
-                      ),
-                    ],
+                    boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)],
                   ),
                   child: Column(
-                    children: List.generate(controller.businessSchedule.length, (
-                        index,
-                        ) {
+
+                    children: List.generate(controller.businessSchedule.length, (index) {
                       final schedule = controller.businessSchedule[index];
                       return VendorBusinessHourRowView(
                         isActive: !schedule.isClosed,
-                        day: schedule.dayDisplay,
+                        day: schedule.day,
                         startTimeRx: controller.startTimes[index],
                         // 🔧 pass the RxString and index instead of a plain String
                         endTimeRx: controller.endTimes[index],
@@ -202,5 +194,32 @@ class EditBusinessProfileView extends GetView<VendorSideProfileController> {
         ),
       ),
     );
+  }
+
+  String? _NumberToDay (int day) {
+    if(day == 0) {
+      return 'Monday';
+    }
+    else if (day == 1) {
+      return 'Tuesday';
+    }
+    else if (day == 2) {
+      return 'Wednesday';
+    }
+    else if (day == 3) {
+      return 'Thursday';
+    }
+    else if (day == 4) {
+      return 'Friday';
+    }
+    else if (day == 5) {
+      return 'Saturday';
+    }
+    else if (day == 6) {
+      return 'Sunday';
+    }
+    else {
+      return null;
+    }
   }
 }
