@@ -338,7 +338,8 @@ class MyDealsDetailsView extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         Get.to(VendorProfileView(
-                          vendorId: data.vendorId ?? 0,
+                          vendorUserId: data.vendorId!,   // <- user_id (for deals/menus)
+                          vendorProfileId: data.vendorId!,      // <- id (for follow/unfollow)
                           logo: data.vendorLogoUrl ?? '',
                           name: data.vendorName,
                           type: '', // optional

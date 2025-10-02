@@ -25,7 +25,7 @@ class Api {
   static const discoverList = "$baseUrl/discover/list/";
 
   /// Profile
-  static const followedVendors = "$baseUrl/discover/followed-vendors/";
+  static const followedVendors = "$baseUrl/vendors/customers/followed-vendors/";
   static const cart = 'https://intensely-optimal-unicorn.ngrok-free.app/order/cart/';
 
   static String menu(int userId) {

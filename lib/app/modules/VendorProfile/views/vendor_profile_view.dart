@@ -10,14 +10,16 @@ import 'package:quopon/common/restaurant_card.dart';
 import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
-  final int vendorId;
+  final int vendorUserId;     // was vendorId before
+  final int vendorProfileId;  // NEW: use this for follow/unfollow
   final String? logo;
   final String name;
   final String type;
   final String address;
 
   const VendorProfileView({
-    required this.vendorId,
+    required this.vendorUserId,
+    required this.vendorProfileId,
     required this.logo,
     required this.name,
     required this.type,
@@ -28,9 +30,13 @@ class VendorProfileView extends GetView<VendorProfileController> {
   @override
   Widget build(BuildContext context) {
     Get.put(VendorProfileController());
-    print(vendorId);
-    controller.fetchDeals(vendorId);
-    controller.fetchMenus(vendorId);
+
+    // existing fetches (need user id)
+    controller.fetchDeals(vendorUserId);
+    controller.fetchMenus(vendorUserId);
+
+    // ensure follow state loaded once per vendorProfileId
+    controller.ensureFollowState(vendorProfileId);
 
     final hasLogo = logo != null && logo!.trim().isNotEmpty;
 
@@ -123,40 +129,52 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GradientButton(
-                          onPressed: () {},
-                          text: "Follow",
-                          colors: [Color(0xFFD62828), Color(0xFFC21414)],
-                          width: 175.w, // ScreenUtil applied
-                          borderRadius: 12.r, // ScreenUtil applied
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/images/VendorProfile/Follow.png"),
-                              SizedBox(width: 10.w), // ScreenUtil applied
-                              Text(
-                                "Follow",
-                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
+                        Obx(() {
+                          final isFollowing = controller.isFollowed.value;
+                          final busy = controller.followBusy.value;
+
+                          return GradientButton(
+                            onPressed: busy ? null : () => controller.toggleFollow(vendorProfileId),
+                            text: isFollowing ? "Unfollow" : "Follow",
+                            colors: isFollowing
+                                ? [const Color(0xFFBAC9D8), const Color(0xFF8EA0B3)]  // grey-ish for "Unfollow"
+                                : [const Color(0xFFD62828), const Color(0xFFC21414)],  // red for "Follow"
+                            width: 175.w,
+                            borderRadius: 12.r,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (busy)
+                                  SizedBox(width: 18.w, height: 18.w,
+                                    child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                  )
+                                else
+                                  Image.asset("assets/images/VendorProfile/Follow.png"),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  isFollowing ? "Unfollow" : "Follow",
+                                  style: TextStyle(
+                                    fontSize: 17.5.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: isFollowing ? Colors.white : Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
                         GradientButton(
                           onPressed: () {},
                           text: "Email",
-                          colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                          width: 175.w, // ScreenUtil applied
+                          colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
+                          width: 175.w,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset("assets/images/login/Email.png"),
-                              SizedBox(width: 10.w), // ScreenUtil applied
-                              Text(
-                                "Email",
-                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
-                              ),
+                              SizedBox(width: 10.w),
+                              Text("Email", style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711))),
                             ],
                           ),
                         ),

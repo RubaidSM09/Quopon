@@ -387,7 +387,8 @@ class DealDetailView extends GetView<DealDetailController> {
                       onPressed: () {
                         Get.to(
                           VendorProfileView(
-                            vendorId: 0,
+                            vendorUserId: 0,
+                            vendorProfileId: 0,
                             logo: brandLogo,
                             name: dealStoreName,
                             type: 'Cafe',

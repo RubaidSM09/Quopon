@@ -7,62 +7,46 @@ import '../controllers/follow_vendors_controller.dart';
 class FollowVendorsView extends GetView<FollowVendorsController> {
   const FollowVendorsView({super.key});
 
+  String _categoryLabel(int? id) {
+    switch (id) {
+      case 1: return 'Restaurant';
+      case 2: return 'Grocery';
+      default: return 'Other';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final FollowVendorsController controller = Get.put(FollowVendorsController());
+
+    const placeholderLogo = 'https://via.placeholder.com/200x200.png?text=Logo';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
       body: Padding(
         padding: EdgeInsets.all(16.w),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Icon(Icons.arrow_back, size: 24.sp),
-                    ),
-                    Text(
-                      "Follow Vendors",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                      ),
-                    ),
-                    SizedBox(width: 24.w), // Placeholder to balance layout
-                  ],
-                )
+                GestureDetector(onTap: Get.back, child: Icon(Icons.arrow_back, size: 24.sp)),
+                Text("Follow Vendors", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                SizedBox(width: 24.w),
               ],
             ),
-
             SizedBox(height: 25.h),
 
-            // Search bar
+            // Search bar (unchanged)
             GestureDetector(
-              onTap: () {
-                // TODO: Navigate to search
-              },
+              onTap: () {},
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 5, offset: Offset(0, 2))],
                 ),
                 child: Row(
                   children: [
@@ -71,10 +55,7 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                         readOnly: true,
                         decoration: InputDecoration(
                           hintText: 'Search food, store, deals...',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 14.sp,
-                          ),
+                          hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14.sp),
                           border: InputBorder.none,
                         ),
                       ),
@@ -90,28 +71,28 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
             Expanded(
               child: Obx(() {
                 if (controller.followedVendors.isEmpty) {
-                  return Center(
-                    child: Text(
-                      "No vendors found",
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                  );
+                  return Center(child: Text("No vendors found", style: TextStyle(fontSize: 14.sp)));
                 }
 
                 return ListView.builder(
                   itemCount: controller.followedVendors.length,
                   itemBuilder: (context, index) {
-                    final vendor = controller.followedVendors[index];
+                    final v = controller.followedVendors[index];
+
+                    final logo = (v.logoImage != null && v.logoImage!.trim().isNotEmpty)
+                        ? v.logoImage!
+                        : placeholderLogo;
+
                     return VendorCard(
-                      brandLogo: vendor.logoUrl,
-                      dealStoreName: vendor.title,
-                      dealType: vendor.category,
-                      activeDeals: vendor.menuCategory,
+                      brandLogo: logo,                          // ✅ logo_image
+                      dealStoreName: v.name,                    // ✅ name
+                      dealType: _categoryLabel(v.category),     // ✅ readable label
+                      activeDeals: 0,                           // no count in API; pass 0 (or hide in card)
                     );
                   },
                 );
               }),
-            )
+            ),
           ],
         ),
       ),
