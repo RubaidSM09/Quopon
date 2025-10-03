@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
@@ -40,7 +42,45 @@ class BusinessProfileVendorView extends GetView<SignUpProcessVendorController> {
                 color: Colors.grey[600],
               ),
             ),
-            SizedBox(height: 40.h), // Use ScreenUtil for height spacing
+            SizedBox(height: 40.h),
+            Center(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: controller.pickProfileImage,
+                    child: Obx(() {
+                      final img = controller.profileImage.value;
+                      return Container(
+                        width: 80.w,
+                        height: 80.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                          child: img == null
+                              ? Image.asset(
+                            'assets/images/CompleteProfile/Cloud.png',
+                            color: const Color(0xFF6F7E8D),
+                            height: 30.h,
+                            width: 30.w,
+                          )
+                              : Image.file(
+                            File(img.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text('Upload Profile Picture',
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711))),
+                ],
+              ),
+            ),
+            SizedBox(height: 40.h),
+
             _buildTextField(
               'Store Name',
               'Enter store name',

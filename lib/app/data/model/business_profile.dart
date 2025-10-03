@@ -1,69 +1,110 @@
-// To parse this JSON data, do
-//
-//     final businessProfile = businessProfileFromJson(jsonString);
+// lib/app/data/model/business_profile.dart
+// Vendor-centric model compatible with DiscoverController
 
 import 'dart:convert';
 
-BusinessProfile businessProfileFromJson(String str) => BusinessProfile.fromJson(json.decode(str));
+/// Parse a JSON array (from /vendors/all-business-profile/) into a List<BusinessProfile>
+List<BusinessProfile> businessProfileListFromJson(String str) =>
+    (json.decode(str) as List)
+        .map((e) => BusinessProfile.fromJson(e as Map<String, dynamic>))
+        .toList();
 
-String businessProfileToJson(BusinessProfile data) => json.encode(data.toJson());
+/// Encode a List<BusinessProfile> back to JSON (rarely needed on client)
+String businessProfileListToJson(List<BusinessProfile> data) =>
+    json.encode(data.map((e) => e.toJson()).toList());
 
 class BusinessProfile {
-  String message;
-  Data data;
+  final int id;
 
-  BusinessProfile({
-    required this.message,
-    required this.data,
-  });
+  // The API sometimes includes these; keep them nullable for safety.
+  final String? vendorEmail;
+  final int? vendorId;
 
-  factory BusinessProfile.fromJson(Map<String, dynamic> json) => BusinessProfile(
-    message: json["message"],
-    data: Data.fromJson(json["data"]),
-  );
+  final String name;
+  final String? logoImage;
+  final String kvkNumber;
+  final String phoneNumber;
+  final String address;
+  final int? category;
 
-  Map<String, dynamic> toJson() => {
-    "message": message,
-    "data": data.toJson(),
-  };
-}
+  /// Client-side geocoded coordinates (API doesn’t send these yet)
+  final double? lat;
+  final double? lng;
 
-class Data {
-  int id;
-  String name;
-  dynamic logoImage;
-  String kvkNumber;
-  String phoneNumber;
-  String address;
-  dynamic category;
-
-  Data({
+  const BusinessProfile({
     required this.id,
     required this.name,
     required this.logoImage,
     required this.kvkNumber,
     required this.phoneNumber,
     required this.address,
-    required this.category,
+    this.category,
+    this.vendorEmail,
+    this.vendorId,
+    this.lat,
+    this.lng,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["id"],
-    name: json["name"],
-    logoImage: json["logo_image"],
-    kvkNumber: json["kvk_number"],
-    phoneNumber: json["phone_number"],
-    address: json["address"],
-    category: json["category"],
-  );
+  /// Handy for setting lat/lng after geocoding (and any other partial updates)
+  BusinessProfile copyWith({
+    int? id,
+    String? vendorEmail,
+    int? vendorId,
+    String? name,
+    String? logoImage,
+    String? kvkNumber,
+    String? phoneNumber,
+    String? address,
+    int? category,
+    double? lat,
+    double? lng,
+  }) {
+    return BusinessProfile(
+      id: id ?? this.id,
+      vendorEmail: vendorEmail ?? this.vendorEmail,
+      vendorId: vendorId ?? this.vendorId,
+      name: name ?? this.name,
+      logoImage: logoImage ?? this.logoImage,
+      kvkNumber: kvkNumber ?? this.kvkNumber,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      address: address ?? this.address,
+      category: category ?? this.category,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+    );
+  }
+
+  bool get hasCoords => lat != null && lng != null;
+
+  factory BusinessProfile.fromJson(Map<String, dynamic> json) {
+    return BusinessProfile(
+      id: json['id'] as int,
+      vendorEmail: (json['vendor_email'] ?? json['vendorEmail'])?.toString(),
+      vendorId: json['vendor_id'] is int ? json['vendor_id'] as int : (json['vendorId'] as int?),
+      name: (json['name'] ?? '').toString(),
+      logoImage: json['logo_image'] as String?,
+      kvkNumber: (json['kvk_number'] ?? '').toString(),
+      phoneNumber: (json['phone_number'] ?? '').toString(),
+      address: (json['address'] ?? '').toString(),
+      category: json['category'] is int ? json['category'] as int : null,
+
+      // If backend later returns lat/lng, we’ll pick them up; otherwise null.
+      lat: (json['lat'] is num) ? (json['lat'] as num).toDouble() : null,
+      lng: (json['lng'] is num) ? (json['lng'] as num).toDouble() : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "logo_image": logoImage,
-    "kvk_number": kvkNumber,
-    "phone_number": phoneNumber,
-    "address": address,
-    "category": category,
+    'id': id,
+    'vendor_email': vendorEmail,
+    'vendor_id': vendorId,
+    'name': name,
+    'logo_image': logoImage,
+    'kvk_number': kvkNumber,
+    'phone_number': phoneNumber,
+    'address': address,
+    'category': category,
+    'lat': lat,
+    'lng': lng,
   };
 }
