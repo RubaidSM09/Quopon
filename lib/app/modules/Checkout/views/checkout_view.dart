@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 import 'package:quopon/app/modules/Checkout/views/checkout_delivery_view.dart';
 import 'package:quopon/app/modules/Checkout/views/checkout_pickup_view.dart';
-import 'package:quopon/app/modules/OrderDetails/views/order_details_view.dart';
 import '../../../../common/customTextButton.dart';
-import '../../Cart/controllers/cart_controller.dart';
 import '../../Checkout/controllers/checkout_controller.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
@@ -25,7 +23,7 @@ class CheckoutView extends GetView<CheckoutController> {
     RxBool isDelivery = true.obs;
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
@@ -43,9 +41,9 @@ class CheckoutView extends GetView<CheckoutController> {
                   ),
                   Text(
                     'Checkout',
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)), // ScreenUtil applied
                   ),
-                  SizedBox(),
+                  const SizedBox(),
                 ],
               ),
               SizedBox(height: 20.h), // ScreenUtil applied
@@ -57,8 +55,8 @@ class CheckoutView extends GetView<CheckoutController> {
                       height: 48.h, // ScreenUtil applied
                       width: 398.w, // ScreenUtil applied
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
-                          color: Color(0xFFF1F3F4)
+                        borderRadius: BorderRadius.circular(12.r), // ScreenUtil applied
+                        color: const Color(0xFFF1F3F4),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(4.w), // ScreenUtil applied
@@ -67,7 +65,7 @@ class CheckoutView extends GetView<CheckoutController> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                if(!isDelivery.value) {
+                                if (!isDelivery.value) {
                                   isDelivery.value = !isDelivery.value;
                                 }
                               },
@@ -76,19 +74,23 @@ class CheckoutView extends GetView<CheckoutController> {
                                 width: 185.w, // ScreenUtil applied
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
-                                  color: isDelivery.value ? Color(0xFFD62828) : Color(0xFFF1F3F4),
+                                  color: isDelivery.value ? const Color(0xFFD62828) : const Color(0xFFF1F3F4),
                                 ),
                                 child: Center(
                                   child: Text(
                                     'Delivery',
-                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDelivery.value ? Color(0xFFFFFFFF) : Color(0xFF6F7E8D)), // ScreenUtil applied
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: isDelivery.value ? const Color(0xFFFFFFFF) : const Color(0xFF6F7E8D),
+                                    ), // ScreenUtil applied
                                   ),
                                 ),
                               ),
                             ),
                             GestureDetector(
                               onTap: () {
-                                if(isDelivery.value) {
+                                if (isDelivery.value) {
                                   isDelivery.value = !isDelivery.value;
                                 }
                               },
@@ -96,13 +98,17 @@ class CheckoutView extends GetView<CheckoutController> {
                                 height: 40.h, // ScreenUtil applied
                                 width: 185.w, // ScreenUtil applied
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
-                                    color: !isDelivery.value ? Color(0xFFD62828) : Color(0xFFF1F3F4)
+                                  borderRadius: BorderRadius.circular(8.r), // ScreenUtil applied
+                                  color: !isDelivery.value ? const Color(0xFFD62828) : const Color(0xFFF1F3F4),
                                 ),
                                 child: Center(
                                   child: Text(
                                     'Pickup',
-                                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: !isDelivery.value ? Color(0xFFFFFFFF) : Color(0xFF6F7E8D)), // ScreenUtil applied
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: !isDelivery.value ? const Color(0xFFFFFFFF) : const Color(0xFF6F7E8D),
+                                    ), // ScreenUtil applied
                                   ),
                                 ),
                               ),
@@ -112,18 +118,19 @@ class CheckoutView extends GetView<CheckoutController> {
                       ),
                     ),
                     SizedBox(height: 10.h), // ScreenUtil applied
-                    isDelivery.value ? CheckoutDeliveryView(
+                    isDelivery.value
+                        ? CheckoutDeliveryView(
                       mapLocationImg: 'assets/images/Checkout/Map.png',
                       subTotal: subTotal,
                       deliveryCharge: deliveryCharge,
-                    ) : CheckoutPickupView(
+                    )
+                        : CheckoutPickupView(
                       mapLocationImg: 'assets/images/Checkout/Map.png',
                       subTotal: subTotal,
                     ),
                   ],
                 );
-              },
-              ),
+              }),
             ],
           ),
         ),
@@ -135,11 +142,13 @@ class CheckoutView extends GetView<CheckoutController> {
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
           child: GradientButton(
             onPressed: () {
-              controller.foodPayment(amount: '20');
-             // Get.to(OrderDetailsView());
+              controller.placeOrderAndPay(
+                isDelivery: isDelivery.value,
+                note: controller.noteController.text, // note comes from shared controller
+              );
             },
             text: "Follow",
-            colors: [Color(0xFFD62828), Color(0xFFC21414)],
+            colors: const [Color(0xFFD62828), Color(0xFFC21414)],
             borderRadius: 12.r, // ScreenUtil applied
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

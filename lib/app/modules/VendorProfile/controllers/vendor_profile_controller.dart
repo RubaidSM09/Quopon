@@ -44,7 +44,7 @@ class VendorProfileController extends GetxController {
 
       // Fetch the deals
       final response = await http.get(
-        Uri.parse('http://10.10.13.52:7000/vendors/create-deals/?user_id=$id'),
+        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/create-deals/?user_id=$id'),
         headers: headers,
       );
 
@@ -68,7 +68,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.52:7000/vendors/deals/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/',
         params: {'user_id': id.toString()},
         headers: headers,
       );

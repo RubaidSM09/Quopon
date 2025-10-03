@@ -16,7 +16,7 @@ class CartView extends GetView<CartController> {
   @override
   Widget build(BuildContext context) {
     // ❌ Don’t create controllers in build()
-    // Get.put(CartController());
+    Get.put(CartController());
 
     String money(num v) => v.toStringAsFixed(2);
 

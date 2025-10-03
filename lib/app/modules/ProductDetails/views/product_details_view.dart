@@ -29,6 +29,7 @@ class ProductDetailsView extends GetView<VendorProfileController> {
   @override
   Widget build(BuildContext context) {
     // Get.put(VendorProfileController());
+    ProductDetailsController productController = Get.put(ProductDetailsController());
 
     return Scaffold(
       backgroundColor: Color(0xFFF9FBFC),
@@ -305,45 +306,38 @@ class ProductDetailsView extends GetView<VendorProfileController> {
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            16.w,
-            16.h,
-            16.w,
-            32.h,
-          ), // ScreenUtil applied
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h),
           child: GradientButton(
-            onPressed: () {
-              /*controller.toggleOption(
-                id,
-                item.id!,
-                true,
-                1,
-                false,
-              );*/
-
-              Get.back();
+            onPressed: () async {
+              final ok = await Get.find<ProductDetailsController>().addToCart(
+                menuItemId: id,              // pass the real menu item id
+                quantity: 1,
+                specialInstructions: '',   // or a note from a text field
+              );
+              if (ok) Get.back();            // or show a toast, refresh cart, etc.
             },
             text: "Follow",
             colors: [Color(0xFFD62828), Color(0xFFC21414)],
-            borderRadius: 12.r, // ScreenUtil applied
+            borderRadius: 12.r,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset("assets/images/ProductDetails/Cart.png"),
-                SizedBox(width: 10.w), // ScreenUtil applied
+                SizedBox(width: 10.w),
                 Obx(() {
-                  // controller.total_price.value = item.totalPrice!;
-
+                  productController.total_price.value = price;
                   return Text(
-                    "Add 1 to Cart \$${controller.total_price.value}",
-                    style: TextStyle(
-                      fontSize: 17.5.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  );
-                }),
+                        "Add 1 to Cart \$${productController.total_price.value
+                            .toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontSize: 17.5.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      );
+                  },
+                ),
               ],
             ),
           ),

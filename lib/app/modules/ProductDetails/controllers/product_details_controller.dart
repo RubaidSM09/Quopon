@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../data/base_client.dart';
 
 class AddOnOptions {
   final String title;
@@ -28,12 +33,13 @@ class AddOn {
 
 class ProductDetailsController extends GetxController {
   var itemAddOns = <AddOn>[].obs;
+  RxDouble total_price = 0.0.obs;
 
   @override
   void onInit() {
     super.onInit();
 
-    itemAddOns.value = [
+    /*itemAddOns.value = [
       AddOn(
         addOnTitle: 'Select Your Bread',
         addOnOptions: [
@@ -95,6 +101,42 @@ class ProductDetailsController extends GetxController {
             ),
           ]
       ),
-    ];
+    ];*/
+  }
+
+  /// Add to Cart API
+  Future<bool> addToCart({
+    required int menuItemId,
+    int quantity = 1,
+    String? specialInstructions,
+  }) async {
+    try {
+      final headers = await BaseClient.authHeaders();
+
+      final body = jsonEncode({
+        "menu_item_id": menuItemId,
+        "quantity": quantity,
+        "special_instructions": specialInstructions,
+      });
+
+      final uri = Uri.parse(
+          "https://intensely-optimal-unicorn.ngrok-free.app/order/cart/add/");
+      print(uri);
+      print(body);
+      print(headers);
+      final res = await http.post(uri, headers: headers, body: body);
+      print(res.statusCode);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        Get.snackbar("Cart", "Item added successfully");
+        return true;
+      } else {
+        Get.snackbar("Error", "Failed to add item (${res.statusCode})");
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar("Network", "Add to cart failed: $e");
+      return false;
+    }
   }
 }
