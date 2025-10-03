@@ -283,7 +283,7 @@ class HomeView extends GetView<HomeController> {
                                           Get.bottomSheet(QuoponPlusView());
                                         },
                                         child: HomeRestaurantCard(
-                                          /*discountTxt: '', */
+                                          discountText: '',
                                           restaurantImg: beyondNeighbourhood.coverImageUrl!,
                                           restaurantName: beyondNeighbourhood.name,
                                           deliveryFee: beyondNeighbourhood.deliveryFee.toString(),
@@ -382,8 +382,8 @@ class HomeView extends GetView<HomeController> {
                                         },
                                         child: _buildShopItem(
                                           nearShops.name,
-                                          nearShops.address,
-                                          nearShops.logoImage,               // nullable; _buildShopItem handles fallback
+                                          controller.vendorStatus[nearShops.vendorId] ?? '—', // <-- status here
+                                          nearShops.logoImage,
                                         ),
                                       ),
                                     ); // Use category object here
@@ -461,7 +461,7 @@ class HomeView extends GetView<HomeController> {
                                           ) : Get.bottomSheet(QuoponPlusView());
                                         },
                                         child: HomeRestaurantCard(
-                                          /*discountTxt: '', */
+                                          discountText: '',
                                           restaurantImg: speedyDeliveries.coverImageUrl!,
                                           restaurantName: speedyDeliveries.name,
                                           deliveryFee: speedyDeliveries.deliveryFee,

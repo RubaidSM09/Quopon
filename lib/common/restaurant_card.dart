@@ -236,6 +236,7 @@ class RestaurantCard extends GetView {
 }
 
 class HomeRestaurantCard extends GetView {
+  final String discountText;
   final String restaurantImg;
   final String restaurantName;
   final String deliveryFee;
@@ -246,6 +247,7 @@ class HomeRestaurantCard extends GetView {
   final bool isPremium;
 
   const HomeRestaurantCard({
+    required this.discountText,
     required this.restaurantImg,
     required this.restaurantName,
     required this.deliveryFee,

@@ -142,45 +142,63 @@ class VendorSideProfileController extends GetxController {
     }
   }
 
-  // Function to fetch business hours from the server
+  // Helper to convert "HH:mm:ss" -> "HH:mm" (and handle nulls safely)
+  String _toHHmm(String? v) {
+    if (v == null || v.isEmpty) return '';
+    // Expect "HH:mm:ss" or "HH:mm"
+    if (v.length >= 5) return v.substring(0, 5);
+    return v;
+  }
+
+  String _weekdayFromIndex(int i) {
+    const names = [
+      'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'
+    ];
+    return (i >= 0 && i < names.length) ? names[i] : 'Monday';
+  }
+
   Future<void> fetchBusinessHours() async {
     try {
       String? userId = await BaseClient.getUserId();
-
       if (userId == null) {
-
-
-
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
+      final apiUrl =
+          'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
 
+      print(response.statusCode);
+
       if (response.statusCode >= 200 && response.statusCode <= 210) {
         final responseBody = json.decode(response.body);
-        print(responseBody);
-        BusinessHour businessHour = BusinessHour.fromJson(responseBody);
 
+        final businessHour = BusinessHour.fromJson(responseBody);
+
+        // Keep the raw model for patching later
         businessSchedule.value = businessHour.schedule;
 
-        startTimes.assignAll(
-          businessHour.schedule.map((s) => s.openTime.obs).toList(),
-        );
+        // 🚑 Normalize day labels using the row index (Mon..Sun)
+        for (int i = 0; i < businessSchedule.length; i++) {
+          final label = _weekdayFromIndex(i);
+          businessSchedule[i].day = label;
+          businessSchedule[i].dayDisplay = label;
+        }
 
-        endTimes.assignAll(
-          businessHour.schedule.map((s) => s.closeTime.obs).toList(),
-        );
+        // Feed the UI-friendly HH:mm strings (your TimePicker expects HH:mm)
+        startTimes.assignAll(businessSchedule.map((s) => _toHHmm(s.openTime).obs).toList());
+        endTimes.assignAll(businessSchedule.map((s) => _toHHmm(s.closeTime).obs).toList());
 
-        print(" length ====== > ${businessHour.schedule.length}");
-        print(" length ====== > ${endTimes.length}");
+        // (Optional) log
+        // print("Fetched ${businessHour.schedule.length} business hour rows");
       } else {
         final responseBody = json.decode(response.body);
         throw responseBody['message'] ?? 'Failed to fetch business hours';
       }
     } catch (error) {
+      print(error.toString());
       Get.snackbar('Error', error.toString());
     }
   }
