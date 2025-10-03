@@ -6,18 +6,18 @@ import 'package:get/get.dart';
 import '../../../../common/customTextButton.dart';
 import '../../dealDetail/views/deal_detail_view.dart';
 
-class QrSuccessVendorView extends GetView {
-  final String dealTitle;
-  final String dealStoreName;
-  final String brandLogo;
-  final String time;
+class QrSuccessOrderView extends GetView {
+  final String invoiceNumber;
+  final String customerName;
+  final String orderItems;
+  final String timestamp;
 
-  const QrSuccessVendorView({
+  const QrSuccessOrderView({
     super.key,
-    required this.dealTitle,
-    required this.dealStoreName,
-    required this.brandLogo,
-    required this.time,
+    required this.invoiceNumber,
+    required this.customerName,
+    required this.orderItems,
+    required this.timestamp,
   });
 
   @override
@@ -25,10 +25,10 @@ class QrSuccessVendorView extends GetView {
     return Dialog(
       backgroundColor: Colors.black.withOpacity(0.0),
       child: Container(
-        padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Color(0xFFF9FBFC),
-          borderRadius: BorderRadius.circular(16.r), // Use ScreenUtil for border radius
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
@@ -44,18 +44,18 @@ class QrSuccessVendorView extends GetView {
             children: [
               Image.asset('assets/images/QR/confetti 1.png'),
               SizedBox(height: 20.h),
-              Text('Order Verified Successfully', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF020711), fontSize: 20.sp, fontWeight: FontWeight.w500),), // Use ScreenUtil for font size
+              Text('Order Verified Successfully', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF020711), fontSize: 20.sp, fontWeight: FontWeight.w500),),
               SizedBox(height: 10.h),
-              Text('The deal has been redeemed and the order is confirmed. You may now proceed with handing over the items.', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 16.sp, fontWeight: FontWeight.normal),), // Use ScreenUtil for font size
+              Text('The order has been verified and completed. You may now proceed with handing over the items.', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 16.sp, fontWeight: FontWeight.normal),),
               SizedBox(height: 24.h),
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for radius
-                    color: Colors.white,
-                    boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)],
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     children: [
                       Row(
@@ -79,7 +79,7 @@ class QrSuccessVendorView extends GetView {
                           SizedBox(
                             width: 124.w,
                             child: Text(
-                              'S564 F5677 G6412',
+                              invoiceNumber,
                               style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -111,7 +111,7 @@ class QrSuccessVendorView extends GetView {
                           SizedBox(
                             width: 124.w,
                             child: Text(
-                              'Mubashir Saleem',
+                              customerName,
                               style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -127,7 +127,7 @@ class QrSuccessVendorView extends GetView {
                           SizedBox(
                             width: 118.w,
                             child: Text(
-                              'Deal',
+                              'Order Items',
                               style: TextStyle(color: Color(0xFF6F7E8D), fontSize: 14.sp),
                             ),
                           ),
@@ -143,7 +143,7 @@ class QrSuccessVendorView extends GetView {
                           SizedBox(
                             width: 124.w,
                             child: Text(
-                              '50% OFF Any Grande Beverage',
+                              orderItems,
                               style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -175,7 +175,7 @@ class QrSuccessVendorView extends GetView {
                           SizedBox(
                             width: 124.w,
                             child: Text(
-                              'Verified at 2:42 PM',
+                              timestamp,
                               style: TextStyle(color: Color(0xFF020711), fontSize: 14.sp),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -198,7 +198,7 @@ class QrSuccessVendorView extends GetView {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),

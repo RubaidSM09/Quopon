@@ -101,7 +101,7 @@ class _ChooseRedemptionDealViewState extends State<ChooseRedemptionDealView> {
                             builder: (BuildContext context) {
                               return Dialog(
                                   backgroundColor: Colors.transparent,
-                                  child: PickupView(dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo)
+                                  // child: PickupView(dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo)
                               );
                               },
                           );

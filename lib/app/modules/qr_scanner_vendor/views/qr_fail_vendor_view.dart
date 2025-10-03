@@ -15,14 +15,14 @@ class QrFailVendorView extends GetView {
     return Dialog(
       backgroundColor: Colors.black.withOpacity(0.0),
       child: Container(
-        padding: EdgeInsets.all(16.w),  // Use ScreenUtil for padding
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Color(0xFFF9FBFC),
-          borderRadius: BorderRadius.circular(16.r),  // Use ScreenUtil for radius
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
-              blurRadius: 8.r,  // Use ScreenUtil for blurRadius
+              blurRadius: 8.r,
               offset: Offset(0, 4),
             ),
           ],
@@ -39,28 +39,28 @@ class QrFailVendorView extends GetView {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF020711),
-                  fontSize: 20.sp,  // Use ScreenUtil for font size
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(height: 10.h),
               Text(
-                'The QR code or 6-digit code is invalid or already used. Please double-check the code or contact support if needed.',
+                'The QR code or 6-digit code is invalid, already used, or does not match any pending order. Please double-check the code or contact support if needed.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF6F7E8D),
-                  fontSize: 16.sp,  // Use ScreenUtil for font size
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               SizedBox(height: 20.h),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),  // Use ScreenUtil for radius
+                  borderRadius: BorderRadius.circular(12.r),
                   color: Color(0xFFF7EEEF),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(8.w),  // Use ScreenUtil for padding
+                  padding: EdgeInsets.all(8.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,7 @@ class QrFailVendorView extends GetView {
                           Text(
                             'Unable to process QR code',
                             style: TextStyle(
-                              fontSize: 14.sp,  // Use ScreenUtil for font size
+                              fontSize: 14.sp,
                               color: Color(0xFFD62828),
                               fontWeight: FontWeight.bold,
                             ),
@@ -86,9 +86,9 @@ class QrFailVendorView extends GetView {
                           SizedBox(
                             width: 265.w,
                             child: Text(
-                              'The QR code might be expired or invalid. Please try scanning again or contact support if the issue persists.',
+                              'The QR code might be expired, invalid, or not matching any order. Please try scanning again or contact support if the issue persists.',
                               style: TextStyle(
-                                fontSize: 12.sp,  // Use ScreenUtil for font size
+                                fontSize: 12.sp,
                                 color: Color(0xFFD62828),
                                 fontWeight: FontWeight.w400,
                               ),
@@ -104,14 +104,14 @@ class QrFailVendorView extends GetView {
               GradientButton(
                 text: '⟳ Try Again',
                 onPressed: () {
-
+                  Get.back();
                 },
                 colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                 boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
                 child: Text(
                   '⟳ Try Again',
                   style: TextStyle(
-                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),

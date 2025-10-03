@@ -1,83 +1,42 @@
-import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:quopon/app/modules/QRScanner/views/q_r_fail_view.dart';
-import 'package:quopon/app/modules/QRScanner/views/q_r_success_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
-import '../../MyDeals/views/my_deals_view.dart';
-import '../../Profile/views/profile_view.dart';
-import '../../deals/views/deals_view.dart';
-import '../../home/views/home_view.dart';
+import '../controllers/q_r_scanner_controller.dart';
 
-class QRScannerView extends StatefulWidget {
+
+class QRScannerView extends GetView<QRScannerController> {
   const QRScannerView({super.key});
 
   @override
-  State<QRScannerView> createState() => _QRScannerViewState();
-}
-
-class _QRScannerViewState extends State<QRScannerView> {
-  final MobileScannerController _scannerController = MobileScannerController();
-
-  int _selectedIndex = 2;
-  bool _isScanned = false;
-
-  void _showQRSuccess(BuildContext context, String dealTitle, String dealStoreName, String brandLogo, String time) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: QRSuccessView(dealTitle: dealTitle, dealStoreName: dealStoreName, brandLogo: brandLogo, time: time),
-        );
-      },
-    );
-  }
-
-  void _showQRFail(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: QRFailView(),
-        );
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // NOTE: controller is provided by your Binding. Don't Get.put here.
+    Get.put(QRScannerController());
+    final cameraSupported = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+
     return Scaffold(
       body: Stack(
         children: [
-          // Camera View (disable on Web)
-          if (!kIsWeb)
-            MobileScanner(
-              controller: _scannerController,
-              onDetect: (BarcodeCapture capture) {
-                if (_isScanned) return;
-
-                final List<Barcode> barcodes = capture.barcodes;
-                if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
-                  _isScanned = true;
-                  final String code = barcodes.first.rawValue!;
-                  debugPrint('Scanned: $code');
-
-                  // Reset after 3 seconds
-                  Future.delayed(const Duration(seconds: 3), () {
-                    _isScanned = false;
-                  });
-                }
-              },
+          if (cameraSupported)
+            QRView(
+              key: controller.qrKey,
+              onQRViewCreated: controller.onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: Colors.white,
+                borderRadius: 8.r,
+                borderLength: 30.w, // double OK
+                borderWidth: 6.w,
+                cutOutSize: 220.w,
+              ),
             )
           else
             const Center(
               child: Text(
-                "Scanner not supported on web",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                "Scanner not supported on this platform",
+                style: TextStyle(color: Colors.black87, fontSize: 18),
               ),
             ),
 
@@ -89,7 +48,7 @@ class _QRScannerViewState extends State<QRScannerView> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Get.back(),
                   child: const Icon(Icons.arrow_back, color: Colors.white),
                 ),
                 SizedBox(width: 12.w),
@@ -100,66 +59,50 @@ class _QRScannerViewState extends State<QRScannerView> {
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
                   ),
-                )
-              ],
-            ),
-          ),
-
-          // QR Scan overlay box and label
-          Center(
-            child: Container(
-              width: 200.w,
-              height: 200.h,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 2.w),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-          ),
-
-          // Bottom action buttons (Flash & Camera flip)
-          Positioned(
-            bottom: 100.h,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () => _scannerController.toggleTorch(),
-                  child: _actionButton(Icons.flash_on),
-                ),
-                SizedBox(width: 32.w),
-                GestureDetector(
-                  onTap: () => _scannerController.switchCamera(),
-                  child: _actionButton(Icons.cameraswitch),
-                ),
-                SizedBox(width: 32.w),
-                GestureDetector(
-                  onTap: () => _showQRSuccess(context, '50% Off Any Grande Beverage', 'Starbucks', 'assets/images/deals/details/Starbucks_Logo.png', '01:05 AM'),
-                  child: _actionButton(Icons.flash_on),
-                ),
-                SizedBox(width: 32.w),
-                GestureDetector(
-                  onTap: () => _showQRFail(context),
-                  child: _actionButton(Icons.cameraswitch),
                 ),
               ],
             ),
           ),
+
+          // Bottom action buttons
+          if (cameraSupported)
+            Positioned(
+              bottom: 100.h,
+              left: 0,
+              right: 0,
+              child: Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _actionButton(
+                      icon: controller.isTorchOn.value ? Icons.flash_on : Icons.flash_off,
+                      onTap: controller.toggleTorch,
+                    ),
+                    SizedBox(width: 32.w),
+                    _actionButton(
+                      icon: Icons.cameraswitch,
+                      onTap: controller.flipCamera,
+                    ),
+                  ],
+                );
+              }),
+            ),
         ],
       ),
     );
   }
 
-  Widget _actionButton(IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
-        shape: BoxShape.circle,
+  Widget _actionButton({required IconData icon, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.3),
+          shape: BoxShape.circle,
+        ),
+        padding: EdgeInsets.all(12.w),
+        child: Icon(icon, color: Colors.white),
       ),
-      padding: EdgeInsets.all(12.w),  // Use ScreenUtil for padding
-      child: Icon(icon, color: Colors.white),
     );
   }
 }

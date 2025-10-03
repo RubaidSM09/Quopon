@@ -1,39 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
-
-import '../../../../common/deal_card.dart';
 
 class PickupView extends GetView {
-  final String dealImage;
-  final String dealTitle;
-  final String dealDescription;
-  final String dealValidity;
-  final String dealStoreName;
-  final String brandLogo;
+  final String qRCodeImage;
+  final String verificationCOde;
 
   const PickupView({
+    required this.qRCodeImage,
+    required this.verificationCOde,
     super.key,
-    required this.dealImage,
-    required this.dealTitle,
-    required this.dealDescription,
-    required this.dealValidity,
-    required this.dealStoreName,
-    required this.brandLogo
   });
+
   @override
   Widget build(BuildContext context) {
+    // Split the verification code into individual characters
+    final codeDigits = verificationCOde.split('').take(6).toList();
+
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);  // Close the detail view on tapping outside
+        Navigator.pop(context); // Close the dialog on tapping outside
       },
       child: Dialog(
         backgroundColor: Colors.black.withOpacity(0.0),
         child: Center(
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {}, // Prevent dialog from closing when tapping inside
             child: Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
@@ -64,147 +56,79 @@ class PickupView extends GetView {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                            child: Icon(Icons.close, size: 24.r,)
-                        )
+                          child: Icon(Icons.close, size: 24.r),
+                        ),
                       ],
                     ),
-                    SizedBox(height: 16.h,),
+                    SizedBox(height: 16.h),
                     Divider(
                       color: Color(0xFFEAECED),
                       thickness: 1,
                     ),
-                    SizedBox(height: 16.h,),
+                    SizedBox(height: 16.h),
                     Column(
                       children: [
                         Text(
                           "Show this QR at the counter. If it doesn’t scan, use the 6-digit code below.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp, color: Color(0xFF6F7E8D)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16.sp,
+                              color: Color(0xFF6F7E8D)),
                         ),
-                        SizedBox(height: 24.h,),
+                        SizedBox(height: 24.h),
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r)
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: ClipRRect(
-                            child: Image.asset(
-                              "assets/images/Pickup/QR Code.png",
+                            borderRadius: BorderRadius.circular(12.r),
+                            child: Image.network(
+                              qRCodeImage.startsWith('http')
+                                  ? qRCodeImage
+                                  : 'https://intensely-optimal-unicorn.ngrok-free.app$qRCodeImage',
                               fit: BoxFit.cover,
+                              width: 200.w,
+                              height: 200.h,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                Icons.broken_image,
+                                size: 100.w,
+                                color: Color(0xFF6F7E8D),
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 24.h,),
+                        SizedBox(height: 24.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(
+                            6,
+                                (index) => Container(
                               height: 51.h,
-                              width: 51.h,
+                              width: 51.w,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.r),
                                 color: Color(0xFFF9FBFC),
-                                border: Border.all(color: Color(0xFFEFF1F2), width: 1)
+                                border: Border.all(color: Color(0xFFEFF1F2), width: 1),
                               ),
                               child: Center(
                                 child: Text(
-                                  '8',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
+                                  codeDigits.length > index ? codeDigits[index] : '-',
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF020711)),
                                 ),
                               ),
                             ),
-
-                            Container(
-                              height: 51.h,
-                              width: 51.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  color: Color(0xFFF9FBFC),
-                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '2',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
-                                ),
-                              ),
-                            ),
-
-                            Container(
-                              height: 51.h,
-                              width: 51.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  color: Color(0xFFF9FBFC),
-                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '0',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
-                                ),
-                              ),
-                            ),
-
-                            Container(
-                              height: 51.h,
-                              width: 51.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  color: Color(0xFFF9FBFC),
-                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '1',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
-                                ),
-                              ),
-                            ),
-
-                            Container(
-                              height: 51.h,
-                              width: 51.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  color: Color(0xFFF9FBFC),
-                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '7',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
-                                ),
-                              ),
-                            ),
-
-                            Container(
-                              height: 51.h,
-                              width: 51.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  color: Color(0xFFF9FBFC),
-                                  border: Border.all(color: Color(0xFFEFF1F2), width: 1)
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '5',
-                                  style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: Color(0xFF020711)),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                        SizedBox(height: 24.h,),
-                        DealCard(
-                          brandLogo: brandLogo,
-                          dealStoreName: dealStoreName,
-                          dealValidity: dealValidity,
-                        ),
+                        SizedBox(height: 24.h),
                       ],
                     ),
                   ],
                 ),
-              )
+              ),
             ),
           ),
         ),

@@ -319,12 +319,8 @@ class TrackOrderView extends GetView<TrackOrderController> {
           text: 'Show QR Code',
           onPressed: () {
             Get.dialog(PickupView(
-              dealImage: 'assets/images/deals/Pizza.jpg',
-              dealTitle: '20% Discount',
-              dealDescription: 'Lorem Ipsum\u00a0is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-              dealValidity: '11:59 PM, May 31',
-              dealStoreName: 'Pizzeria Bella Italia',
-              brandLogo: 'assets/images/deals/details/Starbucks_Logo.png',
+              qRCodeImage: controller.orderData['qr_code']['image'],
+              verificationCOde: controller.orderData['delivery_code'],
             )
             );
           },
