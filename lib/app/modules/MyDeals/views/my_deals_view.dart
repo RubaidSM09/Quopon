@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/MyDealsDetails/views/my_deals_details_view.dart';
 import 'package:quopon/common/my_deals_card.dart';
+import '../controllers/my_deals_controller.dart';
 
-import '../../Profile/views/profile_view.dart';
-import '../../QRScanner/views/q_r_scanner_view.dart';
-import '../../deals/views/deals_view.dart';
-import '../../home/views/home_view.dart';
-import '../../MyDeals/controllers/my_deals_controller.dart';
-
-class MyDealsView extends StatefulWidget {
+class MyDealsView extends GetView<MyDealsController> {
   const MyDealsView({super.key});
 
   @override
-  _MyDealsViewState createState() => _MyDealsViewState();
-}
-
-class _MyDealsViewState extends State<MyDealsView> {
-  int _selectedIndex = 3;
-
-  @override
   Widget build(BuildContext context) {
+    final c = Get.put(MyDealsController()); // or bind via AppPages
+
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: Padding(
-        padding: EdgeInsets.all(16.w), // Use ScreenUtil for padding
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -108,28 +98,49 @@ class _MyDealsViewState extends State<MyDealsView> {
                 ),
               ),
             ),
-            SizedBox(height: 20.h), // Use ScreenUtil for height spacing
-            Text(
-              'Total Deals: 23',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
-            ),
 
-            /// ✅ Scrollable section starts here
+            SizedBox(height: 20.h),
+            Obx(() => Text(
+              'Total Deals: ${c.deals.length}',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF6F7E8D),
+              ),
+            )),
+            SizedBox(height: 20.h),
+
             Expanded(
-              child: ListView.builder(
-                itemCount: 23,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MyDealsDetailsView()),
+              child: Obx(() {
+                if (c.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (c.deals.isEmpty) {
+                  return const Center(child: Text('No deals yet'));
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () => c.fetchMyDeals(),
+                  child: ListView.builder(
+                    itemCount: c.deals.length,
+                    itemBuilder: (_, i) {
+                      final d = c.deals[i];
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(MyDealsDetailsView(data: d));
+                        },
+                        child: MyDealsCard(
+                          imageUrl: d.imageUrl,
+                          title: d.title,
+                          startDate: d.startDate,
+                          endDate: d.endDate,
+                          statusText: d.statusText,
+                        ),
                       );
                     },
-                    child: const MyDealsCard(),
-                  );
-                },
-              ),
+                  ),
+                );
+              }),
             ),
           ],
         ),

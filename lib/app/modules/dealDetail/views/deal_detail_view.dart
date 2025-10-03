@@ -2,54 +2,67 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:quopon/app/modules/ChooseRedemptionDeal/views/choose_redemption_deal_view.dart';
 import 'package:quopon/app/modules/ChooseRedemptionDeal/views/pickup_view.dart';
 import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 
 import '../../../../common/customTextButton.dart';
 import '../../home/views/home_view.dart';
+import '../controllers/deal_detail_controller.dart';
 
-class DealDetailView extends StatelessWidget {
+class DealDetailView extends GetView<DealDetailController> {
+  final int dealId;
   final String dealImage;
   final String dealTitle;
   final String dealDescription;
   final String dealValidity;
   final String dealStoreName;
   final String brandLogo;
+  final String address;
   final String redemptionType;
   final String deliveryCost;
   final int minOrder;
+  final bool userType;
+  final String freeDiscount;   // ← NEW
+  final String plusDiscount;   // ← NEW
 
   const DealDetailView({
     super.key,
+    required this.dealId,
     required this.dealImage,
     required this.dealTitle,
     required this.dealDescription,
     required this.dealValidity,
     required this.dealStoreName,
     required this.brandLogo,
+    required this.address,
     required this.redemptionType,
     required this.deliveryCost,
     required this.minOrder,
+    required this.userType,
+    required this.freeDiscount,
+    required this.plusDiscount,
   });
 
   @override
   Widget build(BuildContext context) {
+    // one controller per deal dialog, keyed by deal id
+    final dealC = Get.put(DealDetailController(), tag: 'deal_$dealId');
+    dealC.init(dealId); // preload saved state via GET /wish-deals
+
     RxBool isPickup = true.obs;
-    RxBool isSaved = false.obs;
 
     return Dialog(
       child: Container(
         padding: EdgeInsets.only(left: 8.w, right: 8.w, top: 8.h, bottom: 20.h),
         decoration: BoxDecoration(
-          color: Color(0xFFF9FBFC),
+          color: const Color(0xFFF9FBFC),
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
               blurRadius: 8,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -117,31 +130,38 @@ class DealDetailView extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
+
+                        /// ❤️ Heart — toggles add/remove
                         Obx(() {
-                          return isSaved.value
-                              ? GestureDetector(
-                                  onTap: () {
-                                    if (isSaved.value) {
-                                      isSaved.value = !isSaved.value;
-                                    }
-                                  },
-                                  child: Icon(
-                                    Icons.favorite_rounded,
-                                    color: Color(0xFFD62828),
-                                  ),
-                                )
-                              : GestureDetector(
-                                  onTap: () {
-                                    if (!isSaved.value) {
-                                      isSaved.value = !isSaved.value;
-                                    }
-                                    showTopSavedDealBanner(context);
-                                  },
-                                  child: Icon(
-                                    Icons.favorite_outline_rounded,
-                                    color: Color(0xFFD62828),
-                                  ),
-                                );
+                          final saved = dealC.isSaved.value;
+                          final busy  = dealC.isSaving.value;
+
+                          return GestureDetector(
+                            onTap: busy
+                                ? null
+                                : () async {
+                              final wasSaved = saved;
+                              await dealC.toggleWishlist();
+                              if (!wasSaved && dealC.isSaved.value && context.mounted) {
+                                showTopSavedDealBanner(context);
+                              } else if (wasSaved && !dealC.isSaved.value) {
+                                Get.snackbar('Removed', 'Deal removed from My Deals');
+                              }
+                            },
+                            child: busy
+                                ? SizedBox(
+                              height: 24, width: 24,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2, color: Color(0xFFD62828),
+                              ),
+                            )
+                                : Icon(
+                              saved
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_outline_rounded,
+                              color: const Color(0xFFD62828),
+                            ),
+                          );
                         }),
                       ],
                     ),
@@ -155,6 +175,64 @@ class DealDetailView extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         color: Colors.grey[600],
                       ),
+                    ),
+                    SizedBox(height: 8.h),
+
+                    Row(
+                      spacing: 8.w,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF3F5F6),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            spacing: 8.w,
+                            children: [
+                              Image.asset(
+                                'assets/images/deals/details/vendor_icon.png',
+                                scale: 4,
+                              ),
+
+                              Text(
+                                dealStoreName,
+                                style: TextStyle(
+                                  color: Color(0xFF6F7E8D),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF3F5F6),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            spacing: 8.w,
+                            children: [
+                              Image.asset(
+                                'assets/images/deals/details/vendor_location.png',
+                                scale: 4,
+                              ),
+
+                              Text(
+                                address,
+                                style: TextStyle(
+                                  color: Color(0xFF6F7E8D),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 12.h),
 
@@ -183,7 +261,7 @@ class DealDetailView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),
                                       child: Image.network(
@@ -195,9 +273,9 @@ class DealDetailView extends StatelessWidget {
                                     SizedBox(width: 10.w),
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           dealStoreName,
@@ -214,7 +292,7 @@ class DealDetailView extends StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: Color(0xFFD62828),
+                                                color: const Color(0xFFD62828),
                                               ),
                                             ),
                                             Text(
@@ -236,7 +314,7 @@ class DealDetailView extends StatelessWidget {
                                   height: 22.h,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
-                                    color: Color(0xFFD62828),
+                                    color: const Color(0xFFD62828),
                                   ),
                                   child: Center(
                                     child: Text(
@@ -251,7 +329,7 @@ class DealDetailView extends StatelessWidget {
                               ],
                             ),
 
-                            Divider(color: Color(0xFFF0F2F3)),
+                            const Divider(color: Color(0xFFF0F2F3)),
 
                             SizedBox(height: 6.h),
 
@@ -263,12 +341,12 @@ class DealDetailView extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.r),
-                                    color: Color(0xFFB81EFF).withAlpha(20),
+                                    color: const Color(0xFFB81EFF).withAlpha(20),
                                   ),
                                   child: Text(
                                     'Redemption: $redemptionType',
                                     style: TextStyle(
-                                      color: Color(0xFFB81EFF),
+                                      color: const Color(0xFFB81EFF),
                                       fontSize: 10.sp,
                                     ),
                                   ),
@@ -278,12 +356,12 @@ class DealDetailView extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.r),
-                                    color: Color(0xFF1E92FF).withAlpha(20),
+                                    color: const Color(0xFF1E92FF).withAlpha(20),
                                   ),
                                   child: Text(
                                     'Delivery Cost: \$$deliveryCost',
                                     style: TextStyle(
-                                      color: Color(0xFF1E92FF),
+                                      color: const Color(0xFF1E92FF),
                                       fontSize: 10.sp,
                                     ),
                                   ),
@@ -293,12 +371,12 @@ class DealDetailView extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h,),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.r),
-                                    color: Color(0xFFFF8E24).withAlpha(20),
+                                    color: const Color(0xFFFF8E24).withAlpha(20),
                                   ),
                                   child: Text(
                                     'Min. Order Amount: \$$minOrder',
                                     style: TextStyle(
-                                      color: Color(0xFFFF8E24),
+                                      color: const Color(0xFFFF8E24),
                                       fontSize: 10.sp,
                                     ),
                                   ),
@@ -312,17 +390,17 @@ class DealDetailView extends StatelessWidget {
 
                     SizedBox(height: 20.h),
 
-                    GradientButton(
+                    userType ? GradientButton(
                       text: 'Order Now',
                       onPressed: () {
                         Get.to(
-                            VendorProfileView(
-                              vendorId: 0,
-                              logo: brandLogo,
-                              name: dealStoreName,
-                              type: 'Cafe',
-                              address: 'Downtown',
-                            )
+                          VendorProfileView(
+                            vendorId: 0,
+                            logo: brandLogo,
+                            name: dealStoreName,
+                            type: 'Cafe',
+                            address: 'Downtown',
+                          ),
                         );
                       },
                       colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
@@ -332,10 +410,276 @@ class DealDetailView extends StatelessWidget {
                       child: Text(
                         'Order Now',
                         style: TextStyle(
-                          fontSize: 16.sp, // Use ScreenUtil for font size
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
+                      ),
+                    ) :
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: Color(0xFFF3F5F6),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  spacing: 20.h,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      spacing: 12.w,
+                                      children: [
+                                        Text(
+                                          'Free Users',
+                                          style: TextStyle(
+                                            color: Color(0xFF020711),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                      
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 12.w,
+                                            vertical: 5.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFEAECED),
+                                            borderRadius: BorderRadius.circular(6.r),
+                                          ),
+                                          child: Text(
+                                            'FREE',
+                                            style: TextStyle(
+                                              color: Color(0xFF6F7E8D),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          freeDiscount.isNotEmpty ? freeDiscount : '—',
+                                          style: TextStyle(
+                                            color: Color(0xFF020711),
+                                            fontSize: 32.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          freeDiscount.contains('+') ? ' Offer' : ' Discount',
+                                          style: TextStyle(
+                                            color: Color(0xFF6F7E8D),
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                      
+                                GestureDetector(
+                                  onTap: () { },
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.r),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFF44646),
+                                          Color(0xFFC21414),
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0xFF9A0000),
+                                          spreadRadius: 1.r,
+                                        )
+                                      ],
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 12.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFD62828),
+                                            Color(0xFFC21414),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Grab Free',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                      
+                          Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: Color(0xFF020711),
+                            ),
+                            child: Column(
+                              spacing: 32.h,
+                              children: [
+                                Column(
+                                  spacing: 20.h,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      spacing: 10.w,
+                                      children: [
+                                        Text(
+                                          'Qoupon+ Users',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                      
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 5.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFFA3652A),
+                                                Color(0xFFEFB06E),
+                                                Color(0xFFFFD4A6),
+                                                Color(0xFFF9C176),
+                                                Color(0xFFE77B33),
+                                                Color(0xFFDC702A),
+                                                Color(0xFF733D19),
+                                              ],
+                                              begin: AlignmentGeometry.topLeft,
+                                              end: AlignmentGeometry.bottomRight
+                                            ),
+                                            borderRadius: BorderRadius.circular(6.r),
+                                          ),
+                                          child: Text(
+                                            'Qoupon+',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                      
+                                    Column(
+                                      spacing: 8.h,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              plusDiscount.isNotEmpty ? plusDiscount : '—',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 32.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Text(
+                                              plusDiscount.contains('+') ? ' Offer' : ' Discount',
+                                              style: TextStyle(
+                                                color: Color(0xFF8A99A8),
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                      
+                                        Text(
+                                          'Always better deals with\nQoupon+',
+                                          style: TextStyle(
+                                            color: Color(0xFF8A99A8),
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12.sp,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                      
+                                GestureDetector(
+                                  onTap: () { },
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.r),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFF44646),
+                                          Color(0xFFC21414),
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0xFF9A0000),
+                                          spreadRadius: 1.r,
+                                        )
+                                      ],
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 12.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFD62828),
+                                            Color(0xFFC21414),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Unlock Plus',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -351,7 +695,7 @@ class DealDetailView extends StatelessWidget {
   void showTopSavedDealBanner(BuildContext context) {
     final overlay = Overlay.of(context);
 
-    late OverlayEntry overlayEntry; // ✅ Declare it first with 'late'
+    late OverlayEntry overlayEntry;
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -374,12 +718,12 @@ class DealDetailView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.favorite_rounded, color: Color(0xFFD62828)),
+                    const Icon(Icons.favorite_rounded, color: Color(0xFFD62828)),
                     SizedBox(width: 8.w),
                     Text(
                       "Saved to My Deals",
                       style: TextStyle(
-                        color: Color(0xFFD62828),
+                        color: const Color(0xFFD62828),
                         fontWeight: FontWeight.w500,
                         fontSize: 14.sp,
                       ),
@@ -387,10 +731,10 @@ class DealDetailView extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => overlayEntry.remove(), // ✅ Now valid
+                  onTap: () => overlayEntry.remove(),
                   child: Icon(
                     Icons.close,
-                    color: Color(0xFFD62828),
+                    color: const Color(0xFFD62828),
                     size: 16.sp,
                   ),
                 ),
@@ -404,7 +748,7 @@ class DealDetailView extends StatelessWidget {
     overlay.insert(overlayEntry);
 
     // Auto remove
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (overlayEntry.mounted) overlayEntry.remove();
     });
   }

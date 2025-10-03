@@ -68,7 +68,7 @@ class _ChooseRedemptionDealViewState extends State<ChooseRedemptionDealView> {
                             builder: (BuildContext context) {
                               return Dialog(
                                   backgroundColor: Colors.transparent,
-                                  child: DealDetailView(dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo, redemptionType: '', deliveryCost: '', minOrder: 0,)
+                                  child: DealDetailView(dealId: 0, dealImage: widget.dealImage, dealTitle: widget.dealTitle, dealDescription: widget.dealDescription, dealValidity: widget.dealValidity, dealStoreName: widget.dealStoreName, brandLogo: widget.brandLogo, address: '', redemptionType: '', deliveryCost: '', minOrder: 0, userType: false, freeDiscount: '', plusDiscount: '',)
                               );
                             },
                           );

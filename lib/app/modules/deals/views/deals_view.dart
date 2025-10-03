@@ -24,12 +24,15 @@ class DealsView extends GetView<DealsController> {
   // A helper method to show the deal details in a popup
   void _showDealDetails(BuildContext context, String dealImage, String dealTitle, String dealDescription, String dealValidity, String dealStoreName, String brandLogo) {
     Get.dialog(DealDetailView(
+      dealId: 0,
       dealImage: dealImage,
       dealTitle: dealTitle,
       dealDescription: dealDescription,
       dealValidity: dealValidity,
       dealStoreName: dealStoreName,
-      brandLogo: brandLogo, redemptionType: '', deliveryCost: '', minOrder: 0,
+      brandLogo: brandLogo, address: '', redemptionType: '', deliveryCost: '', minOrder: 0,
+      userType: false,
+      freeDiscount: '', plusDiscount: '',
     ),
     );
   }

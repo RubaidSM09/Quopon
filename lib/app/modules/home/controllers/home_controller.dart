@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:quopon/app/data/base_client.dart';
 import 'package:quopon/app/data/model/beyondNeighbourhood.dart';
@@ -55,24 +56,79 @@ class HomeController extends GetxController {
   // Fetch categories from the API
   Future<void> fetchBeyondNeighbourhood() async {
     try {
-      // Call the API to get the categories
-      final response = await BaseClient.getRequest(api: Api.beyondNeighbourhood, );
+      final headers = await BaseClient.authHeaders();
 
-      // Decode the response body from JSON
-      final decodedResponse = json.decode(response.body);
-
-      // Check if the response contains categories
-      if (decodedResponse != null && decodedResponse is List) {
-        // Map the response to Category objects and update the list
-        beyondNeighbourhood.value = decodedResponse
-            .map((beyondNeighbourhoodJson) => BeyondNeighbourhood.fromJson(beyondNeighbourhoodJson))
-            .toList();
-      } else {
-        print('No categories found or incorrect response format.');
+      // A) Who is the user?
+      final profileRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/',
+        headers: headers,
+      );
+      bool isUserPremium = false;
+      if (profileRes.statusCode >= 200 && profileRes.statusCode < 300) {
+        final Map<String, dynamic> p = json.decode(profileRes.body) as Map<String, dynamic>;
+        final sub = (p['subscription_status'] ?? '').toString().trim().toLowerCase();
+        isUserPremium = sub == 'active'; // subscribed = premium
       }
+
+      // B) Deals
+      final dealsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
+        headers: headers,
+      );
+      if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
+        throw 'Failed to fetch deals (${dealsRes.statusCode})';
+      }
+      final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
+
+      // C) Vendors
+      final vendorsRes = await BaseClient.getRequest(
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
+        headers: headers,
+      );
+      final Map<int, Map<String, dynamic>> vendorById = {};
+      if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
+        final List<dynamic> vendors = json.decode(vendorsRes.body) as List<dynamic>;
+        for (final v in vendors) {
+          final vm = v as Map<String, dynamic>;
+          final vid = vm['vendor_id'];
+          if (vid is int) vendorById[vid] = vm;
+        }
+      }
+
+      // D) Map ALL deals (no paid filtering) and compute per-user isPremium
+      String normDealType(Object? v) {
+        final s = (v ?? '').toString().trim().toLowerCase();
+        if (s == 'paid') return 'paid';
+        if (s == 'free') return 'free';
+        if (s == 'both') return 'both';
+        return ''; // unknown/null
+      }
+
+      final items = <BeyondNeighbourhood>[];
+      for (final raw in deals) {
+        final m = raw as Map<String, dynamic>;
+        // Optional: hide completely inactive deals, or expired ones (keep if you want them shown)
+        final active = m['is_active'] == true;
+        if (!active) continue;
+
+        final vendor = vendorById[m['user_id'] as int? ?? -1];
+
+        final bn = BeyondNeighbourhood.fromDealJson(
+          m,
+          vendorJson: vendor,
+          isUserPremium: isUserPremium, // <- critical for blur logic
+        );
+        items.add(bn);
+      }
+
+      // Optional: sort by newest first (or however you like)
+      items.sort((a, b) => b.startDate.compareTo(a.startDate));
+
+      beyondNeighbourhood.assignAll(items);
+      debugPrint('BeyondNeighbourhood loaded: ${items.length} (userPremium=$isUserPremium)');
     } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error appropriately (e.g., show a Snackbar or error message)
+      debugPrint('Error fetching beyond neighbourhood: $e');
+      Get.snackbar('Error', 'Failed to load deals beyond your neighbourhood');
     }
   }
 

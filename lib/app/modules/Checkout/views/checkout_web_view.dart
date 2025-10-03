@@ -7,7 +7,19 @@ class WebViewScreen extends StatefulWidget {
   final bool isCancel;
   final String orderId;
 
-  const WebViewScreen({super.key, required this.url, required this.onUrlMatched, required this.orderId, this.isCancel = false});
+  // NEW (optional): dynamic success/cancel URLs
+  final String? successUrl;
+  final String? cancelUrl;
+
+  const WebViewScreen({
+    super.key,
+    required this.url,
+    required this.onUrlMatched,
+    required this.orderId,
+    this.isCancel = false,
+    this.successUrl,
+    this.cancelUrl,
+  });
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -24,28 +36,33 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..loadRequest(Uri.parse(widget.url))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading progress if needed
-          },
-          onPageStarted: (String url) {
-            // Handle page start if needed
-          },
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
           onUrlChange: (UrlChange change) {
-            print('::::::::::::::::::::::::::::::URL::::${change.url}');
-            if (change.url == 'https://dummy.org/orders/${widget.orderId}/confirmation/') {
-              // Navigate back to the previous screen
+            final current = change.url ?? '';
+            // Prefer dynamic URLs if provided
+            if (widget.successUrl != null && current.startsWith(widget.successUrl!)) {
+              Navigator.pop(context);
+              widget.onUrlMatched(false); // success
+              return;
+            }
+            if (widget.cancelUrl != null && current.startsWith(widget.cancelUrl!)) {
+              Navigator.pop(context);
+              widget.onUrlMatched(true); // cancelled
+              return;
+            }
+
+            // Fallback to previous hardcoded checks (kept for compatibility)
+            if (current == 'https://dummy.org/orders/${widget.orderId}/confirmation/') {
               Navigator.pop(context);
               widget.onUrlMatched(false);
             }
-            if (change.url == 'https://your-frontend-app.com/payment-cancel/') {
-              // Navigate back to the previous screen
+            if (current == 'https://your-frontend-app.com/payment-cancel/') {
               Navigator.pop(context);
               widget.onUrlMatched(true);
             }
           },
-          onWebResourceError: (WebResourceError error) {
-            // Handle web resource errors
-          },
+          onWebResourceError: (WebResourceError error) {},
         ),
       );
   }

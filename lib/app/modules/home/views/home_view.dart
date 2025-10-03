@@ -264,15 +264,20 @@ class HomeView extends GetView<HomeController> {
                                         onTap: () {
                                           !beyondNeighbourhood.isPremium ? Get.dialog(
                                               DealDetailView(
+                                                dealId: beyondNeighbourhood.id,
                                                 dealImage: beyondNeighbourhood.coverImageUrl!,
                                                 dealTitle: beyondNeighbourhood.offers,
                                                 dealDescription: beyondNeighbourhood.description,
                                                 dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(beyondNeighbourhood.dealValidity)),
                                                 dealStoreName: beyondNeighbourhood.name,
                                                 brandLogo: beyondNeighbourhood.logoUrl!,
+                                                address: beyondNeighbourhood.address,
                                                 redemptionType: beyondNeighbourhood.redemptionType,
                                                 deliveryCost: beyondNeighbourhood.deliveryFee,
                                                 minOrder: beyondNeighbourhood.minOrder,
+                                                userType: beyondNeighbourhood.userType,
+                                                freeDiscount: beyondNeighbourhood.discountValueFree,   // ← NEW
+                                                plusDiscount: beyondNeighbourhood.discountValuePaid,
                                               )
                                           ) : 
                                           Get.bottomSheet(QuoponPlusView());
@@ -438,15 +443,20 @@ class HomeView extends GetView<HomeController> {
                                         onTap: () {
                                           !speedyDeliveries.isPremium ? Get.dialog(
                                               DealDetailView(
+                                                dealId: speedyDeliveries.id,
                                                 dealImage: speedyDeliveries.coverImageUrl!,
                                                 dealTitle: speedyDeliveries.offers,
                                                 dealDescription: speedyDeliveries.description,
                                                 dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(speedyDeliveries.dealValidity)),
                                                 dealStoreName: speedyDeliveries.name,
                                                 brandLogo: speedyDeliveries.logoUrl!,
+                                                address: 'Amsterdam',
                                                 redemptionType: speedyDeliveries.redemptionType,
                                                 deliveryCost: speedyDeliveries.deliveryFee,
                                                 minOrder: speedyDeliveries.minOrder,
+                                                userType: false,
+                                                freeDiscount: '10%',  // ← NEW
+                                                plusDiscount: '15%',
                                               )
                                           ) : Get.bottomSheet(QuoponPlusView());
                                         },
