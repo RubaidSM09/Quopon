@@ -11,6 +11,7 @@ import 'package:quopon/app/modules/my_orders_vendors/views/pickup/pickup_order_r
 import 'package:quopon/app/modules/my_orders_vendors/views/pickup/ready_for_pickup_view.dart';
 
 import '../controllers/my_orders_vendor_pickup_controller.dart';
+import '../controllers/my_orders_vendors_controller.dart';
 
 class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
 
@@ -21,7 +22,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
   @override
   Widget build(BuildContext context) {
     Get.put(MyOrdersVendorPickupController());
-    
+
     return Obx(() {
       return Column(
         children: [
@@ -44,7 +45,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Order Received (03)',
+                      'Order Received (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && (o.status == "PENDING_PAYMENT" || o.status == "RECEIVED")).length})',
                       style: TextStyle(
                         color: controller.filters[0].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -69,7 +70,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'In Preparation (04)',
+                      'In Preparation (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && o.status == "PREPARING").length})',
                       style: TextStyle(
                         color: controller.filters[1].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -94,7 +95,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Ready for Pickup (03)',
+                      'Ready for Pickup (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && o.status == "READY_FOR_PICKUP").length})',
                       style: TextStyle(
                         color: controller.filters[2].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -119,7 +120,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Picked Up (02)',
+                      'Picked Up (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && o.status == "PICKED_UP").length})',
                       style: TextStyle(
                         color: controller.filters[3].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -144,7 +145,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Completed (51)',
+                      'Completed (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && o.status == "COMPLETED").length})',
                       style: TextStyle(
                         color: controller.filters[4].value ? Colors.white : Color(0xFF6F7E8D),
                       ),
@@ -169,7 +170,7 @@ class MyOrdersVendorPickupView extends GetView<MyOrdersVendorPickupController> {
                       boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 12.r)],
                     ),
                     child: Text(
-                      'Cancelled (05)',
+                      'Cancelled (${Get.find<MyOrdersVendorsController>().orders.where((o) => o.deliveryType != "DELIVERY" && o.status == "CANCELLED").length})',
                       style: TextStyle(
                         color: controller.filters[5].value ? Colors.white : Color(0xFF6F7E8D),
                       ),

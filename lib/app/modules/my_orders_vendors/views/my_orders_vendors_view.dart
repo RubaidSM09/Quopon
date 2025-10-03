@@ -31,9 +31,9 @@ class MyOrdersVendorsView extends GetView<MyOrdersVendorsController> {
                   Text(
                     'My Orders',
                     style: TextStyle(
-                      color: Color(0xFF020711),
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500
+                        color: Color(0xFF020711),
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
                     ),
                   ),
                   SizedBox.shrink(),

@@ -39,7 +39,7 @@ class VendorSideProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await http.get(
-        Uri.parse('http://10.10.13.52:7000/vendors/business-profile/'),
+        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/business-profile/'),
         headers: headers,
       );
 
@@ -80,7 +80,7 @@ class VendorSideProfileController extends GetxController {
       print(body);
 
       final response = await http.patch(
-        Uri.parse('http://10.10.13.52:7000/vendors/businessh-profile/manage/'),
+        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/businessh-profile/manage/'),
         headers: headers,
         body: json.encode({'data': body}),
       );
@@ -109,7 +109,7 @@ class VendorSideProfileController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.52:7000/vendors/vendor-categories/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendor-categories/',
         headers: headers,
       );
 
@@ -154,7 +154,7 @@ class VendorSideProfileController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/home/users/$userId/business-hours/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -221,7 +221,7 @@ class VendorSideProfileController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.52:7000/home/users/$userId/business-hours/';
+      final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
       headers['Content-Type'] = 'application/json';
 
