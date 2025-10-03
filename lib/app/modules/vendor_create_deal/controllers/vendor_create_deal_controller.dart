@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:quopon/app/modules/vendor_create_deal/views/deal_publish_view.dart';
 
 import '../../../../common/deliveryCostForm.dart';
 import '../../../data/base_client.dart';
@@ -176,8 +177,19 @@ class VendorCreateDealController extends GetxController {
         body: json.encode(body),
       );
 
-      await BaseClient.handleResponse(res);
-      Get.snackbar('Success', 'Deal created successfully');
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        final resBody = jsonDecode(res.body);
+        final dealId = resBody['id'];
+
+        await BaseClient.handleResponse(res);
+        Get.snackbar('Success', 'Deal created successfully');
+
+        Get.dialog(DealPublishView(dealId: dealId,));
+      }
+      else {
+        final resBody = jsonDecode(res.body);
+        Get.snackbar('Deal creation failed', resBody['message'] ?? 'Please give correct information');
+      }
     } catch (e) {
       print('Error => ${e.toString()}');
       Get.snackbar('Error', e.toString());

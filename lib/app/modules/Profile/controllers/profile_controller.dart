@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../../../services/fcmServices.dart';
 import '../../login/views/login_view.dart';
 import '../../../data/api_client.dart'; // <-- add this
 
 class ProfileController extends GetxController {
-  // bottom-nav
+  // Observable for tracking selected index
   var selectedIndex = 4.obs;
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -60,6 +61,8 @@ class ProfileController extends GetxController {
   // ---------- Bottom nav ----------
   void onItemTapped(int index) {
     selectedIndex.value = index;
+
+    // Navigate based on selected index
     switch (index) {
       case 0: Get.toNamed('/home'); break;
       case 1: Get.toNamed('/deals'); break;
@@ -72,9 +75,17 @@ class ProfileController extends GetxController {
   // ---------- Logout ----------
   Future<void> userLogout() async {
     try {
+      final FCMService fcmService = FCMService();
+      await fcmService.removeFCMToken();
+
+      await FlutterSecureStorage().deleteAll();
+      await _storage.delete(key: 'access_token');
+      await _storage.delete(key: 'refresh_token');
+
       await _storage.deleteAll();
       Get.snackbar('Success', 'Logged out successfully!');
-      Get.offAll(() => const LoginView());
+
+      Get.offAll(() => LoginView());
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while logging out. Please try again.');
     }

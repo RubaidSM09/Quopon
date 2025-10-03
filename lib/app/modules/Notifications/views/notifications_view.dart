@@ -1,149 +1,126 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/Notifications/views/notifications_card_view.dart';
-import 'package:quopon/app/modules/Notifications/views/notifications_settings_view.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 import '../../Notifications/controllers/notifications_controller.dart';
+import '../../Notifications/views/notifications_card_view.dart';
+import '../../Notifications/views/notifications_settings_view.dart';
+import 'package:quopon/app/data/model/app_notification.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
   const NotificationsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(NotificationsController());
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF9FBFC),
+        backgroundColor: const Color(0xFFF9FBFC),
         title: Center(
           child: Text(
             'Notifications',
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)), // ScreenUtil applied
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
           ),
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              Get.to(NotificationsSettingsView());
-            },
+            onTap: () => Get.to(() => const NotificationsSettingsView()),
             child: Image.asset("assets/images/Notifications/Notification Settings.png"),
           ),
         ],
       ),
-      backgroundColor: Color(0xFFF9FBFC),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // TODAY Section
-            Container(
-              padding: EdgeInsets.all(16.w), // ScreenUtil applied
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'TODAY',
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                  ),
-                  SizedBox.shrink()
-                ],
-              ),
-            ),
-            NotificationsCardView(
-              isChecked: false,
-              icon: 'assets/images/Notifications/Flame.png',
-              iconBg: Color(0xFFFF6C3D),
-              title: 'Limited-Time Flash Deal!',
-              time: 'Today',
-              description: 'Sweet Scoops just dropped a 1-hour exclusive offer. Don’t miss it!',
-            ),
-            NotificationsCardView(
-              isChecked: false,
-              icon: 'assets/images/Notifications/Flame.png',
-              iconBg: Color(0xFFFF6C3D),
-              title: 'New Deal from Urban Wok!',
-              time: 'Today',
-              description: '🔥 Save 25% on all noodle bowls this weekend only. HURRY UP',
-            ),
+      backgroundColor: const Color(0xFFF9FBFC),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (controller.notifications.isEmpty) {
+          return const Center(child: Text('No notifications yet'));
+        }
 
-            // YESTERDAY Section
-            Container(
-              padding: EdgeInsets.all(16.w), // ScreenUtil applied
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'YESTERDAY',
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
-                  ),
-                  SizedBox.shrink()
-                ],
-              ),
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/Diamond.png',
-              iconBg: Color(0xFFD62828),
-              title: 'Your Qoupon+ Trial is Ending Soon',
-              time: 'Yesterday',
-              description: 'Upgrade now to keep enjoying full access to premium deals.',
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/Star.png',
-              iconBg: Color(0xFFFFA81C),
-              title: 'Vendor Replied to Your Review',
-              time: 'Yesterday',
-              description: 'Grill House responded to your feedback on deal. Tap to view',
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/Flame.png',
-              iconBg: Color(0xFFFF6C3D),
-              title: 'Limited-Time Flash Deal!',
-              time: 'Yesterday',
-              description: 'Sweet Scoops just dropped a 1-hour exclusive offer. Don’t miss it!',
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/Flame.png',
-              iconBg: Color(0xFFFF6C3D),
-              title: 'New Deal from Urban Wok!',
-              time: 'Yesterday',
-              description: '🔥 Save 25% on all noodle bowls this weekend only. HURRY UP',
-            ),
+        // Copy grouped map so we can safely remove TODAY/YESTERDAY
+        final Map<String, List<AppNotification>> grouped = Map.from(controller.grouped);
 
-            // Date Section
-            Container(
-              padding: EdgeInsets.all(16.w), // ScreenUtil applied
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        final todayItems = grouped.remove('TODAY');
+        final yesterdayItems = grouped.remove('YESTERDAY');
+
+        // Sort remaining section keys (date strings) newest → oldest
+        final otherSections = grouped.keys.toList()
+          ..sort((a, b) {
+            final da = DateFormat('MMM d, yyyy').parse(a);
+            final db = DateFormat('MMM d, yyyy').parse(b);
+            return db.compareTo(da);
+          });
+
+        // Final section order: TODAY → YESTERDAY → others (newest → oldest)
+        final sectionKeys = <String>[
+          if (todayItems != null) 'TODAY',
+          if (yesterdayItems != null) 'YESTERDAY',
+          ...otherSections,
+        ];
+
+        return SingleChildScrollView(
+          child: Column(
+            children: sectionKeys.map((section) {
+              final items = section == 'TODAY'
+                  ? todayItems!
+                  : section == 'YESTERDAY'
+                  ? yesterdayItems!
+                  : grouped[section]!;
+
+              // items are already newest → oldest from controller.grouped,
+              // but sorting again here is harmless and defensive:
+              items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+              return Column(
                 children: [
-                  Text(
-                    'Jun 9, 2024',
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)), // ScreenUtil applied
+                  // Section header
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          section,
+                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: const Color(0xFF6F7E8D)),
+                        ),
+                        const SizedBox.shrink(),
+                      ],
+                    ),
                   ),
-                  SizedBox.shrink()
+
+                  // Notifications list for the section
+                  ...items.map((n) {
+                    final isPromotion = n.type.toLowerCase() == 'promotion' ||
+                        (n.data['type']?.toString().toLowerCase() == 'new_deal');
+
+                    final String icon = isPromotion
+                        ? 'assets/images/Notifications/Flame.png'
+                        : 'assets/images/Notifications/Star.png';
+                    final Color iconBg = isPromotion ? const Color(0xFFFF6C3D) : const Color(0xFFFFA81C);
+
+                    final timeText = (section == 'TODAY' || section == 'YESTERDAY')
+                        ? section
+                        : DateFormat('MMM d, yyyy').format(n.createdAt.toLocal());
+
+                    return NotificationsCardView(
+                      isChecked: n.read,
+                      icon: icon,
+                      iconBg: iconBg,
+                      title: n.title,
+                      time: timeText,
+                      description: n.body,
+                      onTap: () => controller.onTapNotification(n),
+                    );
+                  }).toList(),
                 ],
-              ),
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/DealExpired.png',
-              iconBg: Color(0xFFD62828),
-              title: 'Expired Deal',
-              time: 'Jun 9, 2025',
-              description: 'Your deal for Buy 1 Get 1 at Pizza Place has expired. Explore more deals',
-            ),
-            NotificationsCardView(
-              isChecked: true,
-              icon: 'assets/images/Notifications/DealExpireSoon.png',
-              iconBg: Color(0xFF2ECC71),
-              title: 'Your Deal is Expiring Soon!',
-              time: 'Jun 9, 2025',
-              description: 'Free Coffee at Daily Brew expires tomorrow at 11:59 PM.',
-            ),
-          ],
-        ),
-      ),
+              );
+            }).toList(),
+          ),
+        );
+      }),
     );
   }
 }
