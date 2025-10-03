@@ -3,57 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quopon/common/FAQCard.dart';
 
-class FaqView extends GetView {
+import '../controllers/support_f_a_q_controller.dart';
+
+class FaqView extends GetView<SupportFAQController> {
   const FaqView({super.key});
   @override
   Widget build(BuildContext context) {
+    Get.put(SupportFAQController());
+
     return Column(
       children: [
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-          isPlus: true,
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
-        SizedBox(height: 15,),
-        FAQCard(
-          title: 'Lorem Ipsum is simply dummy text?',
-          description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        ),
+        for (var i = 0; i < controller.faqs.length; i++) ...[
+          FAQCard(
+            title: controller.faqs[i].question,
+            description: controller.faqs[i].answer,
+            // Keep your plus style if you want (e.g., first item expanded)
+            isPlus: i == 0,
+          ),
+          const SizedBox(height: 15),
+        ],
       ],
     );
   }

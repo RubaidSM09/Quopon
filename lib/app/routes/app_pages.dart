@@ -229,7 +229,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REVIEW,
-      page: () => ReviewView(),
+      page: () => ReviewView(menuItemId: 0,),
       binding: ReviewBinding(),
     ),
     GetPage(

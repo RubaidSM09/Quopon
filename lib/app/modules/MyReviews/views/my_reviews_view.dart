@@ -1,8 +1,10 @@
+// lib/app/modules/MyReviews/views/my_reviews_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:quopon/app/modules/MyReviews/views/my_reviews_card_view.dart';
+import 'package:quopon/app/modules/home/controllers/home_controller.dart';
 import 'package:quopon/common/Filter.dart';
 
 import '../controllers/my_reviews_controller.dart';
@@ -12,43 +14,36 @@ class MyReviewsView extends GetView<MyReviewsController> {
 
   @override
   Widget build(BuildContext context) {
+    MyReviewsController myReviewsController = Get.put(MyReviewsController());
+    HomeController homeController = Get.put(HomeController());
+
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // Use ScreenUtil for padding
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(Icons.arrow_back),
-                  ),
-                  Text(
-                    'My Reviews',
-                    style: TextStyle(
-                        fontSize: 20.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF020711)
-                    ),
-                  ),
-                  SizedBox(),
+                  GestureDetector(onTap: Get.back, child: const Icon(Icons.arrow_back)),
+                  Text('My Reviews',
+                      style: TextStyle(
+                          fontSize: 20.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711))),
+                  const SizedBox(),
                 ],
               ),
 
-              SizedBox(height: 20.h), // Use ScreenUtil for height
+              SizedBox(height: 20.h),
 
-              // Search bar
+              // Search bar (unchanged)
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
+                  borderRadius: BorderRadius.circular(12.r),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
@@ -75,67 +70,73 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 ),
               ),
 
-              SizedBox(height: 20.h), // Use ScreenUtil for height
+              SizedBox(height: 20.h),
 
-              // Filters row
+              // Filters row (unchanged)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    FilterCard(filterName: 'Latest'),
+                    const FilterCard(filterName: 'Latest'),
                     SizedBox(width: 10.w),
-                    FilterCard(filterName: 'All Ratings'),
+                    const FilterCard(filterName: 'All Ratings'),
                     SizedBox(width: 10.w),
-                    FilterCard(filterName: 'Highest Rated'),
+                    const FilterCard(filterName: 'Highest Rated'),
                     SizedBox(width: 10.w),
-                    FilterCard(filterName: 'Reply Status'),
+                    const FilterCard(filterName: 'Reply Status'),
                   ],
                 ),
               ),
 
-              SizedBox(height: 20.h), // Use ScreenUtil for height
+              SizedBox(height: 20.h),
 
-              // Reviews
-              MyReviewsCardView(
-                image: 'assets/images/Review/Iced Matcha Latte.jpg',
-                title: 'Iced Matcha Latte',
-                offer: '50% OFF on Any Grande Beverage',
-                review: Review(
-                  review: '“Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.”',
-                  reviewer: 'Leslie Alexander',
-                  time: '2 days',
-                ),
-                rating: 4,
-              ),
+              // ---- Reviews from API ----
+              Obx(() {
+                if (myReviewsController.isLoading.value) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  );
+                }
 
-              SizedBox(height: 10.h), // Use ScreenUtil for height
+                if (myReviewsController.reviews.isEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40.h),
+                    child: Text(
+                      'No reviews yet.',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: const Color(0xFF6F7E8D),
+                      ),
+                    ),
+                  );
+                }
 
-              MyReviewsCardView(
-                image: 'assets/images/Review/Iced Matcha Latte.jpg',
-                title: 'Iced Matcha Latte',
-                offer: '50% OFF on Any Grande Beverage',
-                review: Review(
-                  review: '“Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.”',
-                  reviewer: 'Leslie Alexander',
-                  time: '2 days',
-                ),
-                feedback: VendorFeedback(
-                  image: 'assets/images/deals/details/Starbucks_Logo.png',
-                  title: 'Starbucks',
-                  feedback: '“Lorem Ipsum is simply dummy text of the printing and typesetting industry.”',
-                  time: '1 days',
-                ),
-                rating: 4,
-              ),
+                // Build the same cards you used, populated from API
+                final widgets = <Widget>[];
+                for (final r in myReviewsController.reviews) {
+                  widgets.add(
+                    MyReviewsCardView(
+                      // You don’t receive image/title/offer from the API now,
+                      // so we keep your original visuals as placeholders:
+                      image: 'assets/images/Review/Iced Matcha Latte.jpg',
+                      title: 'Menu item #${r.menuItem}',
+                      offer: '',
+                      review: Review(
+                        review: '“${r.comment}”',
+                        reviewer: 'You',
+                        time: myReviewsController.timeAgo(r.createdAt),
+                      ),
+                      rating: r.rating,
+                    ),
+                  );
+                  widgets.add(SizedBox(height: 10.h));
+                }
 
-              SizedBox(height: 10.h), // Use ScreenUtil for height
-
-              MyReviewsCardView(
-                image: 'assets/images/Review/Iced Matcha Latte.jpg',
-                title: 'Iced Matcha Latte',
-                offer: '50% OFF on Any Grande Beverage',
-                rating: 4,
-              ),
+                return Column(children: widgets);
+              }),
             ],
           ),
         ),
