@@ -372,6 +372,7 @@ class HomeView extends GetView<HomeController> {
 
                                           Get.to(
                                             VendorProfileView(
+                                              id: nearShops.id,
                                               vendorId: nearShops.vendorId,
                                               logo: safeLogo,                 // <- never null
                                               name: nearShops.name,           // assuming non-null in model

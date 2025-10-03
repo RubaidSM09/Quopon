@@ -10,42 +10,45 @@ import 'package:quopon/common/restaurant_card.dart';
 import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
-  final int vendorId;
+  final int id;          // <-- BUSINESS PROFILE ID (used for follow/unfollow)
+  final int vendorId;    // <-- user/vendor id (used for deals/menus)
   final String? logo;
   final String name;
   final String type;
   final String address;
 
   const VendorProfileView({
+    required this.id,
     required this.vendorId,
     required this.logo,
     required this.name,
     required this.type,
     required this.address,
-    super.key
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     Get.put(VendorProfileController());
-    print(vendorId);
+    // Use vendorId for deals/menus (as you already do)
     controller.fetchDeals(vendorId);
     controller.fetchMenus(vendorId);
+
+    // Use business-profile id to check follow state
+    controller.loadFollowState(id);
 
     final hasLogo = logo != null && logo!.trim().isNotEmpty;
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9FBFC),
+      backgroundColor: const Color(0xFFF9FBFC),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 264.h, // ScreenUtil applied
-              decoration: BoxDecoration(
-                color: Color(0xFFF6E7D8),
-              ),
+              height: 264.h,
+              decoration: const BoxDecoration(color: Color(0xFFF6E7D8)),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h), // ScreenUtil applied
+                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -123,39 +126,66 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GradientButton(
-                          onPressed: () {},
-                          text: "Follow",
-                          colors: [Color(0xFFD62828), Color(0xFFC21414)],
-                          width: 175.w, // ScreenUtil applied
-                          borderRadius: 12.r, // ScreenUtil applied
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/images/VendorProfile/Follow.png"),
-                              SizedBox(width: 10.w), // ScreenUtil applied
-                              Text(
-                                "Follow",
-                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
+                        Obx(() {
+                          final following = controller.isFollowed.value;
+                          final busy = controller.followBusy.value;
+                          return GradientButton(
+                            onPressed: () {
+                              if (busy) return;                // ignore taps while busy
+                              controller.toggleFollow(id);     // use business-profile id
+                            },
+                            text: following ? "Unfollow" : "Follow",
+                            colors: following
+                                ? [const Color(0xFF6F7E8D), const Color(0xFF6F7E8D)] // muted for "Unfollow"
+                                : [const Color(0xFFD62828), const Color(0xFFC21414)],
+                            width: 175.w,
+                            borderRadius: 12.r,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                if (busy) ...[
+                                  SizedBox(
+                                    height: 18.h,
+                                    width: 18.h,
+                                    child: const CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                ] else ...[
+                                  Image.asset("assets/images/VendorProfile/Follow.png"),
+                                  SizedBox(width: 10.w),
+                                ],
+                                Text(
+                                  following ? "Unfollow" : "Follow",
+                                  style: TextStyle(
+                                    fontSize: 17.5.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: following ? Colors.white : Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
                         GradientButton(
                           onPressed: () {},
                           text: "Email",
-                          colors: [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
-                          width: 175.w, // ScreenUtil applied
+                          colors: const [Color(0xFFF4F5F6), Color(0xFFEEF0F3)],
+                          width: 175.w,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset("assets/images/login/Email.png"),
-                              SizedBox(width: 10.w), // ScreenUtil applied
+                              SizedBox(width: 10.w),
                               Text(
                                 "Email",
-                                style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                                style: TextStyle(
+                                  fontSize: 17.5.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF020711),
+                                ),
                               ),
                             ],
                           ),

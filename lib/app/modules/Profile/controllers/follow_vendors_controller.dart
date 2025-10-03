@@ -1,85 +1,99 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/api.dart';
 import '../../../data/base_client.dart';
 
 class FollowedVendor {
-  int id;
-  int menuCategory;
-  String title;
-  String category;
-  String logoUrl;
-  bool isFollowed;
-  String descriptions;
-  DateTime expiryDate;
+  final int id;
+  final String vendorEmail;
+  final int vendorId;
+  final String name;
+  final String logoImage;   // URL
+  final String kvkNumber;
+  final String phoneNumber;
+  final String address;
+  final int category;       // category id
 
   FollowedVendor({
     required this.id,
-    required this.menuCategory,
-    required this.title,
+    required this.vendorEmail,
+    required this.vendorId,
+    required this.name,
+    required this.logoImage,
+    required this.kvkNumber,
+    required this.phoneNumber,
+    required this.address,
     required this.category,
-    required this.logoUrl,
-    required this.isFollowed,
-    required this.descriptions,
-    required this.expiryDate,
   });
 
-  factory FollowedVendor.fromJson(Map<String, dynamic> json) => FollowedVendor(
-    id: json["id"],
-    menuCategory: json["menu_category"],
-    title: json["title"],
-    category: json["category"],
-    logoUrl: json["logo_url"],
-    isFollowed: json["is_followed"],
-    descriptions: json["descriptions"],
-    expiryDate: DateTime.parse(json["expiry_date"]),
+  factory FollowedVendor.fromJson(Map<String, dynamic> j) => FollowedVendor(
+    id: j['id'] ?? 0,
+    vendorEmail: (j['vendor_email'] ?? '').toString(),
+    vendorId: j['vendor_id'] ?? 0,
+    name: (j['name'] ?? '').toString(),
+    logoImage: (j['logo_image'] ?? '').toString(),
+    kvkNumber: (j['kvk_number'] ?? '').toString(),
+    phoneNumber: (j['phone_number'] ?? '').toString(),
+    address: (j['address'] ?? '').toString(),
+    category: j['category'] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "menu_category": menuCategory,
-    "title": title,
-    "category": category,
-    "logo_url": logoUrl,
-    "is_followed": isFollowed,
-    "descriptions": descriptions,
-    "expiry_date": expiryDate.toIso8601String(),
+    'id': id,
+    'vendor_email': vendorEmail,
+    'vendor_id': vendorId,
+    'name': name,
+    'logo_image': logoImage,
+    'kvk_number': kvkNumber,
+    'phone_number': phoneNumber,
+    'address': address,
+    'category': category,
   };
 }
 
 class FollowVendorsController extends GetxController {
-  var followedVendors = <FollowedVendor>[].obs;
+  final isLoading = false.obs;
+  final error = RxnString();
+  final followedVendors = <FollowedVendor>[].obs;
 
   Future<void> fetchFollowedVendors() async {
     try {
-      String? accessToken = await BaseClient.getAccessToken();
+      isLoading.value = true;
+      error.value = null;
 
-      Map<String, String> headers = {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      };
+      final headers = await BaseClient.authHeaders(); // includes Bearer + JSON
+      final res = await BaseClient.getRequest(
+        api: Api.followedVendors, // should point to /vendors/customers/followed-vendors/
+        headers: headers,
+      );
 
-      // Call the API to get the categories
-      final response = await BaseClient.getRequest(api: Api.followedVendors, headers: headers,);
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        error.value =
+        'Failed to load followed vendors (${res.statusCode}).';
+        followedVendors.clear();
+        debugPrint('followed-vendors error: ${res.statusCode} ${res.body}');
+        return;
+      }
 
-      // Decode the response body from JSON
-      final decodedResponse = json.decode(response.body);
-      print(decodedResponse);
-
-      // Check if the response contains categories
-      if (decodedResponse != null && decodedResponse is List) {
-        // Map the response to Category objects and update the list
-        followedVendors.value = decodedResponse
-            .map((followedVendorsJson) => FollowedVendor.fromJson(followedVendorsJson))
-            .toList();
+      final body = json.decode(res.body);
+      if (body is List) {
+        followedVendors.assignAll(
+          body.map<FollowedVendor>((e) => FollowedVendor.fromJson(e)).toList(),
+        );
       } else {
-        print('No categories found or incorrect response format.');
+        error.value = 'Unexpected response format.';
+        followedVendors.clear();
       }
     } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error appropriately (e.g., show a Snackbar or error message)
+      print(e.toString());
+      error.value = 'Network error while loading followed vendors.';
+      followedVendors.clear();
+      debugPrint('fetchFollowedVendors error: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
