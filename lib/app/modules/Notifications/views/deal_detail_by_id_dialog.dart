@@ -1,3 +1,4 @@
+// lib/app/modules/Notifications/views/deal_detail_by_id_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,8 @@ class DealDetailByIdDialog extends StatelessWidget {
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 24.h),
       backgroundColor: Colors.transparent,
-      child: FutureBuilder<Map<String, dynamic>>(
-        future: DealsRepo.fetchDealRawById(dealId),
+      child: FutureBuilder<DealBundle>(
+        future: DealsRepo.fetchDealBundle(dealId),
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return _box(child: const Center(child: CircularProgressIndicator()));
@@ -23,9 +24,10 @@ class DealDetailByIdDialog extends StatelessWidget {
           if (snap.hasError) {
             return _box(child: _err('Failed to load deal #$dealId\n${snap.error}'));
           }
-          final m = snap.data ?? {};
+          final bundle = snap.data!;
+          final m = bundle.deal;
 
-          // Map to your DealDetailView props
+          // ---- Map raw deal -> DealDetailView props ----
           final dealImage = (m['image_url'] ?? m['image'] ?? '') as String;
           final dealTitle = (m['title'] ?? m['offer_title'] ?? 'Deal') as String;
           final dealDescription = (m['description'] ?? '') as String;
@@ -37,9 +39,13 @@ class DealDetailByIdDialog extends StatelessWidget {
 
           final dealStoreName = (m['vendor_name'] ?? m['store_name'] ?? 'Store') as String;
           final brandLogo = (m['image_url'] ?? m['brand_logo'] ?? '') as String;
-          final redemptionType = (m['redemption_type'] ?? 'Pickup') as String;
+          final redemptionType = (m['redemption_type'] ?? 'Pickup').toString();
           final deliveryCost = (m['delivery_fee'] ?? '0').toString();
           final minOrder = int.tryParse((m['min_order'] ?? '0').toString()) ?? 0;
+
+          // ---- From the new endpoints ----
+          final address = bundle.address;     // resolved by user_id
+          final userType = bundle.userType;   // true if subscription_status == 'Active'
 
           return DealDetailView(
             dealImage: dealImage,
@@ -51,6 +57,11 @@ class DealDetailByIdDialog extends StatelessWidget {
             redemptionType: redemptionType,
             deliveryCost: deliveryCost,
             minOrder: minOrder,
+            dealId: dealId,
+            address: address,
+            userType: userType,   // <-- now a bool from /food/my-profile/
+            freeDiscount: (m['discount_value_free'] ?? '').toString(),
+            plusDiscount: (m['discount_value_paid'] ?? '').toString(),
           );
         },
       ),
@@ -61,7 +72,9 @@ class DealDetailByIdDialog extends StatelessWidget {
     decoration: BoxDecoration(
       color: const Color(0xFFF9FBFC),
       borderRadius: BorderRadius.circular(16.r),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
+      boxShadow: [
+        BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))
+      ],
     ),
     padding: EdgeInsets.all(16.w),
     child: child,
