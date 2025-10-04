@@ -1,26 +1,34 @@
-import 'package:flutter/cupertino.dart';
+// common/EditProfileField.dart
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../app/modules/Profile/controllers/profile_controller.dart';
-
-class EditProfileField extends GetView<ProfileController> {
+class EditProfileField extends StatelessWidget {
   final String label;
   final String defaultText;
   final String hintText;
-  TextEditingController editProfileController;
+  final TextEditingController editProfileController;
+  final String? Function(String?)? validator;
+  final TextInputType keyboardType;
+  final int maxLines;
 
-  EditProfileField({
+  const EditProfileField({
     super.key,
     required this.label,
     required this.defaultText,
     required this.hintText,
     required this.editProfileController,
+    this.validator,
+    this.keyboardType = TextInputType.text,
+    this.maxLines = 1,
   });
 
   @override
   Widget build(BuildContext context) {
+    // hydrate once if empty
+    if (editProfileController.text.isEmpty && defaultText.isNotEmpty) {
+      editProfileController.text = defaultText;
+    }
+
     return Column(
       children: [
         Row(
@@ -28,39 +36,42 @@ class EditProfileField extends GetView<ProfileController> {
           children: [
             Text(
               label,
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp), // Use ScreenUtil for font size
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
             ),
-            SizedBox(),
+            const SizedBox(),
           ],
         ),
-        SizedBox(height: 8.h), // Use ScreenUtil for spacing
-        TextField(
-          controller: editProfileController,  // Default text in the field
+        SizedBox(height: 8.h),
+        TextFormField(
+          controller: editProfileController,
+          validator: validator,
+          keyboardType: keyboardType,
+          maxLines: maxLines,
           style: TextStyle(
-            fontSize: 14.sp, // Use ScreenUtil for font size
+            fontSize: 14.sp,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF6F7E8D),
+            color: const Color(0xFF6F7E8D),
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Color(0xFFF4F6F7),
+            fillColor: const Color(0xFFF4F6F7),
             hintText: hintText,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r), // Use ScreenUtil for border radius
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(width: 1, color: Color(0xFFEAECED)),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w), // Use ScreenUtil for content padding
+            contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           ),
         ),
-        SizedBox(height: 20.h), // Use ScreenUtil for spacing
+        SizedBox(height: 20.h),
       ],
     );
   }
