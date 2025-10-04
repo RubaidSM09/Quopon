@@ -87,6 +87,7 @@ class MyDealsController extends GetxController {
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/',
         headers: headers,
       );
+      print(wishRes.statusCode);
       if (wishRes.statusCode < 200 || wishRes.statusCode >= 300) {
         Get.snackbar('Error', 'Failed to load My Deals (${wishRes.statusCode})');
         deals.clear();
@@ -101,9 +102,10 @@ class MyDealsController extends GetxController {
 
       // 2) All deals
       final allDealsRes = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-deals/',
+        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
         headers: headers,
       );
+      print(allDealsRes.statusCode);
       if (allDealsRes.statusCode < 200 || allDealsRes.statusCode >= 300) {
         Get.snackbar('Error', 'Failed to load deals catalog (${allDealsRes.statusCode})');
         deals.clear();
@@ -120,6 +122,7 @@ class MyDealsController extends GetxController {
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
       );
+      print(vendorsRes.statusCode);
       final Map<int, Map<String, dynamic>> vendorById = {};
       if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
         final List<dynamic> vendors = json.decode(vendorsRes.body);
@@ -198,6 +201,7 @@ class MyDealsController extends GetxController {
       }
 
       deals.assignAll(joined);
+      print(deals);
     } catch (e) {
       Get.snackbar('Error', e.toString());
       deals.clear();
