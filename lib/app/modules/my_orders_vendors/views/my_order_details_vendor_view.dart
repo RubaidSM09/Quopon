@@ -71,7 +71,7 @@ class MyOrderDetailsVendorView extends GetView {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
-                    child: Image.asset(
+                    child: Image.network(
                       itemImg,
                       height: 62.h,
                       width: 62.w,
@@ -147,7 +147,7 @@ class MyOrderDetailsVendorView extends GetView {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
-                    child: Image.asset(
+                    child: Image.network(
                       itemImg,
                       height: 62.h,
                       width: 62.w,

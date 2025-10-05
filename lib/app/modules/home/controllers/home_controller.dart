@@ -12,71 +12,119 @@ import 'package:quopon/app/data/model/beyondNeighbourhood.dart';
 import 'package:quopon/app/data/model/nearShops.dart';
 import 'package:quopon/app/data/model/speedyDeliveries.dart';
 
-import '../../../data/api.dart';
 import '../../../data/model/business_hour.dart';
 import '../../../data/model/vendor_category.dart';
 
 class HomeController extends GetxController {
+  // ---------------- Existing state ----------------
   RxBool deliveryHighToLow = true.obs;
 
-  final double _nearRadiusKm = 5.0;                 // radius for "Shops Near You"
-  final int _nearLimit = 20;                        // cap list if many results
-  final Map<String, LatLng> _geoCache = {};         // address -> coords
+  final RxBool loadingBeyond = false.obs;
 
-  // Reactive list to store categories
+  final double _nearRadiusKm = 5.0; // radius for "Shops Near You"
+  final int _nearLimit = 20; // cap list if many results
+  final Map<String, LatLng> _geoCache = {}; // address -> coords
+
+  // Reactive lists surfaced to UI
   RxList<VendorCategory> vendorCategories = <VendorCategory>[].obs;
   var beyondNeighbourhood = <BeyondNeighbourhood>[].obs;
   var nearShops = <NearShops>[].obs;
   var speedyDeliveries = <SpeedyDeliveries>[].obs;
 
-  // Live, reactive status by user_id
+  // Live, reactive status by user_id (ETA buckets like "15–25 min")
   final RxMap<int, String> vendorStatus = <int, String>{}.obs;
 
-// Caches
-  final Map<int, BusinessHour> _hoursCache = {};     // user_id -> hours
-  final Map<int, double> _vendorDistanceKm = {};     // user_id -> distance
-  Timer? _statusTicker;
+  // Caches
+  final Map<int, BusinessHour> _hoursCache = {}; // user_id -> hours
+  final Map<int, double> _vendorDistanceKm = {}; // user_id -> distance from user
 
-  // Fetch categories from the API
+  // NEW: cache vendor category by user_id (== vendor_id in your data)
+  final Map<int, int?> _vendorCategory = {}; // user_id -> category id (nullable)
+
+  Timer? _statusTicker;
+  final RxBool sortTouched = false.obs;
+
+  // ---------------- Filter state & master copies ----------------
+  final RxBool filterPickup = false.obs;   // Pickup & Both only (excludes Delivery-only)
+  final RxBool filterOffers = false.obs;   // Near shops that have any active deal
+  final RxBool filterUnder30 = false.obs;  // ETA under 30 mins
+
+  // NEW: selected category
+  final RxnInt selectedCategoryId = RxnInt(); // null = all categories
+
+  // Masters (unfiltered)
+  final List<BeyondNeighbourhood> _allBeyond = [];
+  final List<NearShops> _allNear = [];
+  final List<SpeedyDeliveries> _allSpeedy = [];
+
+  // Indices to support filtering/sorting
+  // user_id -> list of raw deals (as returned from /all-vendor-deals)
+  final Map<int, List<Map<String, dynamic>>> _dealsByUserId = {};
+  // Approximate "effective" delivery fee per vendor (see heuristic below)
+  final Map<int, double> _vendorEffectiveFee = {}; // user_id -> fee
+
+  // ---------------- Utilities ----------------
+  String _normStr(Object? v) => (v ?? '').toString().trim();
+  bool _isPickupOrBoth(Object? v) {
+    final s = _normStr(v).toUpperCase();
+    return s == 'PICKUP' || s == 'BOTH';
+  }
+  bool _isDeliverable(Object? v) {
+    final s = _normStr(v).toUpperCase();
+    return s == 'DELIVERY' || s == 'BOTH';
+  }
+  double _tryParseDouble(Object? v, {double fallback = 0.0}) {
+    if (v == null) return fallback;
+    return double.tryParse(v.toString()) ?? fallback;
+  }
+
+  // Choose an "effective" delivery fee for a vendor given our current constraints.
+  double _effectiveFeeForCosts(List<dynamic>? rawCosts, {double km = 0.0}) {
+    if (rawCosts == null || rawCosts.isEmpty) return 0.0;
+    double best = double.infinity;
+    for (final c in rawCosts) {
+      final fee = _tryParseDouble((c as Map)['delivery_fee'], fallback: double.infinity);
+      if (fee < best) best = fee;
+    }
+    return (best == double.infinity) ? 0.0 : best;
+  }
+
+  double _feeForVendor(int userId) => _vendorEffectiveFee[userId] ?? 0.0;
+
+  int? _minFromStatus(String s) {
+    final m = RegExp(r'(\d+)').firstMatch(s);
+    if (m == null) return null;
+    return int.tryParse(m.group(1)!);
+  }
+
+  // ---------------- Fetches ----------------
+
   Future<void> fetchVendorCategories() async {
     try {
-      String? userId = await BaseClient.getUserId();
-
-      if (userId == null) {
-        throw "User ID not found. Please log in again.";
-      }
-
       final apiUrl = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendor-categories/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
-
       if (response.statusCode >= 200 && response.statusCode <= 210) {
         final responseBody = json.decode(response.body);
-
-        print(responseBody);
-
-        List<VendorCategory> categories = vendorCategoryFromJson(responseBody);
-
+        final categories = vendorCategoryFromJson(responseBody);
         vendorCategories.value = categories;
-
-        print(vendorCategories.value);
       } else {
         final responseBody = json.decode(response.body);
         throw responseBody['message'] ?? 'Failed to fetch vendor categories';
       }
     } catch (error) {
-      print('Error ${error.toString()}');
+      debugPrint('Error ${error.toString()}');
       Get.snackbar('Error', error.toString());
     }
   }
 
-  // Fetch categories from the API
   Future<void> fetchBeyondNeighbourhood() async {
+    loadingBeyond.value = true;
     try {
       final headers = await BaseClient.authHeaders();
 
-      // A) Who is the user?
+      // A) user (for premium)
       final profileRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/',
         headers: headers,
@@ -85,10 +133,16 @@ class HomeController extends GetxController {
       if (profileRes.statusCode >= 200 && profileRes.statusCode < 300) {
         final Map<String, dynamic> p = json.decode(profileRes.body) as Map<String, dynamic>;
         final sub = (p['subscription_status'] ?? '').toString().trim().toLowerCase();
-        isUserPremium = sub == 'active'; // subscribed = premium
+        isUserPremium = sub == 'active';
       }
 
-      // B) Deals
+      // B) user location (for distance/ETA fallback)
+      await _ensureLocationPermission();
+      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      final userLL = LatLng(pos.latitude, pos.longitude);
+      final dist = Distance();
+
+      // C) deals
       final dealsRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
         headers: headers,
@@ -98,55 +152,91 @@ class HomeController extends GetxController {
       }
       final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
 
-      // C) Vendors
+      // D) vendors → **KEY FIX**: map by (assumed) user_id == vendor_id
       final vendorsRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
       );
-      final Map<int, Map<String, dynamic>> vendorById = {};
+      final Map<int, Map<String, dynamic>> vendorByUserId = {};
       if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
         final List<dynamic> vendors = json.decode(vendorsRes.body) as List<dynamic>;
         for (final v in vendors) {
           final vm = v as Map<String, dynamic>;
-          final vid = vm['vendor_id'];
-          if (vid is int) vendorById[vid] = vm;
+          final uid = (vm['user_id'] is int)
+              ? vm['user_id'] as int
+              : (vm['vendor_id'] is int ? vm['vendor_id'] as int : -1);
+          if (uid != -1) {
+            vendorByUserId[uid] = vm;
+            // cache vendor category for filtering later
+            _vendorCategory[uid] = vm['category'] as int?;
+          }
         }
       }
 
-      // D) Map ALL deals (no paid filtering) and compute per-user isPremium
-      String normDealType(Object? v) {
-        final s = (v ?? '').toString().trim().toLowerCase();
-        if (s == 'paid') return 'paid';
-        if (s == 'free') return 'free';
-        if (s == 'both') return 'both';
-        return ''; // unknown/null
-      }
-
+      // E) build items + indexes + compute vendor distances (for ETA fallback)
       final items = <BeyondNeighbourhood>[];
+      _dealsByUserId.clear();
+
       for (final raw in deals) {
         final m = raw as Map<String, dynamic>;
-        // Optional: hide completely inactive deals, or expired ones (keep if you want them shown)
         final active = m['is_active'] == true;
         if (!active) continue;
 
-        final vendor = vendorById[m['user_id'] as int? ?? -1];
+        final int uid = (m['user_id'] is int) ? m['user_id'] as int : -1;
+        if (uid == -1) continue;
+
+        // index deals by vendor
+        (_dealsByUserId[uid] ??= []).add(m);
+
+        // effective fee cache
+        final costs = (m['delivery_costs'] as List<dynamic>?) ?? const [];
+        final fee = _effectiveFeeForCosts(costs);
+        final prev = _vendorEffectiveFee[uid];
+        if (prev == null || fee < prev) _vendorEffectiveFee[uid] = fee;
+
+        final vendor = vendorByUserId[uid];
+
+        // compute & cache vendor distance for ETA fallback
+        if (!_vendorDistanceKm.containsKey(uid) && vendor != null) {
+          LatLng? vendorLL;
+          if (vendor['lat'] is num && vendor['lng'] is num) {
+            vendorLL = LatLng((vendor['lat'] as num).toDouble(), (vendor['lng'] as num).toDouble());
+          } else {
+            final address = (vendor['address'] ?? '').toString().trim();
+            if (address.isNotEmpty) {
+              vendorLL = _geoCache[address];
+              vendorLL ??= await _geocodeAddressMulti(address, bias: userLL);
+              if (vendorLL != null) _geoCache[address] = vendorLL;
+              await Future.delayed(const Duration(milliseconds: 120));
+            }
+          }
+          if (vendorLL != null) {
+            final meters = dist.distance(userLL, vendorLL);
+            _vendorDistanceKm[uid] = meters / 1000.0; // km
+          }
+        }
 
         final bn = BeyondNeighbourhood.fromDealJson(
           m,
           vendorJson: vendor,
-          isUserPremium: isUserPremium, // <- critical for blur logic
+          isUserPremium: isUserPremium,
         );
         items.add(bn);
       }
 
-      // Optional: sort by newest first (or however you like)
+      // newest first
       items.sort((a, b) => b.startDate.compareTo(a.startDate));
 
-      beyondNeighbourhood.assignAll(items);
-      debugPrint('BeyondNeighbourhood loaded: ${items.length} (userPremium=$isUserPremium)');
+      _allBeyond
+        ..clear()
+        ..addAll(items);
+
+      _applyFilters();
     } catch (e) {
       debugPrint('Error fetching beyond neighbourhood: $e');
       Get.snackbar('Error', 'Failed to load deals beyond your neighbourhood');
+    } finally {
+      loadingBeyond.value = false;
     }
   }
 
@@ -160,7 +250,6 @@ class HomeController extends GetxController {
   }
 
   int _estimateDeliveryMinutes(double km) {
-    // Simple: 12 min base + ~6 min per km, clamped
     final m = (12 + km * 6).round();
     return m.clamp(10, 90);
   }
@@ -182,11 +271,11 @@ class HomeController extends GetxController {
     final nowSec = now.hour * 3600 + now.minute * 60 + now.second;
     final o = open.inSeconds;
     final c = close.inSeconds;
-    if (c == o) return false;                 // zero window -> closed
+    if (c == o) return false;
     if (c > o) {
-      return nowSec >= o && nowSec < c;       // same-day window
+      return nowSec >= o && nowSec < c; // same-day window
     } else {
-      return nowSec >= o || nowSec < c;       // crosses midnight
+      return nowSec >= o || nowSec < c; // crosses midnight
     }
   }
 
@@ -196,12 +285,11 @@ class HomeController extends GetxController {
     final nowSec = now.hour * 3600 + now.minute * 60 + now.second;
     final o = open.inSeconds;
     if (nowSec <= o) return ((o - nowSec) / 60).ceil();
-    return null; // today’s open already passed
+    return null;
   }
 
   String _statusFromSchedule(Schedule s, double km, DateTime now) {
     if (s.isClosed) return 'Closed';
-
     final open = s.openTime;
     final close = s.closeTime;
     if (_isOpenNow(open, close, now)) {
@@ -215,7 +303,6 @@ class HomeController extends GetxController {
   }
 
   Schedule _scheduleForDay(BusinessHour hours, int weekdayIdx) {
-    // weekdayIdx: 0=Mon...6=Sun
     final list = hours.schedule;
     if (weekdayIdx >= 0 && weekdayIdx < list.length) return list[weekdayIdx];
     return Schedule(day: 'Monday', dayDisplay: 'Monday', openTime: null, closeTime: null, isClosed: true);
@@ -252,12 +339,11 @@ class HomeController extends GetxController {
       }
       newMap[userId] = status;
     }
-    vendorStatus.assignAll(newMap); // reactive
+    vendorStatus.assignAll(newMap);
+    if (filterUnder30.value) _applyFilters();
   }
 
   Future<void> _primeBusinessHoursAndStatuses() async {
-    print('Rubaid');
-    // Fetch hours for any userIds we don't have yet
     for (final userId in _vendorDistanceKm.keys) {
       if (_hoursCache.containsKey(userId)) continue;
       final h = await _fetchVendorHours(userId);
@@ -287,6 +373,30 @@ class HomeController extends GetxController {
         return;
       }
 
+      // Ensure we have deals index at least once for Offers / Pickup filters
+      if (_dealsByUserId.isEmpty) {
+        try {
+          final dealsRes = await BaseClient.getRequest(
+            api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
+            headers: headers,
+          );
+          if (dealsRes.statusCode >= 200 && dealsRes.statusCode < 300) {
+            final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
+            for (final raw in deals) {
+              final m = raw as Map<String, dynamic>;
+              final uid = (m['user_id'] is int) ? m['user_id'] as int : -1;
+              if (uid != -1) {
+                (_dealsByUserId[uid] ??= []).add(m);
+                final costs = (m['delivery_costs'] as List<dynamic>?) ?? const [];
+                final fee = _effectiveFeeForCosts(costs);
+                final prev = _vendorEffectiveFee[uid];
+                if (prev == null || fee < prev) _vendorEffectiveFee[uid] = fee;
+              }
+            }
+          }
+        } catch (_) {}
+      }
+
       final d = Distance();
       final List<_NearTmp> candidates = [];
 
@@ -310,41 +420,31 @@ class HomeController extends GetxController {
         final km = meters / 1000.0;
         if (km > _nearRadiusKm) continue;
 
-        // 📌 KEY: prefer user_id for hours endpoint; fallback to vendor_id
+        // prefer user_id; fallback to vendor_id
         final int userIdKey = (m['user_id'] is int)
             ? m['user_id'] as int
             : (m['vendor_id'] is int ? m['vendor_id'] as int : -1);
         if (userIdKey == -1) continue;
 
-        // 📌 keep distance keyed by user_id
         _vendorDistanceKm[userIdKey] = km;
 
-        String mapCategory(dynamic id) {
-          switch (id) {
-            case 1: return 'Restaurant';
-            case 2: return 'Grocery';
-            default: return 'Other';
-          }
-        }
-        const placeholderLogo = 'https://via.placeholder.com/120';
+        // cache category for category filtering
+        _vendorCategory[userIdKey] = m['category'] as int?;
 
-        // get a clean logo string
+        const placeholderLogo = 'https://via.placeholder.com/120';
         final rawLogo = (m['logo_image'] ?? '').toString().trim();
         final logo = rawLogo.isNotEmpty ? rawLogo : placeholderLogo;
 
         final adapted = <String, dynamic>{
           'id': m['id'],
-          // expose user_id as vendor_id (unchanged)
           'vendor_id': userIdKey,
           'vendor_email': m['vendor_email'],
-          // ✅ KEY FIX: must be "logo_image" to match NearShops.fromJson
           'logo_image': logo,
           'name': m['name'] ?? 'Unknown',
           'category': m['category'],
           'address': m['address'],
           'phone_number': m['phone_number'],
           'kvk_number': m['kvk_number'],
-          // optional fields you already add:
           'shop_title': m['name'] ?? 'Unknown',
           'status_text': '—',
           'distance_km': double.parse(km.toStringAsFixed(2)),
@@ -356,10 +456,14 @@ class HomeController extends GetxController {
       candidates.sort((a, b) => a.distanceKm.compareTo(b.distanceKm));
       final limited = candidates.take(_nearLimit).map((e) => e.json).toList();
 
-      nearShops.value = limited.map<NearShops>((j) => NearShops.fromJson(j)).toList();
+      final parsed = limited.map<NearShops>((j) => NearShops.fromJson(j)).toList();
 
-      // 📌 fetch hours + compute live statuses
-      await _primeBusinessHoursAndStatuses();
+      _allNear
+        ..clear()
+        ..addAll(parsed);
+
+      await _primeBusinessHoursAndStatuses(); // for ETA buckets
+      _applyFilters();
     } catch (e) {
       debugPrint('Error fetching near shops: $e');
     }
@@ -379,7 +483,6 @@ class HomeController extends GetxController {
   }
 
   Future<LatLng?> _geocodeAddressMulti(String address, {LatLng? bias}) async {
-    // 1) Device geocoding (no key)
     try {
       final results = await locationFromAddress(address);
       if (results.isNotEmpty) {
@@ -388,7 +491,6 @@ class HomeController extends GetxController {
       }
     } catch (_) {}
 
-    // 2) Open-Meteo (keyless)
     try {
       final q = Uri.encodeQueryComponent(address);
       final url = Uri.parse('https://geocoding-api.open-meteo.com/v1/search?name=$q&count=1&language=en&format=json');
@@ -405,7 +507,6 @@ class HomeController extends GetxController {
       }
     } catch (_) {}
 
-    // 3) Photon (Komoot) (keyless) – with bias when available
     try {
       final q = Uri.encodeQueryComponent(address);
       final base = 'https://photon.komoot.io/api/?q=$q&limit=1&lang=en';
@@ -425,7 +526,6 @@ class HomeController extends GetxController {
       }
     } catch (_) {}
 
-    // 4) Nominatim fallback (keyless; be gentle)
     try {
       final q = Uri.encodeQueryComponent(address);
       final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=$q&format=json&limit=1');
@@ -450,7 +550,7 @@ class HomeController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
 
-      // A) user location (for distance/ETA)
+      // A) user location
       await _ensureLocationPermission();
       final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       final userLL = LatLng(pos.latitude, pos.longitude);
@@ -468,7 +568,7 @@ class HomeController extends GetxController {
         isUserPremium = sub == 'active';
       }
 
-      // C) deals (we only want ones that can be delivered quickly)
+      // C) deals (deliverable)
       final dealsRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
         headers: headers,
@@ -478,7 +578,7 @@ class HomeController extends GetxController {
       }
       final List<dynamic> deals = json.decode(dealsRes.body) as List<dynamic>;
 
-      // D) vendors (for name/logo/address/coords)
+      // D) vendors (map by user_id == vendor_id)
       final vendorsRes = await BaseClient.getRequest(
         api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
@@ -491,16 +591,18 @@ class HomeController extends GetxController {
           final uid = (vm['user_id'] is int)
               ? vm['user_id'] as int
               : (vm['vendor_id'] is int ? vm['vendor_id'] as int : -1);
-          if (uid != -1) vendorByUserId[uid] = vm;
+          if (uid != -1) {
+            vendorByUserId[uid] = vm;
+            _vendorCategory[uid] = vm['category'] as int?;
+          }
         }
       }
 
-      // E) map to SpeedyDeliveries with computed distance/ETA
+      // E) map to SpeedyDeliveries
       final items = <SpeedyDeliveries>[];
       for (final raw in deals) {
         final m = raw as Map<String, dynamic>;
 
-        // must be active and deliverable
         final active = m['is_active'] == true;
         if (!active) continue;
         final redem = (m['redemption_type'] ?? '').toString().trim().toUpperCase();
@@ -511,7 +613,7 @@ class HomeController extends GetxController {
         final vendor = vendorByUserId[userId];
         if (vendor == null) continue;
 
-        // vendor coords (or geocode address)
+        // vendor coords
         LatLng? vendorLL;
         if (vendor['lat'] is num && vendor['lng'] is num) {
           vendorLL = LatLng((vendor['lat'] as num).toDouble(), (vendor['lng'] as num).toDouble());
@@ -529,15 +631,13 @@ class HomeController extends GetxController {
         final meters = dist.distance(userLL, vendorLL);
         final km = meters / 1000.0;
         final etaMin = _estimateDeliveryMinutes(km);
-
-        // (optional) focus on truly “speedy” ones within radius
         if (km > _nearRadiusKm) continue;
 
-        // normalize costs
+        // normalize costs & record fees for sorting later
         final List<dynamic> rawCosts = (m['delivery_costs'] as List<dynamic>? ?? []);
-        final costs = rawCosts
-            .map((e) => DeliveryCostBN.fromJson(e as Map<String, dynamic>))
-            .toList();
+        final fee = _effectiveFeeForCosts(rawCosts);
+        final prevFee = _vendorEffectiveFee[userId];
+        if (prevFee == null || fee < prevFee) _vendorEffectiveFee[userId] = fee;
 
         // paid/free logic (blur for free users)
         String _normDealType(Object? v) {
@@ -553,7 +653,6 @@ class HomeController extends GetxController {
 
         String _norm(Object? v) => (v ?? '').toString().trim();
 
-        // build item (set distance/ETA explicitly)
         final miles = (km * 0.621371).toStringAsFixed(1);
 
         items.add(
@@ -572,7 +671,7 @@ class HomeController extends GetxController {
             dealType: normalizedDealType,
             maxCouponsTotal: (m['max_coupons_total'] ?? 0) as int,
             maxCouponsPerCustomer: (m['max_coupons_per_customer'] ?? 0) as int,
-            deliveryCosts: costs,
+            deliveryCosts: rawCosts.map((e) => DeliveryCostBN.fromJson(e as Map<String, dynamic>)).toList(),
             isActive: true,
             qrImage: _norm(m['qrimage']),
             vendorName: _norm(vendor['name']),
@@ -586,9 +685,12 @@ class HomeController extends GetxController {
             priceRange: 2,
           ),
         );
+
+        // maintain deal index too (for Offers filter)
+        (_dealsByUserId[userId] ??= []).add(m);
       }
 
-      // F) sort by fastest ETA, then by distance
+      // sort by fastest ETA, then distance
       items.sort((a, b) {
         final c = a.deliveryTimeMinutes.compareTo(b.deliveryTimeMinutes);
         if (c != 0) return c;
@@ -597,27 +699,161 @@ class HomeController extends GetxController {
         return da.compareTo(db);
       });
 
-      // (optional) take top N
       final top = items.take(_nearLimit).toList();
 
-      speedyDeliveries.assignAll(top);
+      _allSpeedy
+        ..clear()
+        ..addAll(top);
+
+      _applyFilters();
     } catch (e) {
       debugPrint('Error fetching speedy deliveries: $e');
     }
   }
 
+  // ---------------- Filter + sort pipeline ----------------
+
+  void _applyFilters() {
+    // Start from masters
+    var beyond = List<BeyondNeighbourhood>.from(_allBeyond);
+    var near = List<NearShops>.from(_allNear);
+    var speedy = List<SpeedyDeliveries>.from(_allSpeedy);
+
+    // Category filter first
+    final int? catId = selectedCategoryId.value;
+    if (catId != null) {
+      bool vendorInCategory(int uid) {
+        final vc = _vendorCategory[uid];
+        return vc != null && vc == catId;
+      }
+
+      beyond = beyond.where((b) => vendorInCategory(b.userId)).toList();
+      speedy = speedy.where((s) => vendorInCategory(s.userId)).toList();
+      near = near.where((n) => n.category == catId).toList();
+    }
+
+    // 1) Pick-up
+    if (filterPickup.value) {
+      bool dealPass(Object? rt) => _isPickupOrBoth(rt);
+      beyond = beyond.where((b) => dealPass(b.redemptionType)).toList();
+      speedy = speedy.where((s) => dealPass(s.redemptionType)).toList();
+      near = near.where((n) {
+        final deals = _dealsByUserId[n.vendorId] ?? const [];
+        return deals.any((d) => dealPass(d['redemption_type']));
+      }).toList();
+    }
+
+    // 2) Offers
+    if (filterOffers.value) {
+      near = near.where((n) {
+        final deals = _dealsByUserId[n.vendorId] ?? const [];
+        return deals.any((d) => d['is_active'] == true);
+      }).toList();
+    }
+
+    // 3) Under 30 mins
+    int _etaForBeyond(BeyondNeighbourhood b) {
+      final preset = b.deliveryTimeMinutes;
+      if (preset != null) return preset;
+      final km = _vendorDistanceKm[b.userId];
+      if (km == null) return 999;
+      return _estimateDeliveryMinutes(km);
+    }
+
+    if (filterUnder30.value) {
+      beyond = beyond.where((b) => _etaForBeyond(b) < 30).toList();
+      speedy = speedy.where((s) => s.deliveryTimeMinutes < 30).toList();
+
+      near = near.where((n) {
+        final status = vendorStatus[n.vendorId];
+        if (status != null) {
+          final min = _minFromStatus(status);
+          if (min != null) return min < 30;
+        }
+        final km = _vendorDistanceKm[n.vendorId];
+        if (km == null) return false;
+        final eta = _estimateDeliveryMinutes(km);
+        return eta < 30;
+      }).toList();
+    }
+
+    // 4) Delivery Fee sort
+    num _feeOfBeyond(BeyondNeighbourhood b) {
+      final f = _tryParseDouble(b.deliveryFee, fallback: double.nan);
+      if (!f.isNaN) return f;
+      return _feeForVendor(b.userId);
+    }
+
+    num _feeOfSpeedy(SpeedyDeliveries s) {
+      final f = _tryParseDouble(s.deliveryFee, fallback: double.nan);
+      if (!f.isNaN) return f;
+      return _feeForVendor(s.userId);
+    }
+
+    num _feeOfNear(NearShops n) {
+      return _feeForVendor(n.vendorId);
+    }
+
+    final ascending = !deliveryHighToLow.value;
+    int _asc(num a, num b) => a.compareTo(b);
+    int _desc(num a, num b) => b.compareTo(a);
+
+    if (ascending) {
+      beyond.sort((a, b) => _asc(_feeOfBeyond(a), _feeOfBeyond(b)));
+      speedy.sort((a, b) => _asc(_feeOfSpeedy(a), _feeOfSpeedy(b)));
+      near.sort((a, b) => _asc(_feeOfNear(a), _feeOfNear(b)));
+    } else {
+      beyond.sort((a, b) => _desc(_feeOfBeyond(a), _feeOfBeyond(b)));
+      speedy.sort((a, b) => _desc(_feeOfSpeedy(a), _feeOfSpeedy(b)));
+      near.sort((a, b) => _desc(_feeOfNear(a), _feeOfNear(b)));
+    }
+
+    // Push to UI
+    beyondNeighbourhood.assignAll(beyond);
+    speedyDeliveries.assignAll(speedy);
+    nearShops.assignAll(near);
+  }
+
+  // ---------------- Public actions ----------------
+  void togglePickup() {
+    filterPickup.toggle();
+    _applyFilters();
+  }
+
+  void toggleOffers() {
+    filterOffers.toggle();
+    _applyFilters();
+  }
+
+  void toggleUnder30() {
+    filterUnder30.toggle();
+    _applyFilters();
+  }
+
+  void toggleDeliveryFeeSort() {
+    sortTouched.value = true;
+    deliveryHighToLow.value = !deliveryHighToLow.value;
+    _applyFilters();
+  }
+
+  // Category tap (no UI change; just logic)
+  void onCategoryTap(int categoryId) {
+    if (selectedCategoryId.value == categoryId) {
+      selectedCategoryId.value = null; // deselect if same
+    } else {
+      selectedCategoryId.value = categoryId;
+    }
+    _applyFilters();
+  }
+
+  // ---------------- Lifecycle ----------------
   @override
   void onInit() {
     super.onInit();
-    fetchVendorCategories();  // Call the API to fetch categories on controller init
+    fetchVendorCategories();
     fetchBeyondNeighbourhood();
     fetchNearShops();
     fetchSpeedyDeliveries();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override
@@ -627,12 +863,14 @@ class HomeController extends GetxController {
   }
 }
 
+// Helper for near shops construction
 class _NearTmp {
   final double distanceKm;
   final Map<String, dynamic> json;
   _NearTmp({required this.distanceKm, required this.json});
 }
 
+// Local Category class (unchanged)
 class Category {
   final int id;
   final String name;
@@ -644,7 +882,6 @@ class Category {
     required this.imageUrl,
   });
 
-  // Factory constructor to create a Category object from JSON response
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['id'],

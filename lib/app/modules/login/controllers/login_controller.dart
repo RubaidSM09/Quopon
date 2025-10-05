@@ -106,7 +106,7 @@ class LoginController extends GetxController {
           Get.to(LandingVendorView());
         } else {
           Get.to(LandingView());
-          Get.dialog(ReviewView(menuItemId: 1));
+          // Get.dialog(ReviewView(menuItemId: 1));
         }
       } else {
         final responseBody = jsonDecode(response.body);

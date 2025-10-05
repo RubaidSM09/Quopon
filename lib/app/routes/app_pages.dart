@@ -79,6 +79,7 @@ import '../modules/vendor_dashboard/views/vendor_dashboard_view.dart';
 import '../modules/vendor_deal_performance/bindings/vendor_deal_performance_binding.dart';
 import '../modules/vendor_deal_performance/views/vendor_deal_performance_view.dart';
 import '../modules/vendor_deals/bindings/vendor_deals_binding.dart';
+import '../modules/vendor_deals/controllers/vendor_deals_controller.dart';
 import '../modules/vendor_deals/views/vendor_deals_view.dart';
 import '../modules/vendor_edit_deal/bindings/vendor_edit_deal_binding.dart';
 import '../modules/vendor_edit_deal/views/vendor_edit_deal_view.dart';
@@ -102,7 +103,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => OnboardingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -232,6 +233,7 @@ class AppPages {
     GetPage(
       name: _Paths.CHECKOUT,
       page: () => const CheckoutView(
+        vendorId: 0,
         subTotal: 0,
       ),
       binding: CheckoutBinding(),
@@ -288,7 +290,17 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_DEAL_PERFORMANCE,
-      page: () => const VendorDealPerformanceView(),
+      page: () {
+        final args = Get.arguments;
+        if (args is DealItem) {
+          return VendorDealPerformanceView(deal: args);
+        }
+        if (args is Map && args['deal'] is DealItem) {
+          return VendorDealPerformanceView(deal: args['deal'] as DealItem);
+        }
+        // fallback if something was pushed incorrectly
+        return const Error404View();
+      },
       binding: VendorDealPerformanceBinding(),
     ),
     GetPage(

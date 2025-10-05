@@ -77,13 +77,13 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    const FilterCard(filterName: 'Latest'),
+                    const FilterCard(filterName: 'Latest', iconPath: '', active: false,),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'All Ratings'),
+                    const FilterCard(filterName: 'All Ratings', iconPath: '', active: false,),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'Highest Rated'),
+                    const FilterCard(filterName: 'Highest Rated', iconPath: '', active: false,),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'Reply Status'),
+                    const FilterCard(filterName: 'Reply Status', iconPath: '', active: false,),
                   ],
                 ),
               ),

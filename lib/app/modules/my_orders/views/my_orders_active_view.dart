@@ -1,4 +1,3 @@
-// my_orders_active_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/my_orders/views/my_orders_card_view.dart';
@@ -8,7 +7,7 @@ class MyOrdersActiveView extends StatelessWidget {
   final List<Order> orders;
   const MyOrdersActiveView({super.key, required this.orders});
 
-  String _cap(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+  String _cap(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1).toLowerCase();
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +28,19 @@ class MyOrdersActiveView extends StatelessWidget {
       separatorBuilder: (_, __) => SizedBox(height: 8.h),
       itemBuilder: (context, i) {
         final o = orders[i];
-        final price = double.tryParse(o.price) ?? 0.0;
+        final price = double.tryParse(o.totalAmount!) ?? 0.0;
+        String productName = o.items.isNotEmpty ? (o.items[0].itemName ?? 'No item name') : 'No items';
+        if (o.items.length > 1) {
+          productName += ' and ${o.items.length - 1} more';
+        }
+        String imageUrl = o.items.isNotEmpty ? (o.items[0].itemImage ?? '') : '';
         return MyOrdersCardView(
-          itemImg: o.productImageUrl,   // ensure MyOrdersCardView can handle network images
-          itemName: o.productName,
-          orderId: '#${o.orderId}',
+          itemImg: imageUrl,
+          itemName: productName,
+          orderId: o.orderId ?? 'Unknown',
           price: price,
-          orderType: _cap(o.orderType),
+          orderType: _cap(o.deliveryType ?? 'Unknown'),
+          status: o.status ?? 'ACTIVE', // Pass status
         );
       },
     );

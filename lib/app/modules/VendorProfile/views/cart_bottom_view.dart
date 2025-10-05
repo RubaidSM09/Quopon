@@ -10,7 +10,12 @@ import '../../Cart/views/cart_card_view.dart';
 import '../../Checkout/views/checkout_view.dart';
 
 class CartBottomView extends GetView<CartController> {
-  const CartBottomView({super.key});
+  final int vendorId;
+
+  const CartBottomView({
+    required this.vendorId,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +107,7 @@ class CartBottomView extends GetView<CartController> {
                   text: 'Continue',
                   onPressed: () {
                     Get.to(() => CheckoutView(
+                      vendorId: vendorId,
                       subTotal: subTotal,
                       deliveryCharge: delivery,
                     ));

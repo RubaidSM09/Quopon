@@ -223,10 +223,10 @@ class VendorProfileView extends GetView<VendorProfileController> {
                         itemBuilder: (context, index) {
                           final deal = controller.deals[index];
                           return ActiveDealCard(
-                            dealImg: deal.imageUrl,
-                            dealTitle: deal.title,
-                            dealDescription: deal.description,
-                            dealValidity: deal.endDate,
+                            dealImg: deal.imageUrl ?? '',
+                            dealTitle: deal.title ?? 'Untitled Deal',
+                            dealDescription: deal.description ?? '',
+                            dealValidity: deal.endDate ?? '',
                           );
                         },
                       ),
@@ -823,7 +823,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
             ),
             GestureDetector(
               onTap: () {
-                Get.bottomSheet(CartBottomView());
+                Get.bottomSheet(CartBottomView(vendorId: vendorId,));
               },
               child: Icon(
                 Icons.keyboard_arrow_up_outlined,

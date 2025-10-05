@@ -159,7 +159,7 @@ class EditProfileView extends GetView<EditProfileController> {
                     onPressed: () async {
                       await c.save();
                       if (c.error.value == null) {
-                        Get.to(() => const ProfileView());
+                        Get.back();
                       }
                     },
                     colors: const [Color(0xFFD62828), Color(0xFFC21414)],

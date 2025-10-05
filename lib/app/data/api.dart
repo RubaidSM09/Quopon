@@ -39,4 +39,6 @@ class Api {
   /// Orders
   static const activeOrders = "$baseUrl/discover/my-orders/?status=active";
   static const completedOrders = "$baseUrl/discover/my-orders/?status=completed";
+
+  static const deals = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/';
 }

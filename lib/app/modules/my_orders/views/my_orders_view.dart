@@ -1,4 +1,3 @@
-// my_orders_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -46,8 +45,9 @@ class MyOrdersView extends GetView<MyOrdersController> {
               SizedBox(height: 24.h),
 
               Obx(() {
-                final activeCount = c.activeOrders.length; // dynamic count; completed/cancelled are static for now
+                final activeCount = c.activeOrders.length;
                 final completedCount = c.completedOrders.length;
+                final cancelledCount = c.cancelledOrders.length;
                 return Column(
                   children: [
                     Container(
@@ -88,7 +88,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               ),
                             ),
                           ),
-                          // Completed tab (placeholder count)
+                          // Completed tab
                           GestureDetector(
                             onTap: () {
                               for (int i = 0; i < 3; i++) {
@@ -106,7 +106,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                                 width: 103.33.w,
                                 child: Center(
                                   child: Text(
-                                    'Completed (${_countText(completedCount)})', // replace with live count when available
+                                    'Completed (${_countText(completedCount)})',
                                     style: TextStyle(
                                       color: status[1].value ? Colors.white : const Color(0xFF6F7E8D),
                                       fontSize: 14.sp,
@@ -117,7 +117,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               ),
                             ),
                           ),
-                          // Cancelled tab (placeholder count)
+                          // Cancelled tab
                           GestureDetector(
                             onTap: () {
                               for (int i = 0; i < 3; i++) {
@@ -135,7 +135,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                                 width: 103.33.w,
                                 child: Center(
                                   child: Text(
-                                    'Cancelled (03)', // replace with live count when available
+                                    'Cancelled (${_countText(cancelledCount)})',
                                     style: TextStyle(
                                       color: status[2].value ? Colors.white : const Color(0xFF6F7E8D),
                                       fontSize: 14.sp,
@@ -169,7 +169,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 12.h),
-                            TextButton(onPressed: c.fetchActiveOrders, child: const Text('Retry')),
+                            TextButton(onPressed: c.fetchOrders, child: const Text('Retry')),
                           ],
                         ),
                       )
@@ -178,7 +178,7 @@ class MyOrdersView extends GetView<MyOrdersController> {
                           ? MyOrdersActiveView(orders: c.activeOrders.toList())
                           : (status[1].value)
                           ? MyOrdersCompletedView(orders: c.completedOrders.toList())
-                          : const MyOrdersCancelledView(),
+                          : MyOrdersCancelledView(orders: c.cancelledOrders.toList()),
                   ],
                 );
               }),

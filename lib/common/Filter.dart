@@ -2,54 +2,90 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:quopon/app/modules/home/controllers/home_controller.dart'; // Import ScreenUtil
 
-class FilterCard extends GetView<HomeController> {
+class FilterCard extends StatelessWidget {
   final String filterName;
-  final bool isSortable;
-  final String filterIcon;
+  final String iconPath;
+  final bool active;
+  final VoidCallback? onTap;
+
+  /// Show sort arrow (used for Delivery Fee)
+  final bool showSort;
+  /// Direction of sort arrow if [showSort] is true
+  final bool sortHighToLow;
 
   const FilterCard({
+    super.key,
     required this.filterName,
-    this.isSortable = true,
-    this.filterIcon = '',
-    super.key
+    required this.iconPath,
+    required this.active,
+    this.onTap,
+    this.showSort = false,
+    this.sortHighToLow = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-          top: 8.h,
-          bottom: 8.h,
-          left: 12.w,
-          right: 12.w
-      ), // Use ScreenUtil for padding
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.r), // Use ScreenUtil for border radius
-          color: Colors.white,
-          boxShadow: [BoxShadow(blurRadius: 12.r, color: Colors.black.withAlpha(15))]
-      ),
-      child: Row(
-        children: [
-          filterIcon != '' ? SvgPicture.asset(
-            filterIcon
-          ) : SizedBox.shrink(),
-          filterIcon != '' ? SizedBox(width: 8.w,) : SizedBox.shrink(),
-          Text(
-            filterName,
-            style: TextStyle(
-                fontSize: 14.sp,  // Use ScreenUtil for font size
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF6F7E8D)
-            ),
-          ),
-          isSortable ? SizedBox(width: 12.w) : SizedBox.shrink(), // Use ScreenUtil for width
-          isSortable ? Obx(() {
-            return controller.deliveryHighToLow.value ? Icon(Icons.keyboard_arrow_down, color: Color(0xFF6F7E8D),) : Icon(Icons.keyboard_arrow_up, color: Color(0xFF6F7E8D),);
+    // Inactive design
+    const inactiveTextColor = Color(0xFF6F7E8D);
+    const inactiveBgColor = Colors.white;
 
-          }) : SizedBox.shrink(),
-        ],
+    // Active = flip colors
+    const activeBgColor = inactiveTextColor; // gray bg
+    const activeTextColor = Colors.white;    // white text
+
+    final bg = active ? activeBgColor : inactiveBgColor;
+    final fg = active ? activeTextColor : inactiveTextColor;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(100.r),
+        child: Ink(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(100.r),
+            boxShadow: [
+              // subtle shadow when inactive; lighter when active
+              BoxShadow(
+                blurRadius: 12.r,
+                color: Colors.black.withAlpha(active ? 8 : 15),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (iconPath.isNotEmpty) ...[
+                SvgPicture.asset(
+                  iconPath,
+                  height: 18.h,
+                  // re-color the svg to match text color
+                  colorFilter: ColorFilter.mode(fg, BlendMode.srcIn),
+                ),
+                SizedBox(width: 8.w),
+              ],
+              Text(
+                filterName,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: fg,
+                ),
+              ),
+              if (showSort) ...[
+                SizedBox(width: 8.w),
+                Icon(
+                  sortHighToLow ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
+                  size: 20.w,
+                  color: fg,
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

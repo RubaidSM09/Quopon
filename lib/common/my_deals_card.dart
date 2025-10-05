@@ -148,6 +148,7 @@ class VendorDealCard extends GetView {
   final int redemptions;
   final String startValidTime;
   final String endValidTime;
+  final VoidCallback? onTap; // <- NEW
 
   const VendorDealCard({
     required this.image,
@@ -156,6 +157,7 @@ class VendorDealCard extends GetView {
     required this.redemptions,
     required this.startValidTime,
     required this.endValidTime,
+    this.onTap, // <- NEW
     super.key,
   });
 
@@ -174,9 +176,7 @@ class VendorDealCard extends GetView {
     final end = _formatDate(endValidTime);
 
     return GestureDetector(
-      onTap: () {
-        Get.to(VendorDealPerformanceView());
-      },
+      onTap: onTap, // <- use the callback
       child: Container(
         padding: EdgeInsets.only(right: 12.w, left: 8.w, top: 8.h, bottom: 8.h),
         decoration: BoxDecoration(

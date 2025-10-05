@@ -15,23 +15,20 @@ class CartView extends GetView<CartController> {
 
   @override
   Widget build(BuildContext context) {
-    // ❌ Don’t create controllers in build()
-    Get.put(CartController());
+    Get.put(CartController()); // keep once at top
 
     String money(num v) => v.toStringAsFixed(2);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
-
       body: Obx(() {
-        // Safely derive current cart and data
-        final current = controller.cart.isNotEmpty ? controller.cart.first : null;
-        final items = current?.items ?? const <Items>[];
+        final current = controller.currentCart;
+        final items   = current?.items ?? const <Items>[];
         final summary = current?.priceSummary;
 
         final subTotal = (summary?.subTotalPrice ?? 0).toDouble();
         final delivery = (summary?.deliveryCharges ?? 0).toDouble();
-        final total = (summary?.inTotalPrice ?? (subTotal + delivery)).toDouble();
+        final total    = (summary?.inTotalPrice ?? (subTotal + delivery)).toDouble();
 
         return SingleChildScrollView(
           child: Padding(
@@ -169,22 +166,42 @@ class CartView extends GetView<CartController> {
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h), // ScreenUtil applied
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h),
           child: GradientButton(
-            onPressed: () {
-              Get.to(() => CheckoutView(subTotal: (controller.cart[0].priceSummary!.subTotalPrice)!.toInt(), deliveryCharge: 1.99));
+            onPressed: () async {
+              final current = controller.currentCart;
+              if (current == null) {
+                Get.snackbar('Cart', 'Your cart is empty.');
+                return;
+              }
+
+              final vendorId = await controller.resolveVendorIdFromCart();
+              if (vendorId == null) {
+                // resolveVendorIdFromCart already shows a message for multi-vendor case
+                Get.snackbar('Vendor not found',
+                    'Could not resolve vendor for the items in your cart.');
+                return;
+              }
+
+              final summary = current.priceSummary;
+              final subTotal = summary.subTotalPrice;
+              final delivery = summary.deliveryCharges;
+
+              // 🔹 Make sure your CheckoutView accepts the right types.
+              // Ideally: double subTotal, double deliveryCharge, int vendorId
+              Get.to(() => CheckoutView(subTotal: (controller.cart[0].priceSummary!.subTotalPrice)!.toInt(), deliveryCharge: 1.99, vendorId: vendorId,));
             },
             text: "Follow",
-            colors: [Color(0xFFD62828), Color(0xFFC21414)],
-            borderRadius: 12.r, // ScreenUtil applied
+            colors: const [Color(0xFFD62828), Color(0xFFC21414)],
+            borderRadius: 12.r,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Continue",
-                  style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white), // ScreenUtil applied
-                )
+                Text("Continue",
+                    style: TextStyle(
+                        fontSize: 17.5.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white)),
               ],
             ),
           ),

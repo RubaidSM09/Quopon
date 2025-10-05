@@ -1,70 +1,59 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quopon/app/data/api.dart';
+import 'package:quopon/app/data/base_client.dart';
 import 'package:quopon/app/data/model/order.dart';
-
-import '../../../data/api.dart';
-import '../../../data/base_client.dart';
 
 class MyOrdersController extends GetxController {
   final activeOrders = <Order>[].obs;
   final completedOrders = <Order>[].obs;
+  final cancelledOrders = <Order>[].obs;
   final isLoading = false.obs;
   final errorText = ''.obs;
 
-  Future<void> fetchActiveOrders() async {
+  Future<void> fetchOrders() async {
     try {
       isLoading.value = true;
       errorText.value = '';
 
       final headers = await BaseClient.authHeaders();
-      final response = await BaseClient.getRequest(api: Api.activeOrders, headers: headers);
+      final response = await BaseClient.getRequest(api: 'https://intensely-optimal-unicorn.ngrok-free.app/order/orders/', headers: headers);
       final data = await BaseClient.handleResponse(response);
 
-      List<Order> parsed = const [];
+      List<Order> allOrders = [];
       if (data is List) {
-        parsed = data.map((e) => Order.fromJson(Map<String, dynamic>.from(e))).toList();
+        allOrders = data.map((e) {
+          if (e is Map<String, dynamic>) {
+            return Order.fromJson(e);
+          } else {
+            throw FormatException('Invalid order data format');
+          }
+        }).toList();
       } else if (data is Map && data['results'] is List) {
-        parsed = (data['results'] as List)
-            .map((e) => Order.fromJson(Map<String, dynamic>.from(e)))
-            .toList();
+        allOrders = (data['results'] as List).map((e) {
+          if (e is Map<String, dynamic>) {
+            return Order.fromJson(e);
+          } else {
+            throw FormatException('Invalid order data format');
+          }
+        }).toList();
       } else if (data is String && data.isNotEmpty) {
-        parsed = orderFromJson(data);
+        allOrders = orderFromJson(data);
+      } else {
+        throw Exception('Unexpected response format');
       }
 
-      activeOrders.assignAll(parsed);
+      activeOrders.assignAll(allOrders.where((o) => o.status != "COMPLETED" && o.status != "CANCELLED").toList());
+      completedOrders.assignAll(allOrders.where((o) => o.status == "COMPLETED").toList());
+      cancelledOrders.assignAll(allOrders.where((o) => o.status == "CANCELLED").toList());
     } catch (e) {
       errorText.value = e.toString();
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red, colorText: Colors.white);
       activeOrders.clear();
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchCompletedOrders() async {
-    try {
-      isLoading.value = true;
-      errorText.value = '';
-
-      final headers = await BaseClient.authHeaders();
-      final response = await BaseClient.getRequest(api: Api.completedOrders, headers: headers);
-      final data = await BaseClient.handleResponse(response);
-
-      List<Order> parsed = const [];
-      if (data is List) {
-        parsed = data.map((e) => Order.fromJson(Map<String, dynamic>.from(e))).toList();
-      } else if (data is Map && data['results'] is List) {
-        parsed = (data['results'] as List)
-            .map((e) => Order.fromJson(Map<String, dynamic>.from(e)))
-            .toList();
-      } else if (data is String && data.isNotEmpty) {
-        parsed = orderFromJson(data);
-      }
-
-      completedOrders.assignAll(parsed);
-    } catch (e) {
-      errorText.value = e.toString();
       completedOrders.clear();
+      cancelledOrders.clear();
     } finally {
       isLoading.value = false;
     }
@@ -73,8 +62,7 @@ class MyOrdersController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchActiveOrders();
-    fetchCompletedOrders();
+    fetchOrders();
   }
 
   @override

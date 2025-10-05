@@ -177,17 +177,14 @@ class HomeView extends GetView<HomeController> {
                   Column(
                     children: [
                       Obx(() {
-                        // Check if categories are loaded
                         if (controller.vendorCategories.isEmpty) {
-                          return Center(
-                            child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
-                          );
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           return SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: controller.vendorCategories.map((category) {
-                                return _buildCategoryItem(category); // Use category object here
+                                return _buildCategoryItem(category); // now handles tap + highlight
                               }).toList(),
                             ),
                           );
@@ -197,25 +194,50 @@ class HomeView extends GetView<HomeController> {
                       SizedBox(height: 20,),
 
                       // Filter options
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            FilterCard(filterName: 'Pick-up', isSortable: false, filterIcon: 'assets/images/Home/Filters/Pick Up.svg',),
-                            SizedBox(width: 8.w),
-                            FilterCard(filterName: 'Offers', isSortable: false, filterIcon: 'assets/images/Home/Filters/Offers.svg',),
-                            SizedBox(width: 8.w),
-                            GestureDetector(
-                              onTap: () {
-                                controller.deliveryHighToLow.value = !controller.deliveryHighToLow.value;
-                              },
-                              child: FilterCard(filterName: 'Delivery Fee', filterIcon: 'assets/images/Home/Filters/Delivery Fee.svg',),
-                            ),
-                            SizedBox(width: 8.w),
-                            FilterCard(filterName: 'Under 30 min', isSortable: false, filterIcon: 'assets/images/Home/Filters/Under 30 Min.svg',),
-                          ],
-                        ),
-                      ),
+                      Obx(() {
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              FilterCard(
+                                filterName: 'Pick-up',
+                                iconPath: 'assets/images/Home/Filters/Pick Up.svg',
+                                active: controller.filterPickup.value,
+                                onTap: controller.togglePickup,
+                              ),
+                              SizedBox(width: 8.w),
+
+                              FilterCard(
+                                filterName: 'Offers',
+                                iconPath: 'assets/images/Home/Filters/Offers.svg',
+                                active: controller.filterOffers.value,
+                                onTap: controller.toggleOffers,
+                              ),
+                              SizedBox(width: 8.w),
+
+                              FilterCard(
+                                // live label changes with direction
+                                filterName: controller.deliveryHighToLow.value
+                                    ? 'Delivery Fee (High→Low)'
+                                    : 'Delivery Fee (Low→High)',
+                                iconPath: 'assets/images/Home/Filters/Delivery Fee.svg',
+                                active: controller.sortTouched.value,          // becomes selected after first tap
+                                showSort: true,                                 // show arrow
+                                sortHighToLow: controller.deliveryHighToLow.value,
+                                onTap: controller.toggleDeliveryFeeSort,
+                              ),
+                              SizedBox(width: 8.w),
+
+                              FilterCard(
+                                filterName: 'Under 30 min',
+                                iconPath: 'assets/images/Home/Filters/Under 30 Min.svg',
+                                active: controller.filterUnder30.value,
+                                onTap: controller.toggleUnder30,
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
 
                       SizedBox(height: 20.h),
 
@@ -248,57 +270,65 @@ class HomeView extends GetView<HomeController> {
                           ),
 
                           Obx(() {
-                            // Check if categories are loaded
+                            if (controller.loadingBeyond.value) {
+                              return Center(child: CircularProgressIndicator());
+                            }
                             if (controller.beyondNeighbourhood.isEmpty) {
-                              return Center(
-                                child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
-                              );
-                            } else {
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: controller.beyondNeighbourhood.map((beyondNeighbourhood) {
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          !beyondNeighbourhood.isPremium ? Get.dialog(
-                                              DealDetailView(
-                                                dealId: beyondNeighbourhood.id,
-                                                dealImage: beyondNeighbourhood.coverImageUrl!,
-                                                dealTitle: beyondNeighbourhood.offers,
-                                                dealDescription: beyondNeighbourhood.description,
-                                                dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(beyondNeighbourhood.dealValidity)),
-                                                dealStoreName: beyondNeighbourhood.name,
-                                                brandLogo: beyondNeighbourhood.logoUrl!,
-                                                address: beyondNeighbourhood.address,
-                                                redemptionType: beyondNeighbourhood.redemptionType,
-                                                deliveryCost: beyondNeighbourhood.deliveryFee,
-                                                minOrder: beyondNeighbourhood.minOrder,
-                                                userType: beyondNeighbourhood.userType,
-                                                freeDiscount: beyondNeighbourhood.discountValueFree,   // ← NEW
-                                                plusDiscount: beyondNeighbourhood.discountValuePaid,
-                                              )
-                                          ) : 
-                                          Get.bottomSheet(QuoponPlusView());
-                                        },
-                                        child: HomeRestaurantCard(
-                                          discountText: '',
-                                          restaurantImg: beyondNeighbourhood.coverImageUrl!,
-                                          restaurantName: beyondNeighbourhood.name,
-                                          deliveryFee: beyondNeighbourhood.deliveryFee.toString(),
-                                          distance: beyondNeighbourhood.distanceMiles,
-                                          rating: beyondNeighbourhood.rating.toString(),
-                                          reviewCount: beyondNeighbourhood.rating.toString(),
-                                          deliveryTime: beyondNeighbourhood.deliveryTimeMinutes.toString(),
-                                          isPremium: beyondNeighbourhood.isPremium,
-                                        ),
-                                      ),
-                                    ); // Use category object here
-                                  }).toList(),
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                child: Text(
+                                  'No results with current filters',
+                                  style: TextStyle(color: Colors.grey[600], fontSize: 13.sp),
                                 ),
                               );
                             }
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: controller.beyondNeighbourhood.map((beyondNeighbourhood) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        !beyondNeighbourhood.isPremium
+                                            ? Get.dialog(
+                                          DealDetailView(
+                                            dealId: beyondNeighbourhood.id,
+                                            dealImage: beyondNeighbourhood.coverImageUrl!,
+                                            dealTitle: beyondNeighbourhood.offers,
+                                            dealDescription: beyondNeighbourhood.description,
+                                            dealValidity: DateFormat('hh:mm a, MMM dd').format(
+                                              DateTime.parse(beyondNeighbourhood.dealValidity),
+                                            ),
+                                            dealStoreName: beyondNeighbourhood.name,
+                                            brandLogo: beyondNeighbourhood.logoUrl!,
+                                            address: beyondNeighbourhood.address,
+                                            redemptionType: beyondNeighbourhood.redemptionType,
+                                            deliveryCost: beyondNeighbourhood.deliveryFee,
+                                            minOrder: beyondNeighbourhood.minOrder,
+                                            userType: beyondNeighbourhood.userType,
+                                            freeDiscount: beyondNeighbourhood.discountValueFree,
+                                            plusDiscount: beyondNeighbourhood.discountValuePaid,
+                                          ),
+                                        )
+                                            : Get.bottomSheet(QuoponPlusView());
+                                      },
+                                      child: HomeRestaurantCard(
+                                        discountText: '',
+                                        restaurantImg: beyondNeighbourhood.coverImageUrl!,
+                                        restaurantName: beyondNeighbourhood.name,
+                                        deliveryFee: beyondNeighbourhood.deliveryFee.toString(),
+                                        distance: beyondNeighbourhood.distanceMiles,
+                                        rating: beyondNeighbourhood.rating.toString(),
+                                        reviewCount: beyondNeighbourhood.rating.toString(),
+                                        deliveryTime: beyondNeighbourhood.deliveryTimeMinutes.toString(),
+                                        isPremium: beyondNeighbourhood.isPremium,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            );
                           }),
                         ],
                       ),
@@ -495,25 +525,27 @@ class HomeView extends GetView<HomeController> {
   Widget _buildCategoryItem(VendorCategory category) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-      child: Column(
-        children: [
-          // Display category image
-          Image.network(
-            category.imageUrl,
-            height: 60.h,
-            width: 60.w,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(height: 6.h),  // Use ScreenUtil for height spacing
-          Text(
-            category.categoryTitle,
-            style: TextStyle(
-              fontSize: 12.sp,  // Use ScreenUtil for font size
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
+      child: GestureDetector(
+        onTap: () => controller.onCategoryTap(category.id), // <-- add this line
+        child: Column(
+          children: [
+            Image.network(
+              category.imageUrl,
+              height: 60.h,
+              width: 60.w,
+              fit: BoxFit.cover,
             ),
-          ),
-        ],
+            SizedBox(height: 6.h),
+            Text(
+              category.categoryTitle,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

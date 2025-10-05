@@ -108,13 +108,13 @@ class ReviewsView extends GetView {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          FilterCard(filterName: 'Latest',),
+                          FilterCard(filterName: 'Latest', iconPath: '', active: false,),
                           SizedBox(width: 10.w,),
-                          FilterCard(filterName: 'All Ratings'),
+                          FilterCard(filterName: 'All Ratings', iconPath: '', active: false,),
                           SizedBox(width: 10.w,),
-                          FilterCard(filterName: 'Highest Rated'),
+                          FilterCard(filterName: 'Highest Rated', iconPath: '', active: false,),
                           SizedBox(width: 10.w,),
-                          FilterCard(filterName: 'Reply Status'),
+                          FilterCard(filterName: 'Reply Status', iconPath: '', active: false,),
                         ],
                       ),
                     ),

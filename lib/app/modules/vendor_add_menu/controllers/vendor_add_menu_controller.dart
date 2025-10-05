@@ -1,37 +1,94 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../data/base_client.dart';
 
+/// ===== Models backing the Modifiers UI (API-aligned) =====
+class ModifierOption {
+  final TextEditingController nameController;   // -> options[].title
+  final TextEditingController priceController;  // -> options[].Price (double? / null)
+
+  ModifierOption({String? name, String? price})
+      : nameController = TextEditingController(text: name ?? ''),
+        priceController = TextEditingController(text: price ?? '');
+
+  /// API expects:
+  /// { "title": "<option name>", "Price": 2.50 | null }
+  Map<String, dynamic> toJson() => {
+    "title": nameController.text.trim(),
+    "Price": _parsePriceOrNull(priceController.text),
+  };
+
+  static double? _parsePriceOrNull(String raw) {
+    final s = raw.trim();
+    if (s.isEmpty) return null; // free
+    // accept "free", "FREE" etc.
+    if (s.toLowerCase() == 'free') return null;
+    // accept inputs like "1", "1.2", "$ 1.20"
+    final cleaned = s.replaceAll(RegExp(r'[^0-9\.-]'), '');
+    if (cleaned.isEmpty) return null;
+    try {
+      return double.parse(cleaned);
+    } catch (_) {
+      return null;
+    }
+  }
+}
+
+class ModifierGroup {
+  final TextEditingController nameController;   // -> modifiers[].name
+  final RxBool isRequired;                      // -> modifiers[].is_required
+  final RxList<ModifierOption> options;         // -> modifiers[].options
+
+  ModifierGroup({
+    String? name,
+    bool required = false,
+    List<ModifierOption>? opts,
+  })  : nameController = TextEditingController(text: name ?? ''),
+        isRequired = required.obs,
+        options = (opts ?? [ModifierOption()]).obs;
+
+  /// API expects:
+  /// { "name": "<modifier name>", "is_required": true/false, "options": [...] }
+  Map<String, dynamic> toJson() => {
+    "name": nameController.text.trim(),
+    "is_required": isRequired.value,
+    "options": options.map((e) => e.toJson()).toList(),
+  };
+}
+
 class VendorAddMenuController extends GetxController {
   // Reactive holders for inputs coming from the view
   final Rxn<File> imageFile = Rxn<File>();
   final RxInt selectedCategoryId = 0.obs;
-  final RxList<int> selectedModifierGroupIds = <int>[].obs;
 
   // 🔹 Dynamic categories from API
-  final RxList<String> categoryNames = <String>[].obs;     // e.g. ["Breakfast", ...]
-  final RxMap<String, int> nameToId = <String, int>{}.obs; // e.g. {"Breakfast": 1}
+  final RxList<String> categoryNames = <String>[].obs;     // ["Breakfast", ...]
+  final RxMap<String, int> nameToId = <String, int>{}.obs; // {"Breakfast": 1}
   final RxString selectedCategoryName = 'Select'.obs;
+
+  // 🔹 Modifiers state (starts with one empty group)
+  final RxList<ModifierGroup> modifiers = <ModifierGroup>[ModifierGroup()].obs;
 
   void setImageFile(File? file) => imageFile.value = file;
   void setCategoryId(int id) => selectedCategoryId.value = id;
-  void setModifierGroups(List<int> ids) {
-    selectedModifierGroupIds
-      ..clear()
-      ..addAll(ids);
-  }
+
+  // --- Modifiers helpers ---
+  void addModifier() => modifiers.add(ModifierGroup());
+  void addOption(int modifierIndex) =>
+      modifiers[modifierIndex].options.add(ModifierOption());
 
   @override
   void onInit() {
     super.onInit();
-    fetchMenuCategories(); // load on screen open
+    fetchMenuCategories();
   }
 
-  /// GET /vendors/categories/  (uses BaseClient.getRequest)
+  /// GET /vendors/categories/
   Future<void> fetchMenuCategories() async {
     try {
       final headers = await BaseClient.authHeaders();
@@ -41,10 +98,8 @@ class VendorAddMenuController extends GetxController {
         headers: headers,
       );
 
-      // unify handling (throws on error codes)
       final data = await BaseClient.handleResponse(res) as List<dynamic>;
 
-      // shape: [{ "id": 1, "category_title": "..." }, ...]
       final localMap = <String, int>{};
       final localNames = <String>[];
 
@@ -60,7 +115,6 @@ class VendorAddMenuController extends GetxController {
       nameToId.assignAll(localMap);
       categoryNames.assignAll(localNames);
 
-      // default selection if empty/unchosen
       if (selectedCategoryName.value == 'Select' && categoryNames.isNotEmpty) {
         selectedCategoryName.value = categoryNames.first;
         selectedCategoryId.value = nameToId[selectedCategoryName.value] ?? 0;
@@ -70,29 +124,44 @@ class VendorAddMenuController extends GetxController {
     }
   }
 
+  /// Build JSON payload for modifiers (API keys)
+  List<Map<String, dynamic>> _buildModifiersPayload() {
+    final List<Map<String, dynamic>> payload = [];
+    for (final g in modifiers) {
+      final name = g.nameController.text.trim();
+      if (name.isEmpty) continue; // skip empty modifier
+
+      final opts = g.options
+          .where((o) => o.nameController.text.trim().isNotEmpty)
+          .map((o) => o.toJson())
+          .toList();
+
+      payload.add({
+        "name": name,
+        "is_required": g.isRequired.value,
+        "options": opts,
+      });
+    }
+    return payload;
+  }
+
   /// POST /vendors/deals/  (multipart)
-  /// Note: BaseClient has no multipart helper, so we use MultipartRequest,
-  /// but still leverage BaseClient.authHeaders() and handleResponse() for consistency.
+  /// BODY (as fields + file):
+  ///  title, description, price, image(file), category_id (int), modifiers (json)
   Future<void> addMenu({
     required String title,
     required String description,
     required String price,
     int? overrideCategoryId,
-    List<int>? overrideModifierGroups,
   }) async {
     try {
-      print(imageFile.value!.path);
-
-      // Auth headers
       final headers = await BaseClient.authHeaders();
-      // Let MultipartRequest set its own content-type with boundary
+      // Multipart must set its own boundary
       headers.remove('Content-Type');
 
-      final uri = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/');
+      final uri = Uri.parse(
+          'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
-
-      String? userId = await BaseClient.getUserId();
-      print(userId);
 
       // Fields
       req.fields['title'] = title;
@@ -102,14 +171,11 @@ class VendorAddMenuController extends GetxController {
       final cid = overrideCategoryId ?? selectedCategoryId.value;
       req.fields['category_id'] = (cid == 0 ? 1 : cid).toString();
 
-      final mg = overrideModifierGroups ?? selectedModifierGroupIds.toList();
-      // if backend expects JSON array in multipart field:
-      req.fields['modifier_groups'] = "1";
+      // include modifiers JSON using API’s exact keys
+      final modifiersJson = jsonEncode(_buildModifiersPayload());
+      req.fields['modifiers'] = modifiersJson;
 
-      req.fields['user'] = userId as String;
-      // if backend expects CSV, use: req.fields['modifier_groups'] = mg.join(',');
-
-      // File
+      // Image file
       final file = imageFile.value;
       if (file != null && await file.exists()) {
         req.files.add(await http.MultipartFile.fromPath('image', file.path));
@@ -119,9 +185,7 @@ class VendorAddMenuController extends GetxController {
       final streamed = await req.send();
       final resp = await http.Response.fromStream(streamed);
 
-      // Use unified handler for success/error
       await BaseClient.handleResponse(resp);
-
       Get.snackbar('Success', 'Menu item created successfully');
     } catch (e) {
       Get.snackbar('Error', e.toString());

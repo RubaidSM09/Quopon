@@ -6,27 +6,57 @@ import 'package:http/http.dart' as http;
 import 'package:quopon/app/data/base_client.dart';
 
 class Follower {
-  final String followersProfilePic; // asset or URL (we pass asset placeholder)
-  final String followerName;        // email for now (fallback), name later if provided
-  final int redeemedDeals;          // not provided by API -> 0 for now
-  final int pushOpens;              // not provided by API -> 0 for now
+  // ---- UI-needed fields (kept same names so your FollowersCard keeps working)
+  final String followersProfilePic; // URL if provided, else asset placeholder
+  final String followerName;        // full_name -> fallback to email
+  final int redeemedDeals;          // not in API -> 0 for now
+  final int pushOpens;              // not in API -> 0 for now
+
+  // ---- Extra fields from API (useful for future)
+  final String email;
+  final String phoneNumber;
+  final String language;
+  final String country;
+  final String city;
+  final String address;
+  final String subscriptionStatus;
 
   Follower({
     required this.followersProfilePic,
     required this.followerName,
     required this.redeemedDeals,
     required this.pushOpens,
+    required this.email,
+    required this.phoneNumber,
+    required this.language,
+    required this.country,
+    required this.city,
+    required this.address,
+    required this.subscriptionStatus,
   });
 
-  /// Helper to build from API map, using email as name for now.
   factory Follower.fromApi(Map<String, dynamic> m) {
-    final email = (m['email'] ?? '').toString();
-    final nameFromApi = (m['name'] ?? '').toString(); // future-proof if BE adds it
+    final email = (m['email'] ?? '').toString().trim();
+    final fullName = (m['full_name'] ?? '').toString().trim();
+    final profileUrl = (m['profile_picture_url'] ?? '').toString().trim();
+
+    // If BE returns a Cloudinary URL without extension, it's still fine as a NetworkImage URL.
+    final pic = profileUrl.isNotEmpty
+        ? profileUrl
+        : 'assets/images/Profile/Vendors/My Followers Profile Pic.png';
+
     return Follower(
-      followersProfilePic: 'assets/images/Profile/Vendors/My Followers Profile Pic.png',
-      followerName: nameFromApi.isNotEmpty ? nameFromApi : email,
+      followersProfilePic: pic,
+      followerName: fullName.isNotEmpty ? fullName : email,
       redeemedDeals: 0,
       pushOpens: 0,
+      email: email,
+      phoneNumber: (m['phone_number'] ?? '').toString(),
+      language: (m['language'] ?? '').toString(),
+      country: (m['country'] ?? '').toString(),
+      city: (m['city'] ?? '').toString(),
+      address: (m['address'] ?? '').toString(),
+      subscriptionStatus: (m['subscription_status'] ?? '').toString(),
     );
   }
 }

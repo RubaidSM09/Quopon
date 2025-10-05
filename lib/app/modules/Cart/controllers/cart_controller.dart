@@ -14,18 +14,17 @@ class CartController extends GetxController {
 
   Cart? get currentCart => cart.isNotEmpty ? cart.first : null;
 
-  // Optional: to guard against double-taps on "Add to cart"
   final isAdding = false.obs;
-
-  // Optional: guard for item actions (by id)
   final _busyItemIds = <int>{}.obs;
+
+  // 🔹 dealId -> vendorUserId (or null if unknown)
+  final RxMap<int, int?> _dealToVendor = <int, int?>{}.obs;
 
   bool _markBusy(int id) {
     if (_busyItemIds.contains(id)) return false;
     _busyItemIds.add(id);
     return true;
   }
-
   void _unmarkBusy(int id) => _busyItemIds.remove(id);
 
   @override
@@ -43,8 +42,7 @@ class CartController extends GetxController {
         'ngrok-skip-browser-warning': 'true',
       };
 
-      final response =
-      await BaseClient.getRequest(api: Api.cart, headers: headers);
+      final response = await BaseClient.getRequest(api: Api.cart, headers: headers);
       final decoded = json.decode(response.body);
 
       if (decoded is List) {
@@ -54,11 +52,78 @@ class CartController extends GetxController {
       } else {
         cart.clear();
       }
-    } catch (e) {
+    } catch (_) {
       cart.clear();
     }
   }
 
+  // ---------- NEW: build (or refresh) deal -> vendor index ----------
+  Future<void> _ensureDealVendorIndex() async {
+    // If we already have entries for the deals in cart, you can skip refresh.
+    // To be safe/simple: refresh the whole list now.
+    try {
+      final token = await BaseClient.getAccessToken();
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+      };
+
+      final res = await http.get(Uri.parse(Api.deals), headers: headers);
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        final List<dynamic> list = jsonDecode(res.body);
+        // Fill map: deal.id -> user_id (or null)
+        for (final e in list) {
+          if (e is Map<String, dynamic>) {
+            final dealId = e['id'] as int?;
+            final userId = (e['user_id'] ?? e['user']) as int?;
+            if (dealId != null) {
+              _dealToVendor[dealId] = userId;
+            }
+          }
+        }
+      } else {
+        // If fetch fails, keep old map (if any)
+        Get.snackbar('Error', 'Failed to fetch deals (${res.statusCode})');
+      }
+    } catch (e) {
+      Get.snackbar('Network', 'Failed to fetch deals: $e');
+    }
+  }
+
+  /// Resolves a single vendorId for the current cart.
+  /// Returns null if not found or if multiple vendors are present.
+  Future<int?> resolveVendorIdFromCart() async {
+    final c = currentCart;
+    if (c == null || c.items.isEmpty) return null;
+
+    // Make sure we have the index
+    await _ensureDealVendorIndex();
+
+    // Collect vendorIds for all items in the cart (skip nulls)
+    final vendorIds = <int>{};
+    for (final it in c.items) {
+      final v = _dealToVendor[it.dealId];
+      if (v != null) vendorIds.add(v);
+    }
+
+    if (vendorIds.isEmpty) {
+      // Couldn’t map any item → vendor, possibly because deal list is stale or user=null
+      return null;
+    }
+
+    if (vendorIds.length > 1) {
+      // Cart has items from multiple vendors — decide your business rule.
+      // For now, block checkout and ask user to split carts.
+      Get.snackbar('Multiple vendors',
+          'Your cart contains items from multiple vendors. Please checkout per vendor.');
+      return null;
+    }
+
+    return vendorIds.first;
+  }
+
+  // ----- existing add/remove/increment/decrement unchanged -----
   Future<bool> addToCart({
     required int menuItemId,
     int quantity = 1,
@@ -76,7 +141,7 @@ class CartController extends GetxController {
       };
 
       final uri = Uri.parse(
-          'http://intensely-optimal-unicorn.ngrok-free.app/order/cart/add/');
+          'https://intensely-optimal-unicorn.ngrok-free.app/order/cart/add/'); // use https
 
       final body = {
         'menu_item_id': menuItemId,
@@ -93,8 +158,7 @@ class CartController extends GetxController {
         Get.snackbar('Success', 'Item added to cart');
         return true;
       } else {
-        Get.snackbar(
-            'Error', 'Add to cart failed (${res.statusCode})\n${res.body}');
+        Get.snackbar('Error', 'Add to cart failed (${res.statusCode})\n${res.body}');
         return false;
       }
     } catch (e) {

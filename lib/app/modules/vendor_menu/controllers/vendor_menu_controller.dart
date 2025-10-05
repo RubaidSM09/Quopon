@@ -9,7 +9,8 @@ class VendorMenuController extends GetxController {
   final RxString error = ''.obs;
 
   // categoryTitle -> List<MenuItem>
-  final RxMap<String, List<MenuItem>> menusByCategory = <String, List<MenuItem>>{}.obs;
+  final RxMap<String, List<MenuItem>> menusByCategory =
+      <String, List<MenuItem>>{}.obs;
 
   @override
   void onInit() {
@@ -37,13 +38,14 @@ class VendorMenuController extends GetxController {
 
       final data = await BaseClient.handleResponse(res);
 
-      final List<MenuItem> items = (data as List)
+      final List<MenuItem> items = (data as List<dynamic>)
           .map((e) => MenuItem.fromJson(e as Map<String, dynamic>))
           .toList();
 
+      // Group by category title
       final map = <String, List<MenuItem>>{};
       for (final mi in items) {
-        final catTitle = (mi.category.categoryTitle).isNotEmpty
+        final catTitle = mi.category.categoryTitle.isNotEmpty
             ? mi.category.categoryTitle
             : 'Uncategorized';
         map.putIfAbsent(catTitle, () => <MenuItem>[]);

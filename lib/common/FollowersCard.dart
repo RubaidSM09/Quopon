@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class FollowersCard extends GetView {
+class FollowersCard extends StatelessWidget {
   final String followersProfilePic;
   final String followerName;
   final int redeemedDeals;
@@ -17,14 +12,16 @@ class FollowersCard extends GetView {
     required this.followerName,
     required this.redeemedDeals,
     required this.pushOpens,
-    super.key
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isNetwork = followersProfilePic.startsWith('http');
+
     return Column(
       children: [
-        SizedBox(height: 10.h), // Adjust the spacing using ScreenUtil
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,20 +30,20 @@ class FollowersCard extends GetView {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 21.w, // Use ScreenUtil for radius
-                  backgroundImage: AssetImage(followersProfilePic),
+                  radius: 21.w,
+                  backgroundImage: isNetwork
+                      ? NetworkImage(followersProfilePic)
+                      : AssetImage(followersProfilePic) as ImageProvider,
                 ),
-                SizedBox(
-                  width: 10.w, // Adjust the width using ScreenUtil
-                ),
+                SizedBox(width: 10.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       followerName,
                       style: TextStyle(
-                        fontSize: 16.sp, // Use ScreenUtil for font size
-                        color: Color(0xFF020711),
+                        fontSize: 16.sp,
+                        color: const Color(0xFF020711),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -55,27 +52,29 @@ class FollowersCard extends GetView {
                         Text(
                           "Deals Redeemed: $redeemedDeals",
                           style: TextStyle(
-                            fontSize: 12.sp, // Use ScreenUtil for font size
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xFF6F7E8D),
+                            color: const Color(0xFF6F7E8D),
                           ),
                         ),
-                        SizedBox(width: 8.w), // Adjust the width using ScreenUtil
+                        SizedBox(width: 8.w),
                         Container(
-                          height: 5.h, // Adjust height using ScreenUtil
-                          width: 5.w, // Adjust width using ScreenUtil
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFF6F7E8D)
+                          height: 5.h,
+                          width: 5.w,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF6F7E8D),
                           ),
                         ),
-                        SizedBox(width: 8.w), // Adjust the width using ScreenUtil
+                        SizedBox(width: 8.w),
                         Text(
-                          pushOpens < 10 ? "Push Opens: $pushOpens/10" : "Push Opens: 10/10",
+                          pushOpens < 10
+                              ? "Push Opens: $pushOpens/10"
+                              : "Push Opens: 10/10",
                           style: TextStyle(
-                            fontSize: 12.sp, // Use ScreenUtil for font size
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xFF6F7E8D),
+                            color: const Color(0xFF6F7E8D),
                           ),
                         ),
                       ],
@@ -84,11 +83,11 @@ class FollowersCard extends GetView {
                 ),
               ],
             ),
-            SizedBox.shrink()
+            const SizedBox.shrink(),
           ],
         ),
-        SizedBox(height: 5.h), // Adjust the height using ScreenUtil
-        Divider(
+        SizedBox(height: 5.h),
+        const Divider(
           color: Color(0xFFF0F2F3),
           thickness: 2,
         ),

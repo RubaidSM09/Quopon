@@ -138,42 +138,42 @@ class EditProfileController extends GetxController {
       isSaving.value = true;
       error.value = null;
 
-      // 1) Upload only if user picked a new file
+      // 1) Upload only if the user picked a new file
       String? uploadedUrl;
       if (profileImage.value != null) {
         uploadedUrl = await _uploadProfileImageAndGetUrl();
         if (uploadedUrl == null) {
-          // optional: allow proceeding while keeping previous picture
           Get.snackbar('Profile picture', 'Upload failed. Keeping previous picture.');
         }
       }
 
-      // 2) Resolve final picture URL
-      final finalPhotoUrl = (uploadedUrl != null && uploadedUrl.isNotEmpty)
+      // 2) Decide the final photo URL for PUT (do NOT mutate/trim it)
+      //    - If a new one uploaded, use it
+      //    - Else keep exactly what you hydrated from server
+      final String finalPhotoUrl = (uploadedUrl != null && uploadedUrl.isNotEmpty)
           ? uploadedUrl
-          : profilePictureUrl.value; // keep old
+          : profilePictureUrl.value; // keep as-is
 
-      print(uploadedUrl);
-      print(profilePictureUrl);
-      print(finalPhotoUrl);
-
-      // 3) Build payload
+      // 3) Build the payload for PUT (only trim human-entered fields)
       final p = UserProfile(
         email: emailCtrl.text.trim(),
         fullName: fullNameCtrl.text.trim(),
         phoneNumber: phoneCtrl.text.trim(),
-        profilePictureUrl: finalPhotoUrl,   // <— key line
+        profilePictureUrl: finalPhotoUrl, // unchanged unless new upload
         country: cc.selectedCountry.value.trim(),
         city: cc.selectedCity.value.trim(),
         address: addressCtrl.text.trim(),
-        subscriptionStatus: subscriptionStatus.value, // not sent
+        subscriptionStatus: subscriptionStatus.value, // keep as-is
       );
 
       await ProfileApi.update(p);
-      // also update local state so UI reflects it immediately
-      profilePictureUrl.value = finalPhotoUrl;
 
+      // 4) Reflect locally
+      profilePictureUrl.value = finalPhotoUrl;
       Get.snackbar('Success', 'Profile updated');
+
+      // Clear temp picked file
+      profileImage.value = null;
     } catch (e) {
       error.value = e.toString();
       Get.snackbar('Error', 'Could not save profile');
