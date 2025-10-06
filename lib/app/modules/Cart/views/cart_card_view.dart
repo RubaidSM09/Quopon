@@ -1,4 +1,3 @@
-// lib/app/modules/Cart/views/cart_card_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +20,6 @@ class CartCardView extends GetView<CartController> {
     final imageUrl = items.image;
     final title = items.title;
     final qty = items.quantity;
-    final note = items.specialInstructions;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,6 +48,7 @@ class CartCardView extends GetView<CartController> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   title,
                   style: TextStyle(
@@ -58,32 +57,45 @@ class CartCardView extends GetView<CartController> {
                   ),
                 ),
 
-                if (note.isNotEmpty) ...[
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Text(
-                        'Note: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp,
-                          color: const Color(0xFF6F7E8D),
-                        ),
+                SizedBox(height: 4.h),
+
+                // ---------- Modifiers (names only, no price) ----------
+                if (items.modifierGroups.isNotEmpty)
+                  ...items.modifierGroups.map((g) {
+                    final selections =
+                    g.selections.map((s) => s.title).join(', '); // <- no price
+
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 4.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Select ${g.name}: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.sp,
+                              color: const Color(0xFF6F7E8D),
+                            ),
+                          ),
+                          Text(
+                            selections.isEmpty ? '-' : selections,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.sp,
+                              color: const Color(0xFF6F7E8D),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
                       ),
-                      Text(
-                        note,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp,
-                          color: const Color(0xFF6F7E8D),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    );
+                  }).toList(),
 
                 SizedBox(height: 6.h),
 
+                // Actions: delete / decrement / qty / increment
                 Row(
                   children: [
                     // Delete
@@ -95,26 +107,20 @@ class CartCardView extends GetView<CartController> {
                         height: 24.h,
                       ),
                     ),
-
-                    // NEW: Decrease (use Icon)
+                    // Decrease
                     IconButton(
                       onPressed: () => controller.decrementItem(items.id),
-                      icon: const Icon(
-                        Icons.remove,
-                        color: Colors.black87,
-                      ),
+                      icon: const Icon(Icons.remove, color: Colors.black87),
                       iconSize: 20.sp,
                     ),
-
                     // Quantity
                     Text(
-                      '0$qty',
+                      qty < 10 ? '0$qty' : '$qty',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14.sp,
                       ),
                     ),
-
                     // Increase
                     IconButton(
                       onPressed: () => controller.incrementItem(items.id),
@@ -130,6 +136,8 @@ class CartCardView extends GetView<CartController> {
             ),
           ],
         ),
+
+        // Right-aligned item total
         Text(
           '\$${_money(items.itemTotal)}',
           style: TextStyle(

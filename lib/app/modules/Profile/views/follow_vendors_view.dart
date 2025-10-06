@@ -1,4 +1,4 @@
-// lib/app/modules/FollowVendors/views/follow_vendors_view.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -11,6 +11,22 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(FollowVendorsController());
+    final textCtrl = TextEditingController(text: controller.query.value);
+    Timer? _deb;
+
+    void _onChanged(String txt) {
+      // light debounce for smoother typing
+      _deb?.cancel();
+      _deb = Timer(const Duration(milliseconds: 250), () {
+        controller.setQuery(txt);
+      });
+    }
+
+    Future<void> _executeSearch() async {
+      // explicitly apply current text
+      controller.setQuery(textCtrl.text);
+      // nothing else to do — the list updates via GetX
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
@@ -36,7 +52,7 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
             ),
             SizedBox(height: 25.h),
 
-            // Search bar (placeholder)
+            // Search bar
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(
@@ -55,7 +71,10 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                 children: [
                   Expanded(
                     child: TextField(
-                      readOnly: true,
+                      controller: textCtrl,
+                      readOnly: false,
+                      onChanged: _onChanged,
+                      onSubmitted: (_) => _executeSearch(),
                       decoration: InputDecoration(
                         hintText: 'Search food, store, deals...',
                         hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14.sp),
@@ -63,7 +82,10 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                       ),
                     ),
                   ),
-                  Icon(Icons.search, color: Colors.grey[500], size: 24.sp),
+                  GestureDetector(
+                    onTap: _executeSearch,
+                    child: Icon(Icons.search, color: Colors.grey[500], size: 24.sp),
+                  ),
                 ],
               ),
             ),
@@ -77,14 +99,16 @@ class FollowVendorsView extends GetView<FollowVendorsController> {
                 if (controller.error.value != null) {
                   return Center(child: Text(controller.error.value!));
                 }
-                if (controller.followedVendors.isEmpty) {
-                  return Center(child: Text("No vendors found", style: TextStyle(fontSize: 14.sp)));
+                if (controller.filteredVendors.isEmpty) {
+                  return Center(
+                    child: Text("No vendors found", style: TextStyle(fontSize: 14.sp)),
+                  );
                 }
 
                 return ListView.builder(
-                  itemCount: controller.followedVendors.length,
+                  itemCount: controller.filteredVendors.length,
                   itemBuilder: (context, index) {
-                    final v = controller.followedVendors[index];
+                    final v = controller.filteredVendors[index];
 
                     return VendorCard(
                       id: v.id,

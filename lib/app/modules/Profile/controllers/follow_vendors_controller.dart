@@ -57,7 +57,40 @@ class FollowedVendor {
 class FollowVendorsController extends GetxController {
   final isLoading = false.obs;
   final error = RxnString();
+
+  /// The full list as returned by the API
   final followedVendors = <FollowedVendor>[].obs;
+
+  /// Filtered list shown in the UI (based on [query])
+  final filteredVendors = <FollowedVendor>[].obs;
+
+  /// Current search text
+  final query = ''.obs;
+
+  String _lc(String s) => s.toLowerCase();
+
+  /// Set the query and re-filter
+  void setQuery(String value) {
+    query.value = value;
+    _applyFilter();
+  }
+
+  /// Run filtering (case-insensitive) by vendor name (and email as fallback)
+  void _applyFilter() {
+    final q = query.value.trim();
+    if (q.isEmpty) {
+      filteredVendors.assignAll(followedVendors);
+      return;
+    }
+    final qq = _lc(q);
+    final result = followedVendors.where((v) {
+      final nameMatch = _lc(v.name).contains(qq);
+      final emailMatch = _lc(v.vendorEmail).contains(qq);
+      return nameMatch || emailMatch;
+    }).toList();
+
+    filteredVendors.assignAll(result);
+  }
 
   Future<void> fetchFollowedVendors() async {
     try {
@@ -71,26 +104,27 @@ class FollowVendorsController extends GetxController {
       );
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
-        error.value =
-        'Failed to load followed vendors (${res.statusCode}).';
+        error.value = 'Failed to load followed vendors (${res.statusCode}).';
         followedVendors.clear();
+        filteredVendors.clear();
         debugPrint('followed-vendors error: ${res.statusCode} ${res.body}');
         return;
       }
 
       final body = json.decode(res.body);
       if (body is List) {
-        followedVendors.assignAll(
-          body.map<FollowedVendor>((e) => FollowedVendor.fromJson(e)).toList(),
-        );
+        final list = body.map<FollowedVendor>((e) => FollowedVendor.fromJson(e)).toList();
+        followedVendors.assignAll(list);
+        _applyFilter(); // initialize filtered with full list (or current query if any)
       } else {
         error.value = 'Unexpected response format.';
         followedVendors.clear();
+        filteredVendors.clear();
       }
     } catch (e) {
-      print(e.toString());
       error.value = 'Network error while loading followed vendors.';
       followedVendors.clear();
+      filteredVendors.clear();
       debugPrint('fetchFollowedVendors error: $e');
     } finally {
       isLoading.value = false;
@@ -101,5 +135,6 @@ class FollowVendorsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchFollowedVendors();
+    ever(query, (_) => _applyFilter()); // keep filtered list in sync if query changes elsewhere
   }
 }

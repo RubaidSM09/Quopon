@@ -15,7 +15,6 @@ class Cart {
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
-    // Backend sends numbers as strings — normalize safely
     double _num(dynamic v) {
       if (v == null) return 0.0;
       if (v is num) return v.toDouble();
@@ -41,7 +40,6 @@ class Cart {
   }
 }
 
-/// What your UI reads in Cart/CartBottom:
 class PriceSummary {
   final double subTotalPrice;
   final double deliveryCharges;
@@ -56,6 +54,51 @@ class PriceSummary {
   });
 }
 
+/// ----------------- NEW: Modifiers in cart -----------------
+class CartModifierGroup {
+  final String name;
+  final bool isRequired;
+  final List<CartSelection> selections;
+
+  CartModifierGroup({
+    required this.name,
+    required this.isRequired,
+    required this.selections,
+  });
+
+  factory CartModifierGroup.fromJson(Map<String, dynamic> json) => CartModifierGroup(
+    name: (json['name'] ?? '').toString(),
+    isRequired: json['is_required'] == true,
+    selections: (json['selections'] as List? ?? [])
+        .map((e) => CartSelection.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
+}
+
+class CartSelection {
+  final String title;
+  /// API returns string numbers or "None"
+  final String priceRaw; // keep raw to display per API ("1.2" or "None")
+
+  CartSelection({
+    required this.title,
+    required this.priceRaw,
+  });
+
+  factory CartSelection.fromJson(Map<String, dynamic> json) => CartSelection(
+    title: (json['title'] ?? '').toString(),
+    priceRaw: (json['price'] ?? '').toString(),
+  );
+
+  /// Convenience: numeric price or null if "None"/empty
+  double? get priceNum {
+    final p = priceRaw.trim();
+    if (p.isEmpty || p.toLowerCase() == 'none') return null;
+    return double.tryParse(p);
+  }
+}
+/// -----------------------------------------------------------
+
 class Items {
   final int id;
   final int quantity;
@@ -69,6 +112,13 @@ class Items {
   final double unitPrice;
   final String image;
 
+  // NEW: modifier groups on the cart item
+  final List<CartModifierGroup> modifierGroups;
+
+  // Optional extras (not strictly needed by UI, but handy)
+  final double basePrice;
+  final double modifiersPrice;
+
   Items({
     required this.id,
     required this.quantity,
@@ -79,6 +129,9 @@ class Items {
     required this.description,
     required this.unitPrice,
     required this.image,
+    required this.modifierGroups,
+    required this.basePrice,
+    required this.modifiersPrice,
   });
 
   factory Items.fromJson(Map<String, dynamic> json) {
@@ -97,8 +150,14 @@ class Items {
       dealId: deal['id'] ?? 0,
       title: (deal['title'] ?? '').toString(),
       description: (deal['description'] ?? '').toString(),
-      unitPrice: _num(deal['price']),
+      // Prefer unit_price if present; fall back to deal.price
+      unitPrice: _num(json['unit_price'] ?? deal['price']),
       image: (deal['image'] ?? '').toString(),
+      modifierGroups: (json['modifier_groups'] as List? ?? [])
+          .map((e) => CartModifierGroup.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      basePrice: _num(json['base_price']),
+      modifiersPrice: _num(json['modifiers_price']),
     );
   }
 }

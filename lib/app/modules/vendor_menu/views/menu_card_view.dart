@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quopon/app/modules/vendor_menu/views/menu_options_view.dart';
 
 class MenuCardView extends GetView {
+  final int menuId;
   final String image;
   final String title;
   final String description;
@@ -14,6 +15,7 @@ class MenuCardView extends GetView {
   final bool isNetworkImage;
 
   const MenuCardView({
+    required this.menuId,
     required this.image,
     required this.title,
     required this.description,
@@ -66,7 +68,7 @@ class MenuCardView extends GetView {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Get.bottomSheet(const MenuOptionsView()),
+                      onTap: () => Get.bottomSheet(MenuOptionsView(menuId: menuId,)),
                       child: const Icon(Icons.more_vert),
                     ),
                   ],

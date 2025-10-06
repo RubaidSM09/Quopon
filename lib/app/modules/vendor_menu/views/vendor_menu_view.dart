@@ -132,6 +132,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 7.5.h),
                         child: MenuCardView(
+                          menuId: m.id,
                           // if you already added `isNetworkImage` earlier, pass true; otherwise this arg is optional.
                           image: imageUrl.isNotEmpty
                               ? imageUrl

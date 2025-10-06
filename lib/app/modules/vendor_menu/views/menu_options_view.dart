@@ -4,9 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';  // Import ScreenUt
 
 import '../../../../common/profileCard.dart';
 import '../../vendor_edit_deal/views/vendor_edit_deal_view.dart';
+import '../../vendor_edit_menu/views/vendor_edit_menu_view.dart';
 
 class MenuOptionsView extends GetView {
-  const MenuOptionsView({super.key});
+  final int menuId;
+
+  const MenuOptionsView({
+    required this.menuId,
+    super.key
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,8 +47,9 @@ class MenuOptionsView extends GetView {
 
           GestureDetector(
             onTap: () {
+              // on Tap "Edit Item"
               Get.back();
-              Get.to(VendorEditDealView());
+              Get.to(() => VendorEditMenuView(menuId: menuId), arguments: {'menuId': menuId});
             },
             child: ProfileCard(icon: 'assets/images/DealOptions/Edit Deal.png', title: 'Edit Item'),
           ),

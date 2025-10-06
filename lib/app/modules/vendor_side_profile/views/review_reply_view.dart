@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:quopon/app/modules/vendor_side_profile/views/reviews_view.dart';
-import 'package:quopon/common/customTextButton.dart';
 
-import '../../../../common/custom_textField.dart';
+import '../controllers/reviews_controller.dart';
 
-class ReviewReplyView extends GetView {
+class ReviewReplyView extends GetView<VendorReviewsController> {
+  final int reviewId;
   final _replyController = TextEditingController();
 
-  ReviewReplyView({super.key});
+  ReviewReplyView({super.key, required this.reviewId});
 
   @override
   Widget build(BuildContext context) {
+    final logo = controller.myVendorLogoUrl;
+
+    ImageProvider avatarProvider;
+    if (logo.isNotEmpty) {
+      avatarProvider = NetworkImage(logo);
+    } else {
+      avatarProvider = const AssetImage('assets/images/Profile/Avatar.png');
+    }
+
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
@@ -28,38 +36,28 @@ class ReviewReplyView extends GetView {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox.shrink(),
+                  const SizedBox.shrink(),
                   Text(
                     'Reply to Review',
-                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.back(); // Close the dialog
-                    },
-                    child: Icon(Icons.close),
-                  ),
+                  GestureDetector(onTap: Get.back, child: const Icon(Icons.close)),
                 ],
               ),
-
               SizedBox(height: 10.h),
-              Divider(color: Color(0xFFEAECED)),
+              const Divider(color: Color(0xFFEAECED)),
 
-              // User Info and Text Field for Reply
               SizedBox(height: 5.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 18.r,
-                    backgroundImage: AssetImage('assets/images/deals/details/Starbucks_Logo.png'),
-                  ),
+                  CircleAvatar(radius: 18.r, backgroundImage: avatarProvider),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF4F6F7), // Light gray background
+                        color: const Color(0xFFF4F6F7),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: TextField(
@@ -67,7 +65,7 @@ class ReviewReplyView extends GetView {
                         maxLines: 6,
                         decoration: InputDecoration(
                           hintText: "Write here...",
-                          hintStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
+                          hintStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xFF6F7E8D)),
                           border: InputBorder.none,
                         ),
                         style: TextStyle(fontSize: 14.sp),
@@ -79,20 +77,29 @@ class ReviewReplyView extends GetView {
 
               SizedBox(height: 20.h),
 
-              // Submit Button
-              GradientButton(
-                text: 'Submit',
-                onPressed: () {
-                  if (_replyController.text.isNotEmpty) {
-                    // Handle the submission of the reply
-                    Get.to(ReviewsView()); // Navigate back to Reviews View
-                  } else {
-                    Get.snackbar('Error', 'Please write a reply before submitting.',
-                        snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
-                  }
-                },
-                colors: [Color(0xFFD62828), Color(0xFFC21414)],
-              )
+              // Submit
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD62828),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                  onPressed: () async {
+                    final text = _replyController.text.trim();
+                    if (text.isEmpty) {
+                      Get.snackbar('Error', 'Please write a reply before submitting.',
+                          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+                      return;
+                    }
+                    final ok = await controller.postReply(reviewId: reviewId, comment: text);
+                    if (ok) Get.back(); // close dialog on success
+                  },
+                  child: Text('Submit', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                ),
+              ),
             ],
           ),
         ),

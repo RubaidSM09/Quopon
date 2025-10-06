@@ -101,6 +101,10 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                           final desc = it['item_description']?.toString() ?? '';
                           final image = it['item_image']?.toString() ?? 'assets/images/Cart/Italian Panini.png';
 
+                          // NEW: modifiers from JSON (names only, no price)
+                          final List modsRaw = (it['modifiers'] as List?) ?? const [];
+                          final modifiers = modsRaw.whereType<Map<String, dynamic>>().toList();
+
                           return Column(
                             children: [
                               Row(
@@ -136,18 +140,42 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                               ),
                                             ],
                                           ),
-                                          if (desc.isNotEmpty) ...[
+
+                                          // ---------- NEW: Show selected modifiers ----------
+                                          if (modifiers.isNotEmpty) ...[
                                             SizedBox(height: 6.h),
-                                            Text(
-                                              desc,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12.sp,
-                                                color: const Color(0xFF6F7E8D),
-                                              ),
-                                            ),
+                                            ...modifiers.map((m) {
+                                              final groupName = m['group_name']?.toString() ?? '';
+                                              final List opts = (m['selected_options'] as List?) ?? const [];
+                                              final selections = opts.map((e) => e?.toString() ?? '').where((e) => e.isNotEmpty).join(', ');
+
+                                              return Padding(
+                                                padding: EdgeInsets.only(bottom: 4.h),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      groupName.isEmpty ? '—: ' : 'Select $groupName: ',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 12.sp,
+                                                        color: const Color(0xFF6F7E8D),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      selections.isEmpty ? '-' : selections,
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 12.sp,
+                                                        color: const Color(0xFF6F7E8D),
+                                                      ),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
                                           ],
                                         ],
                                       ),

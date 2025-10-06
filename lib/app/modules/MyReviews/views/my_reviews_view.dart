@@ -1,4 +1,3 @@
-// lib/app/modules/MyReviews/views/my_reviews_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +13,8 @@ class MyReviewsView extends GetView<MyReviewsController> {
 
   @override
   Widget build(BuildContext context) {
-    MyReviewsController myReviewsController = Get.put(MyReviewsController());
-    HomeController homeController = Get.put(HomeController());
+    final myReviewsController = Get.put(MyReviewsController());
+    Get.put(HomeController());
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
@@ -38,7 +37,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
 
               SizedBox(height: 20.h),
 
-              // Search bar (unchanged)
+              // Search bar (visual only)
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
@@ -55,12 +54,11 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 ),
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: TextField(
                         readOnly: true,
                         decoration: InputDecoration(
                           hintText: 'Search review',
-                          hintStyle: TextStyle(color: Colors.grey[500]),
                           border: InputBorder.none,
                         ),
                       ),
@@ -72,32 +70,29 @@ class MyReviewsView extends GetView<MyReviewsController> {
 
               SizedBox(height: 20.h),
 
-              // Filters row (unchanged)
+              // Filters (kept)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    const FilterCard(filterName: 'Latest', iconPath: '', active: false,),
+                    const FilterCard(filterName: 'Latest', iconPath: '', active: false),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'All Ratings', iconPath: '', active: false,),
+                    const FilterCard(filterName: 'All Ratings', iconPath: '', active: false),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'Highest Rated', iconPath: '', active: false,),
+                    const FilterCard(filterName: 'Highest Rated', iconPath: '', active: false),
                     SizedBox(width: 10.w),
-                    const FilterCard(filterName: 'Reply Status', iconPath: '', active: false,),
+                    const FilterCard(filterName: 'Reply Status', iconPath: '', active: false),
                   ],
                 ),
               ),
 
               SizedBox(height: 20.h),
 
-              // ---- Reviews from API ----
               Obx(() {
                 if (myReviewsController.isLoading.value) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                  return const Padding(
+                    padding: EdgeInsets.all(24.0),
+                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                   );
                 }
 
@@ -106,30 +101,61 @@ class MyReviewsView extends GetView<MyReviewsController> {
                     padding: EdgeInsets.symmetric(vertical: 40.h),
                     child: Text(
                       'No reviews yet.',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: const Color(0xFF6F7E8D),
-                      ),
+                      style: TextStyle(fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
                     ),
                   );
                 }
 
-                // Build the same cards you used, populated from API
                 final widgets = <Widget>[];
                 for (final r in myReviewsController.reviews) {
+                  final title = myReviewsController.dealTitleFor(r.menuItem);
+                  final img = myReviewsController.dealImageFor(r.menuItem);
+
+                  final rep = myReviewsController.latestReplyFor(r.id);
+                  final hasReply = rep != null;
+
+                  String replyTitle = '';
+                  String replyLogo = '';
+                  String replyText = '';
+                  String replyAgo = '';
+
+                  if (hasReply) {
+                    final tuple = myReviewsController.vendorNameAndLogoForEmail(rep!.user);
+                    replyTitle = tuple.$1;
+                    replyLogo = tuple.$2; // may be empty
+                    replyText = rep.comment;
+                    replyAgo = myReviewsController.timeAgo(rep.createdAt);
+                  }
+
                   widgets.add(
                     MyReviewsCardView(
-                      // You don’t receive image/title/offer from the API now,
-                      // so we keep your original visuals as placeholders:
-                      image: 'assets/images/Review/Iced Matcha Latte.jpg',
-                      title: 'Menu item #${r.menuItem}',
+                      image: img.isNotEmpty
+                          ? img
+                          : 'assets/images/Review/Iced Matcha Latte.jpg',
+                      title: title, // deal title or "Menu item #id"
                       offer: '',
                       review: Review(
-                        review: '“${r.comment}”',
+                        review: r.comment.isNotEmpty ? '“${r.comment}”' : '',
                         reviewer: 'You',
                         time: myReviewsController.timeAgo(r.createdAt),
                       ),
+                      feedback: hasReply
+                          ? VendorFeedback(
+                        image: replyLogo,              // network URL OK
+                        title: replyTitle,             // vendor business name
+                        feedback: replyText,
+                        time: replyAgo,
+                      )
+                          : const VendorFeedback(
+                        image: '',
+                        title: '',
+                        feedback: '',
+                        time: '',
+                      ),
                       rating: r.rating,
+                      isVendor: false,
+                      isPending: !hasReply,
+                      reviewId: r.id,
                     ),
                   );
                   widgets.add(SizedBox(height: 10.h));

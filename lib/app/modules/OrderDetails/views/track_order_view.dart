@@ -126,13 +126,19 @@ class TrackOrderView extends GetView<TrackOrderController> {
                   padding: EdgeInsets.all(16.w),
                   child: Column(
                     children: [
+                      // ---------- ITEMS WITH MODIFIERS INSTEAD OF DESCRIPTION ----------
                       Obx(() => Column(
-                        children: controller.orderData['items']?.map<Widget>((it) {
-                          final name = it['item_name'] ?? '—';
-                          final qty = it['quantity'] ?? 0;
-                          final price = it['total_price'] ?? '0.00';
-                          final desc = it['item_description'] ?? '';
-                          final image = it['item_image'] ?? 'assets/images/Cart/Italian Panini.png';
+                        children: (controller.orderData['items'] as List? ?? [])
+                            .map<Widget>((raw) {
+                          final it = raw as Map<String, dynamic>;
+                          final name = (it['item_name'] ?? '—').toString();
+                          final qty = (it['quantity'] ?? 0).toString();
+                          final price = (it['total_price'] ?? '0.00').toString();
+                          final image = (it['item_image'] ?? 'assets/images/Cart/Italian Panini.png').toString();
+
+                          final modifiers = (it['modifiers'] as List? ?? [])
+                              .whereType<Map<String, dynamic>>()
+                              .toList();
 
                           return Column(
                             children: [
@@ -169,13 +175,45 @@ class TrackOrderView extends GetView<TrackOrderController> {
                                               ),
                                             ],
                                           ),
-                                          if (desc.isNotEmpty) ...[
+
+                                          // --- REPLACED DESCRIPTION WITH MODIFIERS ---
+                                          if (modifiers.isNotEmpty) ...[
                                             SizedBox(height: 6.h),
-                                            Text(
-                                              desc,
-                                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp, color: Color(0xFF6F7E8D)),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: modifiers.map((m) {
+                                                final gName = (m['group_name'] ?? '').toString();
+                                                final selected = (m['selected_options'] as List? ?? [])
+                                                    .map((e) => e.toString())
+                                                    .where((e) => e.isNotEmpty)
+                                                    .join(', ');
+                                                if (gName.isEmpty || selected.isEmpty) return const SizedBox.shrink();
+                                                return Padding(
+                                                  padding: EdgeInsets.only(bottom: 4.h),
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        'Select $gName: ',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 12.sp,
+                                                          color: const Color(0xFF6F7E8D),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        selected,
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 12.sp,
+                                                          color: const Color(0xFF6F7E8D),
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }).toList(),
                                             ),
                                           ],
                                         ],
@@ -193,8 +231,9 @@ class TrackOrderView extends GetView<TrackOrderController> {
                               SizedBox(height: 5.h),
                             ],
                           );
-                        }).toList() ?? [],
+                        }).toList(),
                       )),
+
                       Obx(() => CheckoutCard(
                         prefixIcon: 'assets/images/Checkout/Address.png',
                         title: 'Home Address',
@@ -315,26 +354,30 @@ class TrackOrderView extends GetView<TrackOrderController> {
           boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 24)],
           color: Colors.white,
         ),
-        child: GradientButton(
-          text: 'Show QR Code',
-          onPressed: () {
-            Get.dialog(PickupView(
-              qRCodeImage: controller.orderData['qr_code']['image'],
-              verificationCOde: controller.orderData['delivery_code'],
-            )
-            );
-          },
-          colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
-          boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
-          child: Text(
-            'Show QR Code',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+        child: Obx(() {
+          final qr = (controller.orderData['qr_code'] as Map<String, dynamic>?) ?? const {};
+          final qrImage = qr['image'];
+          final verifyCode = controller.orderData['delivery_code'];
+          return GradientButton(
+            text: 'Show QR Code',
+            onPressed: () {
+              Get.dialog(PickupView(
+                qRCodeImage: qrImage,
+                verificationCOde: verifyCode,
+              ));
+            },
+            colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+            boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+            child: Text(
+              'Show QR Code',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

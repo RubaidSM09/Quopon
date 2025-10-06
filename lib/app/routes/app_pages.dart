@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:quopon/app/data/model/menu.dart';
 
+import '../data/model/menu.dart';
 import '../modules/Cart/bindings/cart_binding.dart';
 import '../modules/Cart/views/cart_view.dart';
 import '../modules/Checkout/bindings/checkout_binding.dart';
@@ -83,6 +83,8 @@ import '../modules/vendor_deals/controllers/vendor_deals_controller.dart';
 import '../modules/vendor_deals/views/vendor_deals_view.dart';
 import '../modules/vendor_edit_deal/bindings/vendor_edit_deal_binding.dart';
 import '../modules/vendor_edit_deal/views/vendor_edit_deal_view.dart';
+import '../modules/vendor_edit_menu/bindings/vendor_edit_menu_binding.dart';
+import '../modules/vendor_edit_menu/views/vendor_edit_menu_view.dart';
 import '../modules/vendor_menu/bindings/vendor_menu_binding.dart';
 import '../modules/vendor_menu/views/vendor_menu_view.dart';
 import '../modules/vendor_side_profile/bindings/vendor_side_profile_binding.dart';
@@ -103,7 +105,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => OnboardingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -208,7 +210,14 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VENDOR_PROFILE,
-      page: () => VendorProfileView(id: 0, vendorId: 0, logo: '', name: '', type: '', address: '',),
+      page: () => VendorProfileView(
+        id: 0,
+        vendorId: 0,
+        logo: '',
+        name: '',
+        type: '',
+        address: '',
+      ),
       binding: VendorProfileBinding(),
     ),
     GetPage(
@@ -255,7 +264,9 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REVIEW,
-      page: () => ReviewView(menuItemId: 0,),
+      page: () => ReviewView(
+        menuItemId: 0,
+      ),
       binding: ReviewBinding(),
     ),
     GetPage(
@@ -355,13 +366,20 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FORGOT_PASSWORD,
-      page: () => ForgotPasswordView(userType: '',),
+      page: () => ForgotPasswordView(
+        userType: '',
+      ),
       binding: ForgotPasswordBinding(),
     ),
     GetPage(
       name: _Paths.DISCOVER,
       page: () => const DiscoverView(),
       binding: DiscoverBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_EDIT_MENU,
+      page: () => const VendorEditMenuView(menuId: 0,),
+      binding: VendorEditMenuBinding(),
     ),
   ];
 }
