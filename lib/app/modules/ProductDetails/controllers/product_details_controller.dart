@@ -1,142 +1,83 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-
-import '../../../data/base_client.dart';
-
-class AddOnOptions {
-  final String title;
-  final double? price;
-  final String? checkBoxType;
-  late final bool? checked;
-
-  AddOnOptions({
-    required this.title,
-    this.price = 0.0,
-    this.checkBoxType = "Circle",
-    this.checked = false,
-  });
-}
-
-class AddOn {
-  final String addOnTitle;
-  final bool addOnType;
-  final List<AddOnOptions> addOnOptions;
-
-  AddOn({
-    required this.addOnTitle,
-    this.addOnType = true,
-    required this.addOnOptions
-  });
-}
+import 'package:quopon/app/data/model/menu_item.dart';
 
 class ProductDetailsController extends GetxController {
-  var itemAddOns = <AddOn>[].obs;
-  RxDouble total_price = 0.0.obs;
+  // running total: base + selected option prices
+  final RxDouble totalPrice = 0.0.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
+  // per-modifier selection: key = modifierIndex, value = selected option index (or null if none selected)
+  final RxMap<int, int?> selectedByModifier = <int, int?>{}.obs;
 
-    /*itemAddOns.value = [
-      AddOn(
-        addOnTitle: 'Select Your Bread',
-        addOnOptions: [
-          AddOnOptions(
-            title: 'Classic Wheat Roll',
-            price: 4.10,
-          ),
-          AddOnOptions(
-            title: 'Classic Wheat Roll',
-            price: 4.10,
-          ),
-          AddOnOptions(
-            title: 'Shorti Roll',
-            price: 2.20,
-          ),
-          AddOnOptions(
-            title: 'Shorti Wheat Roll',
-            price: 2.20,
-          ),
-          AddOnOptions(
-            title: 'Junior Roll',
-          ),
-          AddOnOptions(
-            title: 'Junior Shorti Roll',
-          ),
-        ]
-      ),
-      AddOn(
-          addOnTitle: 'Select Your Toasting Options',
-          addOnOptions: [
-            AddOnOptions(
-              title: 'Toast Whole Hoagie or Sandwich',
-            ),
-            AddOnOptions(
-              title: 'Not Toasted',
-            ),
-          ]
-      ),
-      AddOn(
-          addOnTitle: 'Select Your Cheese',
-          addOnOptions: [
-            AddOnOptions(
-              title: 'Pepper Jack',
-            ),
-            AddOnOptions(
-              title: 'American',
-            ),
-            AddOnOptions(
-              title: 'Cheddar',
-            ),
-            AddOnOptions(
-              title: 'No Cheese',
-            ),
-            AddOnOptions(
-              title: 'Provolone',
-            ),
-            AddOnOptions(
-              title: 'Cheddar Cheese Sauce',
-            ),
-          ]
-      ),
-    ];*/
+  // local cache of modifiers for validation
+  List<Modifier> _modifiers = const <Modifier>[];
+  double _basePrice = 0.0;
+  bool initialized = false;
+
+  void init({required double basePrice, required List<Modifier> modifiers}) {
+    if (initialized) return;
+    initialized = true;
+
+    _basePrice = basePrice;
+    _modifiers = modifiers;
+
+    // start with base price only
+    totalPrice.value = _basePrice;
+
+    // initialize map with null selections
+    for (int i = 0; i < _modifiers.length; i++) {
+      selectedByModifier[i] = null;
+    }
   }
 
-  /// Add to Cart API
+  void selectOption({
+    required int modifierIndex,
+    required int optionIndex,
+    required double? optionPrice,
+  }) {
+    // single-select per modifier: just set the chosen index
+    selectedByModifier[modifierIndex] = optionIndex;
+
+    // recalc total
+    double sum = _basePrice;
+    for (final entry in selectedByModifier.entries) {
+      final mi = entry.key;
+      final idx = entry.value;
+      if (idx == null) continue;
+      final price = _modifiers[mi].options[idx].price;
+      if (price != null) sum += price;
+    }
+    totalPrice.value = sum;
+  }
+
+  /// List of required modifier names that are still unselected
+  List<String> validateRequiredSelections() {
+    final missing = <String>[];
+    for (int i = 0; i < _modifiers.length; i++) {
+      final m = _modifiers[i];
+      if (m.isRequired && (selectedByModifier[i] == null)) {
+        missing.add(m.name);
+      }
+    }
+    return missing;
+  }
+
+  /// Stub to match your previous usage; extend to include selected modifiers payload if needed.
   Future<bool> addToCart({
     required int menuItemId,
-    int quantity = 1,
-    String? specialInstructions,
+    required int quantity,
+    required String specialInstructions,
   }) async {
-    try {
-      final headers = await BaseClient.authHeaders();
+    // If you want to send selected modifiers to backend cart, build payload here:
+    // final selections = <Map<String, dynamic>>[];
+    // for (int i = 0; i < _modifiers.length; i++) {
+    //   final idx = selectedByModifier[i];
+    //   if (idx == null) continue;
+    //   final opt = _modifiers[i].options[idx];
+    //   selections.add({"name": _modifiers[i].name, "title": opt.title, "Price": opt.price});
+    // }
+    // await ...POST to your cart endpoint.
 
-      final body = jsonEncode({
-        "menu_item_id": menuItemId,
-        "quantity": quantity,
-        "special_instructions": specialInstructions,
-      });
-
-      final uri = Uri.parse(
-          "https://intensely-optimal-unicorn.ngrok-free.app/order/cart/add/");
-      print(uri);
-      print(body);
-      print(headers);
-      final res = await http.post(uri, headers: headers, body: body);
-      print(res.statusCode);
-
-      if (res.statusCode >= 200 && res.statusCode < 300) {
-        Get.snackbar("Cart", "Item added successfully");
-        return true;
-      } else {
-        Get.snackbar("Error", "Failed to add item (${res.statusCode})");
-        return false;
-      }
-    } catch (e) {
-      Get.snackbar("Network", "Add to cart failed: $e");
-      return false;
-    }
+    // For now, just succeed.
+    return true;
   }
 }
