@@ -11,14 +11,22 @@ import '../../Review/controllers/review_controller.dart';
 class ReviewView extends GetView<ReviewController> {
   final _messageController = TextEditingController();
 
-  /// Pass the menu item id you’re reviewing
-  final int menuItemId;
+  /// NOW: we receive ONLY the menu item NAME
+  final String menuName;
 
-  ReviewView({super.key, required this.menuItemId});
+  ReviewView({
+    super.key,
+    required this.menuName,
+  });
 
   @override
   Widget build(BuildContext context) {
     Get.put(ReviewController());
+
+    // Load preview (title + image) using name from /vendors/deals/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadMenuByName(menuName.trim());
+    });
 
     return Dialog(
       backgroundColor: Colors.white,
@@ -47,43 +55,84 @@ class ReviewView extends GetView<ReviewController> {
               const Divider(thickness: 1, color: Color(0xFFEAECED)),
               SizedBox(height: 20.h),
 
-              // item card (unchanged visuals)
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)],
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 56.h,
-                      width: 56.w,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Image.asset('assets/images/Review/Iced Matcha Latte.jpg', fit: BoxFit.cover),
+              // Item card (loaded by name)
+              Obx(() {
+                final loading = controller.isLoadingItem.value;
+                final title = controller.itemTitle.value.isNotEmpty
+                    ? controller.itemTitle.value
+                    : menuName;
+                final subtitle = controller.itemSubtitle.value;
+                final img = controller.itemImageUrl.value;
+
+                return Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 20.r)],
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 56.h,
+                        width: 56.w,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: img.isNotEmpty
+                              ? Image.network(
+                            img,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Image.asset(
+                              'assets/images/Review/Iced Matcha Latte.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                              : Image.asset(
+                            'assets/images/Review/Iced Matcha Latte.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 190.w,
-                          child: Text('Iced Matcha Latte',
-                              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711))),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 190.w,
+                              child: Text(
+                                loading ? 'Loading…' : title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF020711),
+                                ),
+                              ),
+                            ),
+                            if (subtitle.isNotEmpty) SizedBox(height: 4.h),
+                            if (subtitle.isNotEmpty)
+                              SizedBox(
+                                width: 190.w,
+                                child: Text(
+                                  subtitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xFF6F7E8D),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 190.w,
-                          child: Text('50% OFF on Any Grande Beverage',
-                              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: const Color(0xFF6F7E8D))),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
 
               SizedBox(height: 30.h),
 
@@ -129,10 +178,7 @@ class ReviewView extends GetView<ReviewController> {
               ),
 
               SizedBox(height: 10.h),
-
-              // (kept as-is, not wired to API since no endpoint provided for images in review)
               const PictureUploadField(),
-
               SizedBox(height: 20.h),
 
               // submit
@@ -144,15 +190,15 @@ class ReviewView extends GetView<ReviewController> {
                   onPressed: () async {
                     if (loading) return; // prevent double taps
 
-                    final ok = await controller.submitReview(
-                      menuItemId: menuItemId,
+                    final ok = await controller.submitReviewByName(
+                      menuName: menuName,
                       rating: controller.rating.value,
                       comment: _messageController.text,
                     );
                     if (!ok) return;
 
                     Get.back();                    // close dialog
-                    Get.dialog(ReviewSubmitView()); // success popup
+                    Get.dialog(const ReviewSubmitView()); // success popup
                   },
                   colors: const [Color(0xFFD62828), Color(0xFFC21414)],
                   boxShadow: const [BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
@@ -161,8 +207,7 @@ class ReviewView extends GetView<ReviewController> {
                     style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.white),
                   ),
                 );
-              })
-              ,
+              }),
             ],
           ),
         ),

@@ -25,10 +25,13 @@ class DealLite {
   final int userId;
   final String title;
   final String imageUrl;
-  final String? discountFree;  // discount_value_free
-  final String? discountPaid;  // discount_value_paid
-  final String? dealType;      // "Paid" | "Free" | null
+  final String? discountFree;
+  final String? discountPaid;
+  final String? dealType;
   final bool isActive;
+
+  // ✅ NEW
+  final String? endDate; // ISO string from API
 
   DealLite({
     required this.id,
@@ -39,6 +42,7 @@ class DealLite {
     required this.discountPaid,
     required this.dealType,
     required this.isActive,
+    this.endDate, // NEW
   });
 
   factory DealLite.fromJson(Map<String, dynamic> j) => DealLite(
@@ -50,6 +54,7 @@ class DealLite {
     discountPaid: (j['discount_value_paid']?.toString()),
     dealType: (j['deal_type']?.toString()),
     isActive: (j['is_active'] == true),
+    endDate: (j['end_date']?.toString()), // ✅ NEW
   );
 }
 

@@ -7,6 +7,8 @@ import '../../../data/base_client.dart';
 class VendorDealsController extends GetxController {
   final deals = <DealItem>[].obs;           // all deals from API (for this vendor)
   final activeDeals = <DealItem>[].obs;     // filtered: active + date window
+  final filteredActiveDeals = <DealItem>[].obs; // new: filtered by search query
+  final searchQuery = ''.obs;                // to store search input
 
   String? _userId;
 
@@ -35,7 +37,6 @@ class VendorDealsController extends GetxController {
         // Map → DealItem
         final mapped = data
             .map((raw) => DealItem.fromJson(raw as Map<String, dynamic>))
-        // keep only this vendor’s deals (server returns all vendors)
             .where((d) => d.userId?.toString() == _userId)
             .toList();
 
@@ -55,6 +56,7 @@ class VendorDealsController extends GetxController {
             return (d.isActive == true) && withinWindow;
           }),
         );
+        filteredActiveDeals.assignAll(activeDeals); // initialize filtered list
         print(activeDeals);
       } else {
         throw 'Failed to fetch deals (${response.statusCode})';
@@ -64,13 +66,25 @@ class VendorDealsController extends GetxController {
     }
   }
 
+  // Search function to filter active deals by title
+  void searchDeals(String query) {
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      filteredActiveDeals.assignAll(activeDeals);
+    } else {
+      final filtered = activeDeals
+          .where((deal) =>
+      deal.title?.toLowerCase().contains(query.toLowerCase()) ?? false)
+          .toList();
+      filteredActiveDeals.assignAll(filtered);
+    }
+  }
+
   static DateTime _safeParse(String? iso) {
     if (iso == null) return DateTime.fromMillisecondsSinceEpoch(0);
     return DateTime.tryParse(iso) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
 }
-
-/// -------- Models updated for new JSON --------
 
 class DealItem {
   final int? id;
@@ -81,10 +95,13 @@ class DealItem {
   final String? description;
   final String? imageUrl;
 
-  /// New totals from backend
-  final int viewCount;         // <- NEW
-  final int activationCount;   // <- NEW
-  final int redemptionCount;   // <- NEW
+  // Totals from backend
+  final int viewCount;
+  final int activationCount;
+  final int redemptionCount;
+
+  // ✅ NEW: push sent count
+  final int pushSentCount; // <-- NEW
 
   final String? discountValueFree;
   final String? discountValuePaid;
@@ -106,9 +123,10 @@ class DealItem {
     required this.title,
     required this.description,
     required this.imageUrl,
-    required this.viewCount,        // NEW
-    required this.activationCount,  // NEW
-    required this.redemptionCount,  // NEW
+    required this.viewCount,
+    required this.activationCount,
+    required this.redemptionCount,
+    required this.pushSentCount, // <-- NEW
     required this.discountValueFree,
     required this.discountValuePaid,
     required this.dealType,
@@ -127,6 +145,8 @@ class DealItem {
         .map((e) => DeliveryCost.fromJson(e as Map<String, dynamic>))
         .toList();
 
+    print(_asInt(json['push_sent_count']));
+
     return DealItem(
       id: _asInt(json['id']),
       userId: _asInt(json['user_id']),
@@ -135,9 +155,13 @@ class DealItem {
       title: _asString(json['title']),
       description: _asString(json['description']),
       imageUrl: _asString(json['image_url']),
-      viewCount: _asInt(json['view_count']) ?? 0,          // <- NEW
-      activationCount: _asInt(json['activation']) ?? 0,    // <- NEW
-      redemptionCount: _asInt(json['redemption']) ?? 0,    // <- NEW
+      viewCount: _asInt(json['view_count']) ?? 0,
+      activationCount: _asInt(json['activation']) ?? 0,
+      redemptionCount: _asInt(json['redemption']) ?? 0,
+
+      // ✅ map new field from backend
+      pushSentCount: _asInt(json['push_sent_count']) ?? 0, // <-- NEW
+
       discountValueFree: _asString(json['discount_value_free']),
       discountValuePaid: _asString(json['discount_value_paid']),
       dealType: _asString(json['deal_type']),

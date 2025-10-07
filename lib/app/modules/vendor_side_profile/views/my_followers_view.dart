@@ -1,4 +1,3 @@
-// lib/app/modules/vendor_side_profile/views/my_followers_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +30,7 @@ class MyFollowersView extends GetView<MyFollowersController> {
             ),
             SizedBox(height: 25.h),
 
-            // Search (placeholder)
+            // Search
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(
@@ -50,7 +49,7 @@ class MyFollowersView extends GetView<MyFollowersController> {
                 children: [
                   Expanded(
                     child: TextField(
-                      readOnly: true,
+                      onChanged: (value) => controller.searchFollowers(value),
                       decoration: InputDecoration(
                         hintText: 'Search followers',
                         hintStyle: TextStyle(color: Colors.grey[500]),
@@ -77,19 +76,19 @@ class MyFollowersView extends GetView<MyFollowersController> {
                     ),
                   );
                 }
-                if (controller.followerList.isEmpty) {
+                if (controller.filteredFollowerList.isEmpty) {
                   return const Center(child: Text('No followers found'));
                 }
 
                 return ListView.builder(
-                  itemCount: controller.followerList.length,
+                  itemCount: controller.filteredFollowerList.length,
                   itemBuilder: (context, index) {
-                    final f = controller.followerList[index];
+                    final f = controller.filteredFollowerList[index];
                     return FollowersCard(
-                      followersProfilePic: f.followersProfilePic, // placeholder asset
-                      followerName: f.followerName,               // email for now
-                      redeemedDeals: f.redeemedDeals,             // 0 for now
-                      pushOpens: f.pushOpens,                     // 0 for now
+                      followersProfilePic: f.followersProfilePic,
+                      followerName: f.followerName,
+                      redeemedDeals: f.redeemedDeals,
+                      pushOpens: f.pushOpens,
                     );
                   },
                 );

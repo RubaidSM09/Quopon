@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:quopon/app/modules/my_orders_vendors/controllers/my_orders_vendors_controller.dart';
 import 'package:quopon/common/customTextButton.dart';
 
@@ -20,7 +19,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
   final String orderTime;
   final String orderStatus;
   final String note;
-  final String orderId; // Changed to String to use order_id (UUID)
+  final String orderId;
 
   const MyOrdersVendorCardView({
     required this.itemImg,
@@ -283,7 +282,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
               SizedBox(
                 width: 169.w,
                 child: Text(
-                  '\$$totalAmount',
+                  '\$${totalAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Color(0xFF020711),
                     fontSize: 14.sp,
@@ -425,13 +424,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
           )
               : SizedBox.shrink(),
           SizedBox(height: 16.h),
-          orderStatus == "RECEIVED" ||
-              orderStatus == "PREPARING" ||
-              orderStatus == "READY_FOR_PICKUP" ||
-              orderStatus == "Picked Up" ||
-              orderStatus == "OUT_FOR_DELIVERY" ||
-              orderStatus == "Delivered"
-              ? Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GradientButton(
@@ -449,6 +442,7 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                     totalAmount: totalAmount,
                     orderTime: orderTime,
                     orderStatus: orderStatus,
+                    orderId: orderId,
                   ));
                 },
                 colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
@@ -466,58 +460,28 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
                   ),
                 ),
               ),
-              GradientButton(
-                text: _getButtonText(),
-                onPressed: () {
-                  _handleStatusUpdate();
-                },
-                colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
-                boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
-                borderColor: [Color(0xFFF44646), const Color(0xFFC21414)],
-                width: 181.w,
-                height: 42.h,
-                borderRadius: 12.r,
-                child: Text(
-                  _getButtonText(),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+              if (orderStatus == 'PENDING_PAYMENT' || orderStatus == 'RECEIVED' || orderStatus == 'PREPARING')
+                GradientButton(
+                  text: _getButtonText(),
+                  onPressed: () {
+                    _handleStatusUpdate();
+                  },
+                  colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
+                  boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
+                  borderColor: [Color(0xFFF44646), const Color(0xFFC21414)],
+                  width: 181.w,
+                  height: 42.h,
+                  borderRadius: 12.r,
+                  child: Text(
+                    _getButtonText(),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
             ],
-          )
-              : GradientButton(
-            text: 'View Details',
-            onPressed: () {
-              Get.dialog(MyOrderDetailsVendorView(
-                itemImg: itemImg,
-                itemName: itemName,
-                itemAddons: itemAddons,
-                isNew: isNew,
-                status: status,
-                customerName: customerName,
-                orderItem: orderItem,
-                quantity: quantity,
-                totalAmount: totalAmount,
-                orderTime: orderTime,
-                orderStatus: orderStatus,
-              ));
-            },
-            colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
-            boxShadow: [const BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
-            borderColor: [Colors.white, const Color(0xFFEEF0F3)],
-            height: 42.h,
-            borderRadius: 12.r,
-            child: Text(
-              'View Details',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF020711),
-              ),
-            ),
           ),
         ],
       ),
@@ -525,36 +489,23 @@ class MyOrdersVendorCardView extends GetView<MyOrdersVendorsController> {
   }
 
   String _getButtonText() {
-    if (orderStatus == "RECEIVED") {
+    if (orderStatus == 'PENDING_PAYMENT' || orderStatus == "RECEIVED") {
       return 'Start Preparation';
     } else if (orderStatus == "PREPARING") {
       return status == "Pickup" ? "Ready for Pickup" : "Out for Delivery";
-    } else if (orderStatus == "READY_FOR_PICKUP") {
-      return "Picked Up";
-    } else if (orderStatus == "OUT_FOR_DELIVERY") {
-      return "Mark as Delivered";
-    } else if (orderStatus == "Delivered" || orderStatus == "Picked Up") {
-      return "Mark as Completed";
     }
     return '';
   }
 
   void _handleStatusUpdate() {
-    if (orderStatus == "RECEIVED") {
+    if (orderStatus == 'PENDING_PAYMENT' || orderStatus == "RECEIVED") {
       controller.updateOrderStatus(orderId, 'PREPARING');
     } else if (orderStatus == "PREPARING") {
       if (status == "Pickup") {
         controller.updateOrderStatus(orderId, 'READY_FOR_PICKUP');
       } else {
-        print('Rubaid');
         controller.updateOrderStatus(orderId, 'OUT_FOR_DELIVERY');
       }
-    } else if (orderStatus == "READY_FOR_PICKUP") {
-      controller.updateOrderStatus(orderId, 'PICKED_UP');
-    } else if (orderStatus == "OUT_FOR_DELIVERY") {
-      controller.updateOrderStatus(orderId, 'DELIVERED');
-    } else if (orderStatus == "Delivered" || orderStatus == "Picked Up") {
-      controller.updateOrderStatus(orderId, 'COMPLETED');
     }
   }
 }

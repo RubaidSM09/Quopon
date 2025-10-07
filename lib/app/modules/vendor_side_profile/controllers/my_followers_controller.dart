@@ -1,4 +1,3 @@
-// lib/app/modules/vendor_side_profile/controllers/my_followers_controller.dart
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -63,8 +62,10 @@ class Follower {
 
 class MyFollowersController extends GetxController {
   final followerList = <Follower>[].obs;
+  final filteredFollowerList = <Follower>[].obs; // New list for filtered results
   final isLoading = false.obs;
   final error = RxnString();
+  final searchQuery = ''.obs; // To store the search input
 
   Future<void> fetchFollowers() async {
     try {
@@ -80,6 +81,7 @@ class MyFollowersController extends GetxController {
       if (res.statusCode < 200 || res.statusCode >= 300) {
         error.value = 'Failed to load followers (${res.statusCode})';
         followerList.clear();
+        filteredFollowerList.clear();
         debugPrint('followers error: ${res.statusCode} ${res.body}');
         return;
       }
@@ -93,16 +95,33 @@ class MyFollowersController extends GetxController {
           }
         }
         followerList.assignAll(items);
+        filteredFollowerList.assignAll(items); // Initialize filtered list
       } else {
         error.value = 'Unexpected response format.';
         followerList.clear();
+        filteredFollowerList.clear();
       }
     } catch (e) {
       error.value = 'Network error while loading followers.';
       followerList.clear();
+      filteredFollowerList.clear();
       debugPrint('fetchFollowers error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // Search function to filter followers by name
+  void searchFollowers(String query) {
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      filteredFollowerList.assignAll(followerList);
+    } else {
+      final filtered = followerList
+          .where((follower) =>
+          follower.followerName.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      filteredFollowerList.assignAll(filtered);
     }
   }
 

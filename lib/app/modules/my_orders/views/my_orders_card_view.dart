@@ -116,7 +116,8 @@ class MyOrdersCardView extends GetView {
               GradientButton(
                 text: 'View Details',
                 onPressed: () {
-                  Get.to(OrderDetailsView());
+                  print(orderId);
+                  Get.to(OrderDetailsView(), arguments: orderId);
                 },
                 colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
                 boxShadow: [const BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],

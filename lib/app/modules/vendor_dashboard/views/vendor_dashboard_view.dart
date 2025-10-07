@@ -44,7 +44,10 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
       backgroundColor: const Color(0xFFF9FBFC),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: () => controller.fetchOrders(),
+          onRefresh: () async {
+            await controller.fetchOrders();
+            await controller.fetchDeals();
+          },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
@@ -146,21 +149,21 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
 
                   SizedBox(height: 5.h),
 
-                  Row(
+                  Obx(() => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
                           DashboardView(
                             title: 'Total Deals Published',
-                            count: 54,
+                            count: controller.totalDeals.value,
                             isImproved: true,
                             change: 12.8,
                           ),
                           SizedBox(height: 10.h),
                           DashboardView(
                             title: 'Redemption Rate (%)',
-                            count: 39,
+                            count: controller.redemptionRate.value,
                             isRate: true,
                             isImproved: false,
                             change: 12.8,
@@ -171,21 +174,21 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                         children: [
                           DashboardView(
                             title: 'Total Redemptions',
-                            count: 1283,
+                            count: controller.totalRedemptions.value,
                             isImproved: false,
                             change: 12.8,
                           ),
                           SizedBox(height: 10.h),
                           DashboardView(
                             title: 'Pushes Sent',
-                            count: 2872,
+                            count: controller.pushesSent.value,
                             isImproved: true,
                             change: 12.8,
                           ),
                         ],
                       ),
                     ],
-                  ),
+                  )),
 
                   SizedBox(height: 20.h),
 
@@ -260,6 +263,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
                             totalAmount: _toDouble(o.totalAmount),
                             orderTime: _formatDate(created),
                             orderStatus: o.status,
+                            orderId: o.orderId,
                           ),
                         );
                       }),

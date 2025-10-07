@@ -234,22 +234,26 @@ class CheckoutController extends GetxController {
       if (res.statusCode == 200) {
         final List raw = jsonDecode(res.body);
 
-        // Vendor + active
+        final now = DateTime.now().toLocal();
+
+        // Vendor + active + not expired
         final base = raw
             .cast<Map<String, dynamic>>()
             .map(DealLite.fromJson)
-            .where((d) => d.userId == vendorId && d.isActive);
+            .where((d) => d.userId == vendorId && d.isActive)
+            .where((d) {
+          if (d.endDate == null || d.endDate!.isEmpty) return false;
+          final parsed = DateTime.tryParse(d.endDate!);
+          if (parsed == null) return false;
+          final endLocal = parsed.toLocal();
+          return endLocal.isAfter(now); // only not-expired
+        });
 
-        // Deal-type gating by subscription
+        // Subscription gating
         final filteredByTier = base.where((d) {
-          final t = (d.dealType ?? '').toLowerCase(); // 'free' | 'paid' | 'both' | ''
-          if (isPremium.value) {
-            // Premium -> see all
-            return true;
-          } else {
-            // Free -> can only see Free or Both (treat empty as Both)
-            return t.isEmpty || t == 'free' || t == 'both';
-          }
+          final t = (d.dealType ?? '').toLowerCase();
+          if (isPremium.value) return true;
+          return t.isEmpty || t == 'free' || t == 'both';
         }).toList();
 
         deals.assignAll(filteredByTier);
@@ -423,7 +427,6 @@ class CheckoutController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
       headers['Content-Type'] = 'application/json';
 
-      // Use current (edited) address for delivery; vendor address for pickup.
       final String addr = isDelivery
           ? (currentAddress.value.isNotEmpty ? currentAddress.value : profileAddress.value)
           : (vendorProfile.value?.address ?? 'N/A');
@@ -431,22 +434,18 @@ class CheckoutController extends GetxController {
       final String finalNote =
       (noteController.text.isNotEmpty ? noteController.text : (note.isEmpty ? "No notes" : note));
 
-      // --- Build request body (now with deal_id when selected) ---
       final Map<String, dynamic> body = {
         "delivery_type": isDelivery ? "DELIVERY" : "PICKUP",
         "delivery_address": addr,
         "order_type": isScheduled.value ? "SCHEDULED" : "STANDARD",
         "note": finalNote,
+        // (optional) tell backend which method we chose
+        "payment_method": selectedPaymentMethod.value == 'Online Mollie Payment' ? "MOLLIE" : "CASH",
       };
 
-      // Include scheduled time only if scheduling is enabled
       if (isScheduled.value && scheduledAt.value != null) {
-        // If the backend expects a specific key (e.g., "scheduled_time" vs "scheduled_datetime"),
-        // adjust here. Keeping "scheduled_time" as before unless you confirm otherwise.
         body["scheduled_time"] = scheduledAt.value!.toIso8601String();
       }
-
-      // ✅ NEW: include selected deal (if any)
       if (selectedDeal.value != null) {
         body["deal_id"] = selectedDeal.value!.id;
       }
@@ -464,7 +463,20 @@ class CheckoutController extends GetxController {
           Get.snackbar("Order Error", "Missing order_id in response");
           return;
         }
-        await _startPayment(orderId: orderId);
+
+        // ✅ Branch by selected method
+        final method = selectedPaymentMethod.value;
+        final isMollie = method == 'Online Mollie Payment';
+
+        if (isMollie) {
+          // proceed with Mollie (webview)
+          await _startPayment(orderId: orderId);
+        } else {
+          // Cash: no webview—just confirm & go to details
+          Get.snackbar("Success", "Order placed successfully (Cash).");
+          Get.offAll(() => const OrderDetailsView(), arguments: {"order_id": orderId});
+        }
+
       } else {
         Get.snackbar("Order Failed", orderRes.body);
       }

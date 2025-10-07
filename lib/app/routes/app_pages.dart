@@ -105,7 +105,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingVendorView(),
+      page: () => OnboardingView(),
       binding: OnboardingBinding(),
     ),
     GetPage(
@@ -265,7 +265,7 @@ class AppPages {
     GetPage(
       name: _Paths.REVIEW,
       page: () => ReviewView(
-        menuItemId: 0,
+        menuName: '',
       ),
       binding: ReviewBinding(),
     ),

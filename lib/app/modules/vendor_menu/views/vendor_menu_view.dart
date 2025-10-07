@@ -1,4 +1,3 @@
-// lib/app/modules/vendor_menu/views/vendor_menu_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,37 +43,35 @@ class VendorMenuView extends GetView<VendorMenuController> {
 
               SizedBox(height: 20.h),
 
-              // Search (kept as-is)
-              GestureDetector(
-                onTap: () {/* navigate to search if needed */},
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        child: TextField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            hintText: 'Search food...',
-                            border: InputBorder.none,
-                          ),
+              // Search
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) => controller.searchMenus(value),
+                        decoration: InputDecoration(
+                          hintText: 'Search food, category, or description...',
+                          hintStyle: TextStyle(color: Colors.grey[500]),
+                          border: InputBorder.none,
                         ),
                       ),
-                      Image.asset('assets/images/Home/Search.png'),
-                    ],
-                  ),
+                    ),
+                    Image.asset('assets/images/Home/Search.png'),
+                  ],
                 ),
               ),
 
@@ -97,7 +94,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     ),
                   );
                 }
-                if (controller.menusByCategory.isEmpty) {
+                if (controller.filteredMenusByCategory.isEmpty) {
                   return Padding(
                     padding: EdgeInsets.only(top: 40.h),
                     child: Text(
@@ -108,7 +105,7 @@ class VendorMenuView extends GetView<VendorMenuController> {
                 }
 
                 final sections = <Widget>[];
-                controller.menusByCategory.forEach((category, items) {
+                controller.filteredMenusByCategory.forEach((category, items) {
                   sections.addAll([
                     Row(
                       children: [
@@ -126,18 +123,17 @@ class VendorMenuView extends GetView<VendorMenuController> {
                     SizedBox(height: 15.h),
 
                     ...items.map((m) {
-                      final parsedPrice = double.tryParse(m.price) ?? 0.0;  // your model has price as String
-                      final imageUrl = m.logoImage;                         // full URL from API
+                      final parsedPrice = double.tryParse(m.price) ?? 0.0;
+                      final imageUrl = m.logoImage;
 
                       return Padding(
                         padding: EdgeInsets.only(bottom: 7.5.h),
                         child: MenuCardView(
                           menuId: m.id,
-                          // if you already added `isNetworkImage` earlier, pass true; otherwise this arg is optional.
                           image: imageUrl.isNotEmpty
                               ? imageUrl
                               : 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                          isNetworkImage: imageUrl.isNotEmpty, // safe if your widget added this optional param
+                          isNetworkImage: imageUrl.isNotEmpty,
                           title: m.title,
                           description: m.description,
                           price: parsedPrice,

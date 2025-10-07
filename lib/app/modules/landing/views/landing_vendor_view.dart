@@ -10,6 +10,7 @@ import 'package:quopon/app/modules/vendor_side_profile/views/vendor_side_profile
 
 import '../../../../common/CustomNavBar.dart';
 import '../../QRScanner/views/q_r_scanner_view.dart';
+import '../../my_orders_vendors/controllers/my_orders_vendors_controller.dart';
 import '../controllers/landing_controller.dart';
 
 class LandingVendorView extends GetView {
@@ -17,6 +18,8 @@ class LandingVendorView extends GetView {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LandingController());
+
+    final ordersCtrl = Get.put(MyOrdersVendorsController(), permanent: true);
 
     final List<Widget> pages = [
       VendorDashboardView(),
@@ -28,8 +31,17 @@ class LandingVendorView extends GetView {
     ];
 
     return Scaffold(
-      body: Obx(() => pages[controller.currentIndex.value]),
+      body: Obx(() {
+        final idx = controller.currentIndex.value;
 
+        // If user navigates to the "Orders" tab, refresh the list.
+        if (idx == 3) {
+          // microtask so it doesn't block build
+          Future.microtask(() => ordersCtrl.fetchOrders());
+        }
+
+        return pages[idx];
+      }),
       bottomNavigationBar: const VendorNavigationBar(),
     );
   }

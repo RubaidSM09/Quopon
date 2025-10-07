@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:quopon/app/modules/Search/views/search_view.dart';
 import 'package:quopon/app/modules/vendor_create_deal/views/vendor_create_deal_view.dart';
 import 'package:quopon/common/my_deals_card.dart';
 import '../../vendor_deal_performance/views/vendor_deal_performance_view.dart';
@@ -93,37 +91,34 @@ class VendorDealsView extends GetView<VendorDealsController> {
                 SizedBox(height: 20.h),
 
                 // Search bar
-                GestureDetector(
-                  onTap: () => Get.to(() => const SearchView()),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              hintText: 'Search food, store, deals...',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
-                              border: InputBorder.none,
-                            ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          onChanged: (value) => controller.searchDeals(value),
+                          decoration: InputDecoration(
+                            hintText: 'Search deals by title...',
+                            hintStyle: TextStyle(color: Colors.grey[500]),
+                            border: InputBorder.none,
                           ),
                         ),
-                        Image.asset('assets/images/Home/Search.png'),
-                      ],
-                    ),
+                      ),
+                      Image.asset('assets/images/Home/Search.png'),
+                    ],
                   ),
                 ),
 
@@ -131,13 +126,13 @@ class VendorDealsView extends GetView<VendorDealsController> {
 
                 // Deals list
                 Obx(() {
-                  final list = controller.activeDeals;
+                  final list = controller.filteredActiveDeals;
                   if (list.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 24.h),
                       child: Center(
                         child: Text(
-                          'No active deals right now',
+                          'No active deals found',
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: const Color(0xFF6F7E8D),
@@ -148,16 +143,18 @@ class VendorDealsView extends GetView<VendorDealsController> {
                   }
 
                   return Column(
-                    spacing: 10.h,
                     children: list.map((deal) {
-                      return VendorDealCard(
-                        image: deal.imageUrl ?? '',
-                        title: deal.title ?? 'Untitled Deal',
-                        views: deal.viewCount,                     // <- use real counts
-                        redemptions: deal.redemptionCount,         // <- use real counts
-                        startValidTime: deal.startDate ?? '',
-                        endValidTime: deal.endDate ?? '',
-                        onTap: () => Get.to(() => VendorDealPerformanceView(deal: deal)), // <- pass deal
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: VendorDealCard(
+                          image: deal.imageUrl ?? '',
+                          title: deal.title ?? 'Untitled Deal',
+                          views: deal.viewCount,
+                          redemptions: deal.redemptionCount,
+                          startValidTime: deal.startDate ?? '',
+                          endValidTime: deal.endDate ?? '',
+                          onTap: () => Get.to(() => VendorDealPerformanceView(deal: deal)),
+                        ),
                       );
                     }).toList(),
                   );

@@ -294,7 +294,7 @@ class VendorReviewsController extends GetxController {
   }) async {
     try {
       final res = await ApiClient.post(
-        '/discover/review/reply/$reviewId/',
+        '/discover/review/reply/create/$reviewId/',
         {"comment": comment}, // ApiClient.post jsonEncodes internally
       );
       if (res.statusCode >= 200 && res.statusCode < 300) {

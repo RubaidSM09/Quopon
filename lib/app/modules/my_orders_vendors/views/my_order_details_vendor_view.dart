@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:quopon/app/modules/my_orders_vendors/views/cancel_order_vendor_view.dart';
+import 'package:quopon/common/customTextButton.dart';
 
-import '../../../../common/customTextButton.dart';
+import '../controllers/my_orders_vendors_controller.dart';
 
 class MyOrderDetailsVendorView extends GetView {
   final String itemImg;
@@ -18,6 +19,7 @@ class MyOrderDetailsVendorView extends GetView {
   final double totalAmount;
   final String orderTime;
   final String orderStatus;
+  final String orderId; // Added orderId parameter
 
   const MyOrderDetailsVendorView({
     required this.itemImg,
@@ -31,8 +33,10 @@ class MyOrderDetailsVendorView extends GetView {
     required this.totalAmount,
     required this.orderTime,
     required this.orderStatus,
+    required this.orderId, // Added orderId parameter
     super.key,
   });
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -56,16 +60,16 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: Icon(Icons.close, size: 24.sp,),
-                  )
+                    child: Icon(Icons.close, size: 24.sp),
+                  ),
                 ],
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              Divider(color: Color(0xFFEAECED),),
+              Divider(color: Color(0xFFEAECED)),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
               Row(
                 children: [
@@ -75,10 +79,11 @@ class MyOrderDetailsVendorView extends GetView {
                       itemImg,
                       height: 62.h,
                       width: 62.w,
+                      errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                     ),
                   ),
 
-                  SizedBox(width: 12.w,),
+                  SizedBox(width: 12.w),
 
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,20 +102,19 @@ class MyOrderDetailsVendorView extends GetView {
                               ),
                             ),
                             Text(
-                              '\$9.00',
+                              '\$${totalAmount.toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: Color(0xFF020711),
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
 
-                      SizedBox(height: 8.h,),
+                      SizedBox(height: 8.h),
 
-                      // Dynamically build addon rows for cheese and spreads
                       ...itemAddons.entries.map((entry) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 6.h),
@@ -137,91 +141,15 @@ class MyOrderDetailsVendorView extends GetView {
                         );
                       }),
                     ],
-                  )
-                ],
-              ),
-
-              SizedBox(height: 16.h,),
-
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.r),
-                    child: Image.network(
-                      itemImg,
-                      height: 62.h,
-                      width: 62.w,
-                    ),
                   ),
-
-                  SizedBox(width: 12.w,),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 245.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              itemName,
-                              style: TextStyle(
-                                color: Color(0xFF020711),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.sp,
-                              ),
-                            ),
-                            Text(
-                              '\$9.00',
-                              style: TextStyle(
-                                color: Color(0xFF020711),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.sp,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 8.h,),
-
-                      // Dynamically build addon rows for cheese and spreads
-                      ...itemAddons.entries.map((entry) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 6.h),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Select ${entry.key}: ',
-                                style: TextStyle(
-                                  color: Color(0xFF6F7E8D),
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              Text(
-                                entry.value.join(', '),
-                                style: TextStyle(
-                                  color: Color(0xFF6F7E8D),
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
-                  )
                 ],
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              Divider(color: Color(0xFFEAECED),),
+              Divider(color: Color(0xFFEAECED)),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,7 +176,7 @@ class MyOrderDetailsVendorView extends GetView {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      '#ORD-57321',
+                      '#$orderId',
                       style: TextStyle(
                         color: Color(0xFF020711),
                         fontSize: 14.sp,
@@ -258,7 +186,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -294,7 +224,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -330,7 +262,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -366,7 +300,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -402,7 +338,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -438,7 +376,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -474,7 +414,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,7 +424,7 @@ class MyOrderDetailsVendorView extends GetView {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      'Delivery Addresss',
+                      'Delivery Address',
                       style: TextStyle(
                         color: Color(0xFF6F7E8D),
                         fontSize: 14.sp,
@@ -511,7 +453,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,7 +482,7 @@ class MyOrderDetailsVendorView extends GetView {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                       style: TextStyle(
                         color: Color(0xFF020711),
                         fontSize: 14.sp,
@@ -549,11 +493,11 @@ class MyOrderDetailsVendorView extends GetView {
                 ],
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              Divider(color: Color(0xFFEAECED),),
+              Divider(color: Color(0xFFEAECED)),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -580,7 +524,7 @@ class MyOrderDetailsVendorView extends GetView {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      '\$18.00',
+                      '\$${totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: Color(0xFF020711),
                         fontSize: 14.sp,
@@ -590,7 +534,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -626,7 +572,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -662,7 +610,9 @@ class MyOrderDetailsVendorView extends GetView {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h,),
+
+              SizedBox(height: 16.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -691,14 +641,14 @@ class MyOrderDetailsVendorView extends GetView {
                     child: Row(
                       children: [
                         Text(
-                          '\$9.99',
+                          '\$${totalAmount.toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Color(0xFF020711),
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 12.w,),
+                        SizedBox(width: 12.w),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.5.h),
                           decoration: BoxDecoration(
@@ -713,57 +663,60 @@ class MyOrderDetailsVendorView extends GetView {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              Divider(color: Color(0xFFEAECED),),
+              Divider(color: Color(0xFFEAECED)),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              GradientButton(
-                text: 'Cancel Order',
-                onPressed: () {
-                  Get.back();
-                  Get.dialog(CancelOrderVendorView(
-                    itemImg: itemImg,
-                    itemName: itemName,
-                    itemAddons: itemAddons,
-                    isNew: isNew,
-                    status: status,
-                    customerName: customerName,
-                    orderItem: orderItem,
-                    quantity: quantity,
-                    totalAmount: totalAmount,
-                    orderTime: orderTime,
-                    orderStatus: orderStatus,
-                  ));
-                },
-                colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
-                boxShadow: [const BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
-                borderColor: [Colors.white, const Color(0xFFEEF0F3)],
-                borderRadius: 12.r,
-                child: Text(
-                  'Cancel Order',
-                  style: TextStyle(
-                    fontSize: 14.sp,  // Use ScreenUtil for font size
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF020711),
+              if (orderStatus == 'RECEIVED' || orderStatus == 'PREPARING')
+                GradientButton(
+                  text: 'Cancel Order',
+                  onPressed: () {
+                    Get.back();
+                    Get.dialog(CancelOrderVendorView(
+                      itemImg: itemImg,
+                      itemName: itemName,
+                      itemAddons: itemAddons,
+                      isNew: isNew,
+                      status: status,
+                      customerName: customerName,
+                      orderItem: orderItem,
+                      quantity: quantity,
+                      totalAmount: totalAmount,
+                      orderTime: orderTime,
+                      orderStatus: orderStatus,
+                      orderId: orderId,
+                    ));
+                  },
+                  colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
+                  boxShadow: [const BoxShadow(color: Color(0xFFDFE4E9), spreadRadius: 1)],
+                  borderColor: [Colors.white, const Color(0xFFEEF0F3)],
+                  borderRadius: 12.r,
+                  child: Text(
+                    'Cancel Order',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF020711),
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 8.h,),
+              if (orderStatus == 'RECEIVED' || orderStatus == 'PREPARING') SizedBox(height: 8.h),
 
               GradientButton(
                 text: 'Move In Preparation',
                 onPressed: () {
-
+                  Get.find<MyOrdersVendorsController>().updateOrderStatus(orderId, 'PREPARING');
+                  Get.back();
                 },
                 colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                 boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
@@ -772,7 +725,7 @@ class MyOrderDetailsVendorView extends GetView {
                 child: Text(
                   'Move In Preparation',
                   style: TextStyle(
-                    fontSize: 14.sp,  // Use ScreenUtil for font size
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),

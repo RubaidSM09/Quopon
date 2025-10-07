@@ -89,7 +89,7 @@ class VendorOrder {
 
 class OrderItem {
   int id;
-  int deal;
+  int? deal; // Make deal nullable
   int quantity;
   String unitPrice;
   String totalPrice;
@@ -99,7 +99,7 @@ class OrderItem {
 
   OrderItem({
     required this.id,
-    required this.deal,
+    this.deal, // Update to nullable
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
@@ -111,13 +111,13 @@ class OrderItem {
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
       id: json['id'],
-      deal: json['deal'],
+      deal: json['deal'], // This will now accept null
       quantity: json['quantity'],
       unitPrice: json['unit_price'],
       totalPrice: json['total_price'],
       itemName: json['item_name'],
       itemDescription: json['item_description'],
-      itemImage: json['item_image'],
+      itemImage: json['item_image'] ?? '', // Handle null item_image
     );
   }
 }

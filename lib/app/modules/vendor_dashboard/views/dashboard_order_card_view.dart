@@ -16,6 +16,7 @@ class DashboardOrderCardView extends GetView {
   final double totalAmount;
   final String orderTime;
   final String orderStatus;
+  final String orderId;
 
   const DashboardOrderCardView({
     required this.itemImg,
@@ -29,6 +30,7 @@ class DashboardOrderCardView extends GetView {
     required this.totalAmount,
     required this.orderTime,
     required this.orderStatus,
+    required this.orderId,
     super.key
   });
   @override
@@ -47,6 +49,7 @@ class DashboardOrderCardView extends GetView {
           totalAmount: totalAmount,
           orderTime: orderTime,
           orderStatus: orderStatus,
+          orderId: orderId,
         )
         );
       },

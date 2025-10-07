@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:quopon/app/data/api_client.dart';
 
@@ -24,10 +25,13 @@ class MyOrdersVendorsController extends GetxController {
     try {
       print(await ApiClient.authHeaders());
       final response = await http.get(url, headers: await ApiClient.authHeaders());
+      print(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
+        print('Rubaid');
         List<dynamic> data = json.decode(response.body);
         orders.value = data.map((json) => VendorOrder.fromJson(json)).toList();
+        print(orders);
       } else {
         print('Failed to load orders');
       }
@@ -60,6 +64,34 @@ class MyOrdersVendorsController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to update order status: $e');
+      print('Error: $e');
+    }
+  }
+
+  Future<void> cancelOrder(String orderId, String cancellationReason) async {
+    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/cancel/');
+    try {
+      final response = await http.post(
+        url,
+        headers: await ApiClient.authHeaders(),
+        body: json.encode({'cancellation_reason': cancellationReason}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar('Success', 'Order canceled successfully');
+        // Update the local order status
+        final orderIndex = orders.indexWhere((order) => order.orderId == orderId);
+        if (orderIndex != -1) {
+          orders[orderIndex].status = 'CANCELLED';
+          orders.refresh();
+        }
+        // Refresh orders to ensure consistency
+        await fetchOrders();
+      } else {
+        Get.snackbar('Error', 'Failed to cancel order: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to cancel order: $e');
       print('Error: $e');
     }
   }

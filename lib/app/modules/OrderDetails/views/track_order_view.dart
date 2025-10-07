@@ -66,7 +66,7 @@ class TrackOrderView extends GetView<TrackOrderController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildStep(0, 'assets/images/OrderDetails/OrderConfirmed.png', controller),
+                  _buildStep(0, 'assets/images/OrderDetails/OrderCofirmed.png', controller),
                   _buildLine(controller, 1),
                   _buildStep(1, 'assets/images/OrderDetails/Cooking.png', controller),
                   _buildLine(controller, 2),

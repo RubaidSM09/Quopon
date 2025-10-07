@@ -186,14 +186,19 @@ class SearchView extends GetView<SearchController> {
                       ],
                     ),
                     SizedBox(height: 12.h),
+
+                    // ✅ Use the computed top 5 from /auth/all-search-history/
                     Obx(() {
-                      if (controller.frequentSearches.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
+                      final top = controller.frequentTop5;
+                      if (top.isEmpty) {
+                        // You can show a skeleton/loader or a subtle placeholder
+                        return Text(
+                          'No frequent searches yet',
+                          style: TextStyle(color: const Color(0xFF6F7E8D), fontSize: 14.sp),
+                        );
                       }
                       return Column(
-                        children: controller.frequentSearches.take(5).map((f) {
-                          return SearchHistoryView(title: f.queryText);
-                        }).toList(),
+                        children: top.map((q) => SearchHistoryView(title: q)).toList(),
                       );
                     }),
                   ],

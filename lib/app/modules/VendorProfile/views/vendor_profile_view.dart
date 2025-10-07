@@ -402,7 +402,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     return Column(children: sections);
                   }),
                   SizedBox(height: 20.h),
-                  Align(
+                  /*Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Location",
@@ -421,7 +421,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),

@@ -78,8 +78,10 @@ class OrderDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments;
+    print(args);
     final String? oid =
     (args is Map && args["order_id"] != null) ? args["order_id"].toString() : null;
+    print(oid);
 
     if (oid == null || oid.isEmpty) {
       error.value = "Missing order_id";

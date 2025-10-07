@@ -148,7 +148,7 @@ class _VendorDealPerformanceViewState extends State<VendorDealPerformanceView> {
 
               SizedBox(height: 20.h),
 
-              // KPI tiles (now bound to real counts + computed time left + placeholder push)
+              // KPI tiles
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
@@ -198,17 +198,21 @@ class _VendorDealPerformanceViewState extends State<VendorDealPerformanceView> {
                       ],
                     ),
                     SizedBox(height: 8.h),
-                    Obx(() => _KpiTile(
-                      bg: const Color(0xFFEEF2FF),
-                      border: const Color(0xFFE4E7FC),
-                      value: controller.pushSent.value == 0
-                          ? '—'
-                          : NumberFormat.decimalPattern()
-                          .format(controller.pushSent.value),
-                      label: 'Push Sent',
-                      valueColor: const Color(0xFF4338CA),
-                      isWide: true,
-                    )),
+
+                    // NEW: Live "Push Sent" from controller
+                    Obx(() {
+                      controller.pushSentCount.value = deal.pushSentCount;
+                      return _KpiTile(
+                            bg: const Color(0xFFEEF2FF),
+                            border: const Color(0xFFE4E7FC),
+                            value: NumberFormat.decimalPattern().format(controller
+                                .pushSentCount.value),
+                            label: 'Push Sent',
+                            valueColor: const Color(0xFF4338CA),
+                            isWide: true,
+                          );
+                    }
+                    ),
                   ],
                 ),
               ),
@@ -306,7 +310,7 @@ class _VendorDealPerformanceViewState extends State<VendorDealPerformanceView> {
         ),
       ),
 
-      // Bottom actions (unchanged—wire as needed)
+      // Bottom actions
       bottomNavigationBar: Container(
         height: 170.h,
         color: Colors.white,
@@ -327,36 +331,39 @@ class _VendorDealPerformanceViewState extends State<VendorDealPerformanceView> {
                     SizedBox(width: 10.w),
                     Text(
                       "Edit Deal",
-                      style: TextStyle(
-                        fontSize: 17.5.sp,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF020711),
-                      ),
+                      style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: const Color(0xFF020711)),
                     ),
                   ],
                 ),
               ),
-              GradientButton(
-                onPressed: () {},
-                text: "Send Push Notification",
-                colors: const [Color(0xFFD62828), Color(0xFFC21414)],
-                borderRadius: 12.r,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/DealPerformance/Send.png'),
-                    SizedBox(width: 10.w),
-                    Text(
-                      "Send Push Notification",
-                      style: TextStyle(
-                        fontSize: 17.5.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+              Obx(() {
+                final canSend = isDealActiveNow;
+                final isBusy = controller.isSending.value;
+
+                return GradientButton(
+                  onPressed: () {
+                    if (!canSend || isBusy) return;
+                    controller.sendPush(widget.deal.id ?? 0, dealName: widget.deal.title ?? '');
+                  },
+                  text: "Send Push Notification",
+                  colors: const [Color(0xFFD62828), Color(0xFFC21414)],
+                  borderRadius: 12.r,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isBusy)
+                        SizedBox(width: 18.r, height: 18.r, child: const CircularProgressIndicator(strokeWidth: 2))
+                      else
+                        Image.asset('assets/images/DealPerformance/Send.png'),
+                      SizedBox(width: 10.w),
+                      Text(
+                        canSend ? (isBusy ? "Sending..." : "Send Push Notification") : "Deal Inactive",
+                        style: TextStyle(fontSize: 17.5.sp, fontWeight: FontWeight.w500, color: Colors.white),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              })
             ],
           ),
         ),

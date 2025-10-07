@@ -19,7 +19,7 @@ class Api {
   static const speedyDeliveries = "$baseUrl/home/shops/search/?ordering=delivery_time_minutes";
 
   /// search
-  static const frequentSearch = "$baseUrl/home/search/frequent/";
+  static const frequentSearch = "$baseUrl/auth/all-search-history/";
 
   /// Discover list
   static const discoverList = "$baseUrl/discover/list/";

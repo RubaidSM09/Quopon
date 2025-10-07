@@ -6,8 +6,9 @@ import 'package:quopon/common/custom_textField.dart';
 
 import '../../../../common/customTextButton.dart';
 import 'my_order_details_vendor_view.dart';
+import '../controllers/my_orders_vendors_controller.dart';
 
-class CancelOrderVendorView extends GetView {
+class CancelOrderVendorView extends GetView<MyOrdersVendorsController> {
   final String itemImg;
   final String itemName;
   final Map<String, List<String>> itemAddons;
@@ -19,6 +20,7 @@ class CancelOrderVendorView extends GetView {
   final double totalAmount;
   final String orderTime;
   final String orderStatus;
+  final String orderId; // Added orderId parameter
   final _moreDetailsController = TextEditingController();
 
   CancelOrderVendorView({
@@ -33,11 +35,19 @@ class CancelOrderVendorView extends GetView {
     required this.totalAmount,
     required this.orderTime,
     required this.orderStatus,
+    required this.orderId, // Added orderId parameter
     super.key,
   });
+
   @override
   Widget build(BuildContext context) {
     RxList<RxBool> checkBoxTick = [false.obs, false.obs, false.obs, false.obs].obs;
+    final List<String> reasons = [
+      'Customer didn’t show up',
+      'Item not available',
+      'Delivery issue',
+      'Other',
+    ];
 
     return Dialog(
       backgroundColor: Color(0xFFF9FBFC),
@@ -60,16 +70,16 @@ class CancelOrderVendorView extends GetView {
                   ),
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: Icon(Icons.close, size: 24.sp,),
+                    child: Icon(Icons.close, size: 24.sp),
                   )
                 ],
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
-              Divider(color: Color(0xFFEAECED),),
+              Divider(color: Color(0xFFEAECED)),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
               Align(
                 alignment: Alignment.centerLeft,
@@ -82,97 +92,34 @@ class CancelOrderVendorView extends GetView {
                   ),
                 ),
               ),
-              SizedBox(height: 12.h,),
-              Row(
-                children: [
-                  // Use Obx to listen to changes in isChecked
-                  Obx(() {
-                    return Checkbox(
-                      activeColor: Color(0xFFD62828),
-                      value: checkBoxTick[0].value,
-                      onChanged: (bool? value) {
-                        checkBoxTick[0].value = !checkBoxTick[0].value;
-                      },
-                    );
-                  }),
-                  Text(
-                    'Customer didn’t show up',
-                    style: TextStyle(
-                        fontSize: 14.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF020711)
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  // Use Obx to listen to changes in isChecked
-                  Obx(() {
-                    return Checkbox(
-                      activeColor: Color(0xFFD62828),
-                      value: checkBoxTick[1].value,
-                      onChanged: (bool? value) {
-                        checkBoxTick[1].value = !checkBoxTick[1].value;
-                      },
-                    );
-                  }),
-                  Text(
-                    'Item not available',
-                    style: TextStyle(
-                        fontSize: 14.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF020711)
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  // Use Obx to listen to changes in isChecked
-                  Obx(() {
-                    return Checkbox(
-                      activeColor: Color(0xFFD62828),
-                      value: checkBoxTick[2].value,
-                      onChanged: (bool? value) {
-                        checkBoxTick[2].value = !checkBoxTick[2].value;
-                      },
-                    );
-                  }),
-                  Text(
-                    'Delivery issue',
-                    style: TextStyle(
-                        fontSize: 14.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF020711)
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  // Use Obx to listen to changes in isChecked
-                  Obx(() {
-                    return Checkbox(
-                      activeColor: Color(0xFFD62828),
-                      value: checkBoxTick[3].value,
-                      onChanged: (bool? value) {
-                        checkBoxTick[3].value = !checkBoxTick[3].value;
-                      },
-                    );
-                  }),
-                  Text(
-                    'Other',
-                    style: TextStyle(
-                        fontSize: 14.sp, // Use ScreenUtil for font size
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF020711)
-                    ),
-                  ),
-                ],
-              ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 12.h),
+
+              ...reasons.asMap().entries.map((entry) {
+                int index = entry.key;
+                String reason = entry.value;
+                return Row(
+                  children: [
+                    Obx(() => Checkbox(
+                      activeColor: Color(0xFFD62828),
+                      value: checkBoxTick[index].value,
+                      onChanged: (bool? value) {
+                        checkBoxTick[index].value = value ?? false;
+                      },
+                    )),
+                    Text(
+                      reason,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF020711),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+
+              SizedBox(height: 16.h),
 
               GetInTouchTextField(
                 headingText: 'Add more details',
@@ -184,12 +131,41 @@ class CancelOrderVendorView extends GetView {
                 isOptional: true,
               ),
 
-              SizedBox(height: 16.h,),
+              SizedBox(height: 16.h),
 
               GradientButton(
                 text: 'Cancel Order',
                 onPressed: () {
-                  Get.back();
+                  // Collect selected reasons
+                  List<String> selectedReasons = [];
+                  for (int i = 0; i < checkBoxTick.length; i++) {
+                    if (checkBoxTick[i].value) {
+                      selectedReasons.add(reasons[i]);
+                    }
+                  }
+                  // Include text from _moreDetailsController if "Other" is selected
+                  if (checkBoxTick[3].value && _moreDetailsController.text.isNotEmpty) {
+                    selectedReasons.add(_moreDetailsController.text);
+                  }
+
+                  // Ensure at least one reason is selected
+                  if (selectedReasons.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please select at least one cancellation reason',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
+
+                  // Join reasons into a single string
+                  String cancellationReason = selectedReasons.join(', ');
+
+                  // Call cancelOrder method
+                  Get.back(); // Close the dialog
+                  controller.cancelOrder(orderId, cancellationReason);
                 },
                 colors: [const Color(0xFFD62828), const Color(0xFFC21414)],
                 boxShadow: [const BoxShadow(color: Color(0xFF9A0000), spreadRadius: 1)],
@@ -198,14 +174,14 @@ class CancelOrderVendorView extends GetView {
                 child: Text(
                   'Cancel Order',
                   style: TextStyle(
-                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
                 ),
               ),
 
-              SizedBox(height: 8.h,),
+              SizedBox(height: 8.h),
 
               GradientButton(
                 text: 'Go Back',
@@ -223,6 +199,7 @@ class CancelOrderVendorView extends GetView {
                     totalAmount: totalAmount,
                     orderTime: orderTime,
                     orderStatus: orderStatus,
+                    orderId: orderId,
                   ));
                 },
                 colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
@@ -232,7 +209,7 @@ class CancelOrderVendorView extends GetView {
                 child: Text(
                   'Go Back',
                   style: TextStyle(
-                    fontSize: 16.sp,  // Use ScreenUtil for font size
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF020711),
                   ),

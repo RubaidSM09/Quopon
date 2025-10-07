@@ -39,13 +39,13 @@ class MyDealViewData {
 
   // Delivery (first rule fallback)
   final String deliveryFee; // string per API
-  final int minOrder;       // parsed int
+  final int minOrder; // parsed int
 
   // Vendor enrichment
   final int? vendorProfileId;
   final int? vendorId;
-  final String vendorName;          // fallback to deal email if unknown
-  final String? vendorLogoUrl;      // fallback to deal image if missing
+  final String vendorName; // fallback to deal email if unknown
+  final String? vendorLogoUrl; // fallback to deal image if missing
 
   MyDealViewData({
     required this.wishlistId,
@@ -65,6 +65,7 @@ class MyDealViewData {
     required this.vendorLogoUrl,
   });
 
+  /// Status derived from isActive + dates
   String get statusText {
     final now = DateTime.now();
     if (!isActive || now.isAfter(endDate)) return 'Expired';
@@ -77,6 +78,17 @@ class MyDealsController extends GetxController {
   final deals = <MyDealViewData>[].obs;
   final isLoading = false.obs;
 
+  /// 0 = Active, 1 = Used (placeholder), 2 = Expired
+  final selectedTab = 0.obs;
+
+  /// Convenience getters for filtered views
+  List<MyDealViewData> get activeDeals =>
+      deals.where((d) => d.statusText == 'Active').toList();
+  List<MyDealViewData> get expiredDeals =>
+      deals.where((d) => d.statusText == 'Expired').toList();
+  // No backend signal for "used" right now – keep it empty for now.
+  List<MyDealViewData> get usedDeals => <MyDealViewData>[];
+
   Future<void> fetchMyDeals() async {
     try {
       isLoading.value = true;
@@ -84,12 +96,13 @@ class MyDealsController extends GetxController {
 
       // 1) Wishlist rows
       final wishRes = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/',
+        api:
+        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/',
         headers: headers,
       );
-      print(wishRes.statusCode);
       if (wishRes.statusCode < 200 || wishRes.statusCode >= 300) {
-        Get.snackbar('Error', 'Failed to load My Deals (${wishRes.statusCode})');
+        Get.snackbar(
+            'Error', 'Failed to load My Deals (${wishRes.statusCode})');
         deals.clear();
         return;
       }
@@ -102,27 +115,29 @@ class MyDealsController extends GetxController {
 
       // 2) All deals
       final allDealsRes = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
+        api:
+        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/',
         headers: headers,
       );
-      print(allDealsRes.statusCode);
       if (allDealsRes.statusCode < 200 || allDealsRes.statusCode >= 300) {
-        Get.snackbar('Error', 'Failed to load deals catalog (${allDealsRes.statusCode})');
+        Get.snackbar(
+            'Error', 'Failed to load deals catalog (${allDealsRes.statusCode})');
         deals.clear();
         return;
       }
       final List<dynamic> allDeals = json.decode(allDealsRes.body);
       final Map<int, Map<String, dynamic>> dealById = {
         for (final d in allDeals)
-          (d as Map<String, dynamic>)['id'] as int: d as Map<String, dynamic>
+          (d as Map<String, dynamic>)['id'] as int:
+          d as Map<String, dynamic>
       };
 
       // 3) Vendors (enrichment)
       final vendorsRes = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
+        api:
+        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/',
         headers: headers,
       );
-      print(vendorsRes.statusCode);
       final Map<int, Map<String, dynamic>> vendorById = {};
       if (vendorsRes.statusCode >= 200 && vendorsRes.statusCode < 300) {
         final List<dynamic> vendors = json.decode(vendorsRes.body);
@@ -144,12 +159,14 @@ class MyDealsController extends GetxController {
         final userId = djson['user_id'] as int?;
         final vendor = userId != null ? vendorById[userId] : null;
 
-        // safe string helper
         String _s(dynamic v) => v is String ? v : (v?.toString() ?? '');
 
         final title = _s(djson['title']);
         final description = _s(djson['description']);
-        final imageUrl = _s(djson['image_url']);
+        // Try both possible fields for image naming
+        final imageUrl = _s(
+          djson['image_url'] ?? djson['logo_image'] ?? djson['image'],
+        );
         final redemptionType = _s(djson['redemption_type']);
         final emailFallback = _s(djson['email']);
 
@@ -161,7 +178,7 @@ class MyDealsController extends GetxController {
         }
 
         final start = _parseDate(djson['start_date']);
-        final end   = _parseDate(djson['end_date'], fallback: start);
+        final end = _parseDate(djson['end_date'], fallback: start);
 
         // delivery costs
         String deliveryFee = '0';
@@ -178,30 +195,32 @@ class MyDealsController extends GetxController {
         final vName = _s(vendor?['name']).trim();
         final vLogo = _s(vendor?['logo_image']).trim();
 
-        final vendorProfileId = vendor?['id'] as int?;       // business profile id
-        final vendorId = vendor?['vendor_id'] as int?;       // vendor_id from JSON
+        final vendorProfileId = vendor?['id'] as int?;
+        final vendorId = vendor?['vendor_id'] as int?;
 
-        joined.add(MyDealViewData(
-          wishlistId: w.id,
-          dealId: w.dealId,
-          title: title,
-          description: description,
-          imageUrl: imageUrl,
-          startDate: start,
-          endDate: end,
-          isActive: djson['is_active'] == true,
-          redemptionType: redemptionType,
-          deliveryFee: deliveryFee,
-          minOrder: minOrder,
-          vendorProfileId: vendorProfileId,                  // <-- correct now
-          vendorId: vendorId,                                // <-- also correct
-          vendorName: vName.isNotEmpty ? vName : emailFallback,
-          vendorLogoUrl: vLogo.isNotEmpty ? vLogo : (imageUrl.isNotEmpty ? imageUrl : null),
-        ));
+        joined.add(
+          MyDealViewData(
+            wishlistId: w.id,
+            dealId: w.dealId,
+            title: title,
+            description: description,
+            imageUrl: imageUrl,
+            startDate: start,
+            endDate: end,
+            isActive: djson['is_active'] == true,
+            redemptionType: redemptionType,
+            deliveryFee: deliveryFee,
+            minOrder: minOrder,
+            vendorProfileId: vendorProfileId,
+            vendorId: vendorId,
+            vendorName: vName.isNotEmpty ? vName : emailFallback,
+            vendorLogoUrl:
+            vLogo.isNotEmpty ? vLogo : (imageUrl.isNotEmpty ? imageUrl : null),
+          ),
+        );
       }
 
       deals.assignAll(joined);
-      print(deals);
     } catch (e) {
       Get.snackbar('Error', e.toString());
       deals.clear();

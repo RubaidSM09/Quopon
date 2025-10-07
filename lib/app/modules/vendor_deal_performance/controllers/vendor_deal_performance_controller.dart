@@ -17,56 +17,92 @@ class VendorDealPerformanceController extends GetxController {
   final error = RxnString();
   final metrics = <DayMetric>[].obs;
 
-  // Backend hasn't added this yet; keep placeholder
-  final pushSent = 0.obs;
+  // NEW: UI state for send-push
+  final isSending = false.obs;
+  final pushSentCount = 0.obs; // bound to KPI
 
-  /// Call this right after page opens, passing the deal id.
+  // Call this in initState with the current deal's push count
+  void initWithDealPushCount(int initial) {
+    pushSentCount.value = initial;
+  }
+
+  Future<void> sendPush(int dealId, {required String dealName}) async {
+    if (isSending.value) return;
+    isSending.value = true;
+    try {
+      final headers = await BaseClient.authHeaders();
+      headers['Content-Type'] = 'application/json';
+
+      final uri = Uri.parse(
+        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/$dealId/send-notification/',
+      );
+
+      // ✅ REQUIRED BODY
+      final payload = {
+        "title": "New Deals in town",
+        "body": dealName.isEmpty ? "New Deal" : dealName, // $deal_name
+      };
+
+      final res = await http.post(
+        uri,
+        headers: headers,
+        body: jsonEncode(payload),
+      );
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        int? serverTotal;
+        try {
+          final decoded = json.decode(res.body);
+          serverTotal = int.tryParse('${decoded['push_sent_count'] ?? decoded['total_push_sent'] ?? ''}');
+          print(serverTotal);
+        } catch (_) {}
+        if (serverTotal != null) {
+          pushSentCount.value = serverTotal;
+        } else {
+          pushSentCount.value = pushSentCount.value + 1;
+        }
+        Get.snackbar('Success', 'Push notification sent.');
+      } else {
+        Get.snackbar('Failed', 'Send push failed (${res.statusCode}).');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Send push error: $e');
+    } finally {
+      isSending.value = false;
+    }
+  }
+
+  /// ---- metrics code unchanged below ----
+
   Future<void> fetchLast7Days(int dealId) async {
     isLoading.value = true;
     error.value = null;
-
     try {
       final headers = await BaseClient.authHeaders();
-
-      // TODO: switch to your real endpoint when ready.
-      // Expected response example:
-      // {
-      //   "days": [
-      //     {"date":"2025-10-01","views":100,"redemptions":20},
-      //     ...
-      //   ]
-      // }
       final uri = Uri.parse(
         'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/$dealId/daily-metrics/?days=7',
       );
-
       final res = await http.get(uri, headers: headers);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         final decoded = json.decode(res.body);
         final List days = (decoded['days'] as List?) ?? [];
-
-        // Normalize to exactly 7 entries: today and the previous 6 days
         final today = DateTime.now().toLocal();
         final Map<String, Map<String, dynamic>> byDate = {
           for (final e in days)
             (e['date'] ?? '').toString(): (e as Map<String, dynamic>)
         };
-
         final List<DayMetric> out = [];
         for (int i = 6; i >= 0; i--) {
-          final d = DateTime(today.year, today.month, today.day)
-              .subtract(Duration(days: i));
+          final d = DateTime(today.year, today.month, today.day).subtract(Duration(days: i));
           final key = DateFormat('yyyy-MM-dd').format(d);
           final row = byDate[key];
-
           out.add(DayMetric(
             d,
             int.tryParse((row?['views'] ?? 0).toString()) ?? 0,
             int.tryParse((row?['redemptions'] ?? 0).toString()) ?? 0,
           ));
         }
-
         metrics.assignAll(out);
       } else {
         _fallbackZeros();
@@ -82,18 +118,13 @@ class VendorDealPerformanceController extends GetxController {
 
   void _fallbackZeros() {
     final today = DateTime.now().toLocal();
-    final out = List<DayMetric>.generate(
-      7,
-          (i) {
-        final d = DateTime(today.year, today.month, today.day)
-            .subtract(Duration(days: 6 - i));
-        return DayMetric(d, 0, 0);
-      },
-    );
+    final out = List<DayMetric>.generate(7, (i) {
+      final d = DateTime(today.year, today.month, today.day).subtract(Duration(days: 6 - i));
+      return DayMetric(d, 0, 0);
+    });
     metrics.assignAll(out);
   }
 
-  // ---- Formatting helpers ----
   String formatMmmD(DateTime day) => DateFormat('MMM d').format(day);
 
   String formatDdMmmY(String? iso) {
