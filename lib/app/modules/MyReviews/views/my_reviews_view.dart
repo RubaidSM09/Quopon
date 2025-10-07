@@ -15,6 +15,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
   Widget build(BuildContext context) {
     final myReviewsController = Get.put(MyReviewsController());
     Get.put(HomeController());
+    final TextEditingController searchController = TextEditingController();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
@@ -37,7 +38,7 @@ class MyReviewsView extends GetView<MyReviewsController> {
 
               SizedBox(height: 20.h),
 
-              // Search bar (visual only)
+              // Search bar
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
@@ -54,13 +55,14 @@ class MyReviewsView extends GetView<MyReviewsController> {
                 ),
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: TextField(
-                        readOnly: true,
-                        decoration: InputDecoration(
+                        controller: searchController,
+                        decoration: const InputDecoration(
                           hintText: 'Search review',
                           border: InputBorder.none,
                         ),
+                        onChanged: (value) => myReviewsController.updateSearchQuery(value),
                       ),
                     ),
                     Icon(Icons.search, color: Colors.grey[500]),
@@ -96,18 +98,18 @@ class MyReviewsView extends GetView<MyReviewsController> {
                   );
                 }
 
-                if (myReviewsController.reviews.isEmpty) {
+                if (myReviewsController.filteredReviews.isEmpty) {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 40.h),
                     child: Text(
-                      'No reviews yet.',
+                      'No reviews found.',
                       style: TextStyle(fontSize: 14.sp, color: const Color(0xFF6F7E8D)),
                     ),
                   );
                 }
 
                 final widgets = <Widget>[];
-                for (final r in myReviewsController.reviews) {
+                for (final r in myReviewsController.filteredReviews) {
                   final title = myReviewsController.dealTitleFor(r.menuItem);
                   final img = myReviewsController.dealImageFor(r.menuItem);
 
@@ -141,8 +143,8 @@ class MyReviewsView extends GetView<MyReviewsController> {
                       ),
                       feedback: hasReply
                           ? VendorFeedback(
-                        image: replyLogo,              // network URL OK
-                        title: replyTitle,             // vendor business name
+                        image: replyLogo, // network URL OK
+                        title: replyTitle, // vendor business name
                         feedback: replyText,
                         time: replyAgo,
                       )

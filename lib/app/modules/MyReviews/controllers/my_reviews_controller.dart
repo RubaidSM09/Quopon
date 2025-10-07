@@ -13,9 +13,9 @@ class Review {
 class VendorFeedback {
   /// Can be a network URL or an asset path.
   final String image;
-  final String title;   // vendor display name
+  final String title; // vendor display name
   final String feedback;
-  final String time;    // time-ago
+  final String time; // time-ago
   const VendorFeedback({
     required this.image,
     required this.title,
@@ -59,7 +59,7 @@ class DealLite {
 class ReplyItem {
   final int id;
   final int reviewId;
-  final String user;     // email (from API)
+  final String user; // email (from API)
   final String comment;
   final DateTime createdAt;
   ReplyItem({
@@ -91,6 +91,8 @@ class VendorProfile {
 class MyReviewsController extends GetxController {
   final isLoading = false.obs;
   final reviews = <ReviewItem>[].obs;
+  final filteredReviews = <ReviewItem>[].obs; // For search results
+  final searchQuery = ''.obs; // To track search input
 
   /// dealId -> DealLite
   final dealsById = <int, DealLite>{}.obs;
@@ -105,6 +107,9 @@ class MyReviewsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAll();
+    // Update filtered reviews whenever search query or reviews change
+    ever(searchQuery, (_) => filterReviews());
+    ever(reviews, (_) => filterReviews());
   }
 
   Future<void> fetchAll() async {
@@ -133,6 +138,7 @@ class MyReviewsController extends GetxController {
             .map((e) => ReviewItem.fromJson(e as Map<String, dynamic>))
             .toList();
         reviews.assignAll(list);
+        filterReviews(); // Update filtered reviews after fetching
       } else {
         Get.snackbar('Error', 'Failed to load reviews (${res.statusCode})');
       }
@@ -201,6 +207,33 @@ class MyReviewsController extends GetxController {
     } catch (_) {
       // ignore; no replies is fine
     }
+  }
+
+  /// Filter reviews based on search query
+  void filterReviews() {
+    final query = searchQuery.value.trim().toLowerCase();
+    if (query.isEmpty) {
+      filteredReviews.assignAll(reviews);
+      return;
+    }
+
+    filteredReviews.assignAll(reviews.where((review) {
+      final dealTitle = dealTitleFor(review.menuItem).toLowerCase();
+      final comment = review.comment.toLowerCase();
+      final reply = latestReplyFor(review.id);
+      final vendorName = reply != null
+          ? vendorNameAndLogoForEmail(reply.user).$1.toLowerCase()
+          : '';
+
+      return dealTitle.contains(query) ||
+          comment.contains(query) ||
+          vendorName.contains(query);
+    }).toList());
+  }
+
+  /// Update search query
+  void updateSearchQuery(String query) {
+    searchQuery.value = query;
   }
 
   /// “2 days”, “3 h”, etc. — compact for your card

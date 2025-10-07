@@ -10,8 +10,8 @@ import 'package:quopon/common/restaurant_card.dart';
 import '../controllers/vendor_profile_controller.dart';
 
 class VendorProfileView extends GetView<VendorProfileController> {
-  final int id;          // <-- BUSINESS PROFILE ID (used for follow/unfollow)
-  final int vendorId;    // <-- user/vendor id (used for deals/menus)
+  final int id; // <-- BUSINESS PROFILE ID (used for follow/unfollow)
+  final int vendorId; // <-- user/vendor id (used for deals/menus)
   final String? logo;
   final String name;
   final String type;
@@ -30,18 +30,22 @@ class VendorProfileView extends GetView<VendorProfileController> {
   @override
   Widget build(BuildContext context) {
     Get.put(VendorProfileController());
-    // Use vendorId for deals/menus (as you already do)
     controller.fetchDeals(vendorId);
     controller.fetchMenus(vendorId);
-
-    // Use business-profile id to check follow state
     controller.loadFollowState(id);
+
+    // Initialize ScrollController for scrolling to sections
+    final ScrollController scrollController = ScrollController();
+
+    // Map to store GlobalKey for each category
+    final Map<String, GlobalKey> categoryKeys = {};
 
     final hasLogo = logo != null && logo!.trim().isNotEmpty;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FBFC),
       body: SingleChildScrollView(
+        controller: scrollController, // Attach ScrollController
         child: Column(
           children: [
             Container(
@@ -60,52 +64,52 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(Icons.arrow_back, size: 24.sp), // ScreenUtil applied
+                          child: Icon(Icons.arrow_back, size: 24.sp),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              radius: 30.h, // ScreenUtil applied
+                              radius: 30.h,
                               backgroundImage: hasLogo ? NetworkImage(logo!) : null,
                               child: hasLogo ? null : const Icon(Icons.store),
                             ),
-                            SizedBox(height: 10.h), // ScreenUtil applied
+                            SizedBox(height: 10.h),
                             Text(
                               name,
                               style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                             ),
-                            SizedBox(height: 2.5.h), // ScreenUtil applied
+                            SizedBox(height: 2.5.h),
                             Row(
                               children: [
                                 Text(
                                   type,
                                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
-                                SizedBox(width: 5.w), // ScreenUtil applied
+                                SizedBox(width: 5.w),
                                 CircleAvatar(
                                   backgroundColor: Color(0xFF6F7E8D),
-                                  radius: 3.h, // ScreenUtil applied
+                                  radius: 3.h,
                                 ),
-                                SizedBox(width: 5.w), // ScreenUtil applied
+                                SizedBox(width: 5.w),
                                 Text(
                                   address,
                                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF6F7E8D)),
                                 ),
-                                SizedBox(width: 5.w), // ScreenUtil applied
+                                SizedBox(width: 5.w),
                                 CircleAvatar(
                                   backgroundColor: Color(0xFF6F7E8D),
-                                  radius: 3.h, // ScreenUtil applied
+                                  radius: 3.h,
                                 ),
-                                SizedBox(width: 5.w), // ScreenUtil applied
+                                SizedBox(width: 5.w),
                                 Row(
                                   children: [
                                     Icon(
                                       Icons.star,
                                       color: Colors.orange,
-                                      size: 14.sp, // ScreenUtil applied
+                                      size: 14.sp,
                                     ),
-                                    SizedBox(width: 3.w), // ScreenUtil applied
+                                    SizedBox(width: 3.w),
                                     Text(
                                       '4.7',
                                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color(0xFF020711)),
@@ -120,7 +124,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                             ),
                           ],
                         ),
-                        Image.asset("assets/images/MyDealsDetails/Upload.png", width: 40.w, height: 40.h), // ScreenUtil applied
+                        Image.asset("assets/images/MyDealsDetails/Upload.png", width: 40.w, height: 40.h),
                       ],
                     ),
                     Row(
@@ -131,12 +135,12 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           final busy = controller.followBusy.value;
                           return GradientButton(
                             onPressed: () {
-                              if (busy) return;                // ignore taps while busy
-                              controller.toggleFollow(id);     // use business-profile id
+                              if (busy) return;
+                              controller.toggleFollow(id);
                             },
                             text: following ? "Unfollow" : "Follow",
                             colors: following
-                                ? [const Color(0xFF6F7E8D), const Color(0xFF6F7E8D)] // muted for "Unfollow"
+                                ? [const Color(0xFF6F7E8D), const Color(0xFF6F7E8D)]
                                 : [const Color(0xFFD62828), const Color(0xFFC21414)],
                             width: 175.w,
                             borderRadius: 12.r,
@@ -167,7 +171,6 @@ class VendorProfileView extends GetView<VendorProfileController> {
                             ),
                           );
                         }),
-
                         GradientButton(
                           onPressed: () {},
                           text: "Email",
@@ -197,7 +200,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(16.w), // ScreenUtil applied
+              padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -216,7 +219,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     }
 
                     return SizedBox(
-                      height: 253.h, // ScreenUtil applied
+                      height: 253.h,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: controller.deals.length,
@@ -232,14 +235,12 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       ),
                     );
                   }),
-
-                  SizedBox(height: 10.h), // ScreenUtil applied
+                  SizedBox(height: 10.h),
                   Text(
                     "Menu",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Color(0xFF020711)),
                   ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-
+                  SizedBox(height: 6.h),
                   Obx(() {
                     if (controller.loading.value) {
                       return Padding(
@@ -266,21 +267,42 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       );
                     }
 
+                    // Generate GlobalKeys for each category
+                    controller.menusByCategory.forEach((category, _) {
+                      categoryKeys.putIfAbsent(category, () => GlobalKey());
+                    });
+
                     final sections = <Widget>[];
                     controller.menusByCategory.forEach((category, items) {
                       sections.addAll([
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100.r), // ScreenUtil applied
-                            ),
-                            child: Center(
-                              child: Text(
-                                category,
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Scroll to the category section
+                              final key = categoryKeys[category];
+                              if (key != null && key.currentContext != null) {
+                                final RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
+                                final position = renderBox.localToGlobal(Offset.zero).dy;
+                                final scrollOffset = scrollController.offset + position - 50.h; // Adjust for padding
+                                scrollController.animateTo(
+                                  scrollOffset,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  category,
+                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp, color: Color(0xFF6F7E8D)),
+                                ),
                               ),
                             ),
                           ),
@@ -289,18 +311,16 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     });
 
                     return SizedBox(
-                      height: 32.h, // ScreenUtil applied
+                      height: 32.h,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: sections,
                         ),
-                      )
+                      ),
                     );
                   }),
-
-                  SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h),
                   Obx(() {
                     if (controller.loading.value) {
                       return Padding(
@@ -331,6 +351,7 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     controller.menusByCategory.forEach((category, items) {
                       sections.addAll([
                         Row(
+                          key: categoryKeys[category], // Assign GlobalKey to category section
                           children: [
                             Text(
                               category,
@@ -344,10 +365,9 @@ class VendorProfileView extends GetView<VendorProfileController> {
                           ],
                         ),
                         SizedBox(height: 15.h),
-
                         ...items.map((m) {
-                          final parsedPrice = double.tryParse(m.price) ?? 0.0;  // your model has price as String
-                          final imageUrl = m.logoImage;                         // full URL from API
+                          final parsedPrice = double.tryParse(m.price) ?? 0.0;
+                          final imageUrl = m.logoImage;
 
                           return Padding(
                             padding: EdgeInsets.only(bottom: 7.5.h),
@@ -360,15 +380,13 @@ class VendorProfileView extends GetView<VendorProfileController> {
                                   calory: 5,
                                   description: m.description,
                                   image: imageUrl,
-                                  // item: Items(),
                                 ));
                               },
                               child: ItemCard(
-                                // if you already added `isNetworkImage` earlier, pass true; otherwise this arg is optional.
                                 image: imageUrl.isNotEmpty
                                     ? imageUrl
                                     : 'assets/images/Menu/Custom Chicken Steak Hoagie.png',
-                                isNetworkImage: imageUrl.isNotEmpty, // safe if your widget added this optional param
+                                isNetworkImage: imageUrl.isNotEmpty,
                                 title: m.title,
                                 description: m.description,
                                 price: parsedPrice,
@@ -382,399 +400,8 @@ class VendorProfileView extends GetView<VendorProfileController> {
                     });
 
                     return Column(children: sections);
-
-
                   }),
-
-                  SizedBox(height: 20.h), // ScreenUtil applied
-
-
-
-                  /*Obx(() {
-                    if (controller.menu.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    return Column(
-                      children: controller.menu.map((menu) {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  menu.name!,
-                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 6.h),
-
-                            Column(
-                              children: menu.items!.map((items) {
-                                return Container(
-                                  width: 398.w, // ScreenUtil applied
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(() => ProductDetailsView(
-                                          id: menu.id!,
-                                          title: items.name!,
-                                          price: double.parse(items.price!),
-                                          calory: items.calories!,
-                                          description: items.description!,
-                                          image: items.imageUrl,
-                                          item: items,
-                                        ));
-                                      },
-                                      child: ItemCard(
-                                        title: items.name!,
-                                        price: double.parse(items.price!),
-                                        calory: items.calories!,
-                                        description: items.description!,
-                                        image: items.imageUrl,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              ).toList(),
-
-                              *//*return SizedBox(
-                              height: boxHeight,
-                              child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                itemCount: controller.items.length,
-                                itemBuilder: (context, index) {
-                                  final items = controller.items[index];
-                                  return Container(
-                                    width: 398.w, // ScreenUtil applied
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.to(() => ProductDetailsView(
-                                            title: items.title,
-                                            price: items.price,
-                                            calory: items.calory,
-                                            description: items.description,
-                                            image: items.image,
-                                          ));
-                                        },
-                                        child: ItemCard(
-                                          title: items.title,
-                                          price: items.price,
-                                          calory: items.calory,
-                                          description: items.description,
-                                          image: items.image,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),*//*
-                            ),
-
-                            SizedBox(height: 20.h),
-                          ],
-                        );
-                      }).toList(),
-                    );
-                  }),*/
-
-
-
-
-                  /*Text(
-                    "Hot Coffee",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                  ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-                  Obx(() {
-                    if (controller.items.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    // Calculate height based on number of items
-                    double itemHeight = 114.h; // ScreenUtil applied
-                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
-                    double boxHeight = totalHeight * controller.items.length;
-
-                    return SizedBox(
-                      height: boxHeight,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          final items = controller.items[index];
-                          return Container(
-                            width: 398.w, // ScreenUtil applied
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ProductDetailsView(
-                                    title: items.title,
-                                    price: items.price,
-                                    calory: items.calory,
-                                    description: items.description,
-                                    image: items.image,
-                                  ));
-                                },
-                                child: ItemCard(
-                                  title: items.title,
-                                  price: items.price,
-                                  calory: items.calory,
-                                  description: items.description,
-                                  image: items.image,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-
-                  SizedBox(height: 20.h), // ScreenUtil applied
-                  Text(
-                    "Cold Coffee",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                  ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-                  Obx(() {
-                    if (controller.items.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    // Calculate height based on number of items
-                    double itemHeight = 114.h; // ScreenUtil applied
-                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
-                    double boxHeight = totalHeight * controller.items.length;
-
-                    return SizedBox(
-                      height: boxHeight,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          final items = controller.items[index];
-                          return Container(
-                            width: 398.w, // ScreenUtil applied
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ProductDetailsView(
-                                    title: items.title,
-                                    price: items.price,
-                                    calory: items.calory,
-                                    description: items.description,
-                                    image: items.image,
-                                  ));
-                                },
-                                child: ItemCard(
-                                  title: items.title,
-                                  price: items.price,
-                                  calory: items.calory,
-                                  description: items.description,
-                                  image: items.image,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-
-                  SizedBox(height: 20.h), // ScreenUtil applied
-                  Text(
-                    "Hot Tea",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                  ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-                  Obx(() {
-                    if (controller.items.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    // Calculate height based on number of items
-                    double itemHeight = 114.h; // ScreenUtil applied
-                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
-                    double boxHeight = totalHeight * controller.items.length;
-
-                    return SizedBox(
-                      height: boxHeight,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          final items = controller.items[index];
-                          return Container(
-                            width: 398.w, // ScreenUtil applied
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ProductDetailsView(
-                                    title: items.title,
-                                    price: items.price,
-                                    calory: items.calory,
-                                    description: items.description,
-                                    image: items.image,
-                                  ));
-                                },
-                                child: ItemCard(
-                                  title: items.title,
-                                  price: items.price,
-                                  calory: items.calory,
-                                  description: items.description,
-                                  image: items.image,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-
-                  SizedBox(height: 20.h), // ScreenUtil applied
-                  Text(
-                    "Cold Tea",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                  ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-                  Obx(() {
-                    if (controller.items.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    // Calculate height based on number of items
-                    double itemHeight = 114.h; // ScreenUtil applied
-                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
-                    double boxHeight = totalHeight * controller.items.length;
-
-                    return SizedBox(
-                      height: boxHeight,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          final items = controller.items[index];
-                          return Container(
-                            width: 398.w, // ScreenUtil applied
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ProductDetailsView(
-                                    title: items.title,
-                                    price: items.price,
-                                    calory: items.calory,
-                                    description: items.description,
-                                    image: items.image,
-                                  ));
-                                },
-                                child: ItemCard(
-                                  title: items.title,
-                                  price: items.price,
-                                  calory: items.calory,
-                                  description: items.description,
-                                  image: items.image,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-
-                  SizedBox(height: 20.h), // ScreenUtil applied
-                  Text(
-                    "Refreshers",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, color: Color(0xFF020711)),
-                  ),
-                  SizedBox(height: 6.h), // ScreenUtil applied
-                  Obx(() {
-                    if (controller.items.isEmpty) {
-                      return const Text("No active deals available.");
-                    }
-
-                    // Calculate height based on number of items
-                    double itemHeight = 114.h; // ScreenUtil applied
-                    double totalHeight = itemHeight + 12.h; // ScreenUtil applied
-                    double boxHeight = totalHeight * controller.items.length;
-
-                    return SizedBox(
-                      height: boxHeight,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          final items = controller.items[index];
-                          return Container(
-                            width: 398.w, // ScreenUtil applied
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.r) // ScreenUtil applied
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 0.h), // ScreenUtil applied
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ProductDetailsView(
-                                    title: items.title,
-                                    price: items.price,
-                                    calory: items.calory,
-                                    description: items.description,
-                                    image: items.image,
-                                  ));
-                                },
-                                child: ItemCard(
-                                  title: items.title,
-                                  price: items.price,
-                                  calory: items.calory,
-                                  description: items.description,
-                                  image: items.image,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),*/
-
-
-                  // Align "Location" to left
+                  SizedBox(height: 20.h),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -782,7 +409,6 @@ class VendorProfileView extends GetView<VendorProfileController> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF020711)),
                     ),
                   ),
-                  // SizedBox(height: 5),
                   Center(
                     child: Container(
                       width: 398,
@@ -802,13 +428,12 @@ class VendorProfileView extends GetView<VendorProfileController> {
           ],
         ),
       ),
-
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topRight: Radius.circular(12.r), topLeft: Radius.circular(12.r),),
-          boxShadow: [BoxShadow(color: Colors.black.withAlpha(20), blurRadius: 24.r, offset: Offset(0, -4))]
+          borderRadius: BorderRadius.only(topRight: Radius.circular(12.r), topLeft: Radius.circular(12.r)),
+          boxShadow: [BoxShadow(color: Colors.black.withAlpha(20), blurRadius: 24.r, offset: Offset(0, -4))],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -823,14 +448,14 @@ class VendorProfileView extends GetView<VendorProfileController> {
             ),
             GestureDetector(
               onTap: () {
-                Get.bottomSheet(CartBottomView(vendorId: vendorId,));
+                Get.bottomSheet(CartBottomView(vendorId: vendorId));
               },
               child: Icon(
                 Icons.keyboard_arrow_up_outlined,
                 size: 24.sp,
                 color: Color(0xFF020711),
               ),
-            )
+            ),
           ],
         ),
       ),
