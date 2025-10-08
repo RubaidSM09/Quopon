@@ -20,6 +20,10 @@ class MyOrdersVendorsController extends GetxController {
     super.onInit();
   }
 
+  Future<void> refreshAll() async {
+    await fetchOrders();
+  }
+
   Future<void> fetchOrders() async {
     final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/vendor-orders/');
     try {

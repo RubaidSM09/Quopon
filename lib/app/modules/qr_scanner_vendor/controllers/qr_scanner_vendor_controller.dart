@@ -17,6 +17,11 @@ class QrScannerVendorController extends GetxController {
     }
   }
 
+  Future<void> refreshAll() async {
+    // For a keypad/OTP style scanner, “refresh” = clear and focus
+    clearAll();
+  }
+
   void clearAll() {
     for (var c in controllers) {
       c.clear();

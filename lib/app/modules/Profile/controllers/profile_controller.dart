@@ -30,6 +30,10 @@ class ProfileController extends GetxController {
     fetchProfile(); // load on enter
   }
 
+  Future<void> refreshAll() async {
+    await fetchProfile();
+  }
+
   Future<void> fetchProfile() async {
     isLoading.value = true;
     try {

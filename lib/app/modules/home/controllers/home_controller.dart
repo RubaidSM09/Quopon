@@ -1010,12 +1010,23 @@ class HomeController extends GetxController {
   }
 
   void onCategoryTap(int categoryId) {
-  if (selectedCategoryId.value == categoryId) {
-  selectedCategoryId.value = null; // deselect if same
-  } else {
-  selectedCategoryId.value = categoryId;
+    if (selectedCategoryId.value == categoryId) {
+      selectedCategoryId.value = null; // deselect if same
+      } else {
+      selectedCategoryId.value = categoryId;
+    }
+    _applyFilters();
   }
-  _applyFilters();
+
+  Future<void> refreshAll() async {
+    // re-run the four feeds; run them concurrently
+    await Future.wait([
+      fetchVendorCategories(),
+      fetchBeyondNeighbourhood(),
+      fetchNearShops(),
+      fetchSpeedyDeliveries(),
+    ]).catchError((_) {});
+    // statuses recompute on fetches; _applyFilters() already called in each
   }
 
   // ---------------- Lifecycle ----------------

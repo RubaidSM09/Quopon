@@ -50,6 +50,10 @@ class DiscoverController extends GetxController {
     _bootstrap();
   }
 
+  Future<void> refreshAll() async {
+    await _bootstrap(); // same sequence you already use on first load
+  }
+
   Future<void> _bootstrap() async {
     isLoading.value = true;
     error.value = null;

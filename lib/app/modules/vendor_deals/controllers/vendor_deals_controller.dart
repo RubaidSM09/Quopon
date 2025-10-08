@@ -18,6 +18,14 @@ class VendorDealsController extends GetxController {
     fetchDeals();
   }
 
+  Future<void> refreshAll() async {
+    await fetchDeals();
+    // keep current search filter if any
+    if (searchQuery.value.isNotEmpty) {
+      searchDeals(searchQuery.value);
+    }
+  }
+
   Future<void> fetchDeals() async {
     try {
       _userId = await BaseClient.getUserId();

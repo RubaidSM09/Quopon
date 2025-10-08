@@ -29,6 +29,15 @@ class QRScannerController extends GetxController {
     _prefetchVendors();
   }
 
+  Future<void> refreshAll() async {
+    // refresh vendor cache
+    await _prefetchVendors();
+    // keep camera alive; if needed you can pause/resume:
+    try {
+      await qrController?.resumeCamera();
+    } catch (_) {}
+  }
+
   Future<void> _prefetchVendors() async {
     try {
       final res = await http.get(

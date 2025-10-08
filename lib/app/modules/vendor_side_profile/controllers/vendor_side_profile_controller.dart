@@ -51,6 +51,15 @@ class VendorSideProfileController extends GetxController {
     fetchBusinessHours(); // keep your behavior
   }
 
+  Future<void> refreshAll() async {
+    await Future.wait([
+      fetchProfile(),
+      fetchVendorCategories(),
+      fetchBusinessHours(),
+    ]).catchError((_) {});
+    // do not auto-upload; leave picked image as-is
+  }
+
   Future<void> pickProfileImage() async {
     try {
       final XFile? img = await _picker.pickImage(

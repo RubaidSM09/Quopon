@@ -17,6 +17,13 @@ class VendorDashboardController extends GetxController {
   // start at 0; we will compute from API
   RxInt pushesSent = 0.obs;
 
+  Future<void> refreshAll() async {
+    await Future.wait([
+      fetchOrders(),
+      fetchDeals(),
+    ]).catchError((_) {});
+  }
+
   Future<void> fetchOrders() async {
     final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/vendor-orders/');
     try {

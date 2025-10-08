@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../app/modules/landing/controllers/landing_controller.dart';
+import '../app/modules/landing/controllers/landing_vendor_controller.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   const CustomNavigationBar({super.key});
@@ -88,9 +89,9 @@ class VendorNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<LandingController>();
+    final controller = Get.find<LandingVendorController>();
 
-    final List<Map<String, String>> navItems = [
+    final navItems = [
       {
         'label': 'Dashboard',
         'filledIcon': 'assets/images/BottomNavigation/Dashboard Active.svg',
@@ -119,12 +120,11 @@ class VendorNavigationBar extends StatelessWidget {
     ];
 
     return Container(
-      height: 92.h, // Set the desired height
+      height: 92.h,
       color: Colors.white,
       padding: EdgeInsets.all(16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: List.generate(navItems.length, (index) {
           final item = navItems[index];
           return GestureDetector(
@@ -132,25 +132,23 @@ class VendorNavigationBar extends StatelessWidget {
             child: Obx(() {
               final isSelected = index == controller.currentIndex.value;
               return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200), // Smooth transition duration
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
+                duration: const Duration(milliseconds: 200),
                 child: Column(
                   children: [
                     SvgPicture.asset(
                       isSelected ? item['filledIcon']! : item['defaultIcon']!,
                       key: ValueKey('${item['label']}_$isSelected'),
                     ),
-                    item['label'] != '' ?
-                    Text(
+                    item['label']!.isNotEmpty
+                        ? Text(
                       item['label']!,
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp,
-                          color: isSelected ? Color(0xFFD62828) : Color(0xFF6F7E8D)
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12.sp,
+                        color: isSelected ? const Color(0xFFD62828) : const Color(0xFF6F7E8D),
                       ),
-                    ) : SizedBox.shrink(),
+                    )
+                        : const SizedBox.shrink(),
                   ],
                 ),
               );
