@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quopon/app/modules/landing/views/landing_vendor_view.dart';
 import 'package:quopon/app/modules/vendor_menu/views/vendor_menu_view.dart';
 
 import '../../../../common/PictureUploadField.dart';
@@ -134,6 +135,7 @@ class VendorAddMenuView extends GetView<VendorAddMenuController> {
               description: _descriptionController.text.trim(),
               price: _priceController.text.trim(),
             );
+            Get.offAll(LandingVendorView());
             Get.to(VendorMenuView());
           },
           colors: const [Color(0xFFD62828), Color(0xFFC21414)],
