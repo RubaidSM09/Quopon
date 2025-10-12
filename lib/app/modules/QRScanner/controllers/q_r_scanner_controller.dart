@@ -21,7 +21,7 @@ class QRScannerController extends GetxController {
   // Cache vendor profiles for this session
   final RxList<VendorProfile> _vendors = <VendorProfile>[].obs;
   final String _vendorsUrl =
-      'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/';
+      'http://10.10.13.99:8090/vendors/all-business-profile/';
 
   @override
   void onInit() {
@@ -78,7 +78,7 @@ class QRScannerController extends GetxController {
       return;
     }
 
-    final url = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-deals/$dealId/';
+    final url = 'http://10.10.13.99:8090/vendors/all-deals/$dealId/';
 
     try {
       await qrController?.pauseCamera();

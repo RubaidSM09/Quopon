@@ -34,7 +34,7 @@ class VendorDealPerformanceController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final uri = Uri.parse(
-        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/$dealId/send-notification/',
+        'http://10.10.13.99:8090/vendors/$dealId/send-notification/',
       );
 
       // ✅ REQUIRED BODY
@@ -80,7 +80,7 @@ class VendorDealPerformanceController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final uri = Uri.parse(
-        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/$dealId/daily-metrics/?days=7',
+        'http://10.10.13.99:8090/vendors/deals/$dealId/daily-metrics/?days=7',
       );
       final res = await http.get(uri, headers: headers);
 

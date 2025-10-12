@@ -169,7 +169,8 @@ class LoginView extends GetView<LoginController> {
             GradientButton(
               text: 'Continue With Google',
               onPressed: () {
-                Get.to(HomeView());
+                print('Rubaid1');
+                loginController.socialSignIn(userType: 'user', provider: 'Google');
               },
               colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
               borderColor: [Colors.white, Color(0xFFEEF0F3)],
@@ -198,7 +199,7 @@ class LoginView extends GetView<LoginController> {
             GradientButton(
               text: 'Continue With Apple',
               onPressed: () {
-                Get.to(HomeView());
+                loginController.socialSignIn(userType: 'user', provider: 'Apple');
               },
               colors: [const Color(0xFFF4F5F6), const Color(0xFFEEF0F3)],
               borderColor: [Colors.white, Color(0xFFEEF0F3)],

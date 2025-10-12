@@ -74,7 +74,7 @@ class MyFollowersController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final uri = Uri.parse(
-        'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendors/followers/',
+        'http://10.10.13.99:8090/vendors/vendors/followers/',
       );
       final res = await http.get(uri, headers: headers);
 

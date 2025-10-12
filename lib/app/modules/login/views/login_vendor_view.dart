@@ -160,7 +160,9 @@ class LoginVendorView extends GetView<LoginVendorController> {
                 width: double.infinity,
                 height: 56.h,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    loginController.socialSignIn(userType: 'vendor', provider: 'Google');
+                  },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     side: BorderSide(color: Colors.grey[300]!),
@@ -195,7 +197,9 @@ class LoginVendorView extends GetView<LoginVendorController> {
                 width: double.infinity,
                 height: 56.h,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    loginController.socialSignIn(userType: 'vendor', provider: 'Apple');
+                  },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     side: BorderSide(color: Colors.grey[300]!),

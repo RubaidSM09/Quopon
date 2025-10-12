@@ -245,6 +245,7 @@ class HomeRestaurantCard extends GetView {
   final String reviewCount;
   final String deliveryTime;
   final bool isPremium;
+  final bool showPremiumBlur;
 
   const HomeRestaurantCard({
     required this.discountText,
@@ -256,6 +257,7 @@ class HomeRestaurantCard extends GetView {
     required this.reviewCount,
     required this.deliveryTime,
     required this.isPremium,
+    this.showPremiumBlur = false,
     super.key,
   });
 
@@ -282,7 +284,7 @@ class HomeRestaurantCard extends GetView {
                     borderRadius: BorderRadius.circular(8.r),
                     child: Image.network(restaurantImg, height: 120.h, width: 204.w, fit: BoxFit.cover,),
                   ),
-                  /*Positioned(
+                  Positioned(
                     top: 13.h,
                     left: 8.w,
                     child: Container(
@@ -292,7 +294,7 @@ class HomeRestaurantCard extends GetView {
                         color: Color(0xFFD62828),
                       ),
                       child: Text(
-                        '20% Discount',
+                        discountText,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10.sp,
@@ -300,7 +302,7 @@ class HomeRestaurantCard extends GetView {
                         ),
                       ),
                     ),
-                  ),*/
+                  ),
                   Positioned(
                     top: 8.h,
                     left: 162.w,
@@ -388,10 +390,9 @@ class HomeRestaurantCard extends GetView {
           ),
         ),
 
-        isPremium ? ClipRRect(
-          borderRadius: BorderRadius.circular(
-            12.r,
-          ), // Use ScreenUtil for border radius
+        (isPremium && showPremiumBlur)
+            ? ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
             child: Padding(

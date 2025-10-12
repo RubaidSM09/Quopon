@@ -58,7 +58,7 @@ class QrScannerVendorView extends GetView<QrScannerVendorController> {
       return;
     }
 
-    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/${order.orderId}/verify-delivery/');
+    final url = Uri.parse('http://10.10.13.99:8090/order/orders/${order.orderId}/verify-delivery/');
     try {
       final response = await http.post(
         url,

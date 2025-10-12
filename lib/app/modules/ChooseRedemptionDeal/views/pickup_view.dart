@@ -86,7 +86,7 @@ class PickupView extends GetView {
                             child: Image.network(
                               qRCodeImage.startsWith('http')
                                   ? qRCodeImage
-                                  : 'https://intensely-optimal-unicorn.ngrok-free.app$qRCodeImage',
+                                  : 'http://10.10.13.99:8090$qRCodeImage',
                               fit: BoxFit.cover,
                               width: 200.w,
                               height: 200.h,

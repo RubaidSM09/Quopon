@@ -39,7 +39,7 @@ class NotificationsController extends GetxController {
       isLoading.value = true;
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/notifications/list/',
+        api: 'http://10.10.13.99:8090/notifications/list/',
         headers: headers,
       );
 
@@ -71,7 +71,7 @@ class NotificationsController extends GetxController {
 
     try {
       final headers = await BaseClient.authHeaders();
-      final url = 'https://intensely-optimal-unicorn.ngrok-free.app/notifications/mark-read/$notificationId/';
+      final url = 'http://10.10.13.99:8090/notifications/mark-read/$notificationId/';
       // If your BaseClient has postRequest:
       final res = await BaseClient.postRequest(api: url, headers: headers);
       // If you need a body, send {}. If your BaseClient requires body param, use body: {}

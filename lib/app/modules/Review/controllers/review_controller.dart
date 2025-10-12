@@ -30,7 +30,7 @@ class ReviewController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/deals/'),
         headers: headers,
       );
 
@@ -78,7 +78,7 @@ class ReviewController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/deals/'),
         headers: headers,
       );
 

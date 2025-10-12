@@ -58,7 +58,7 @@ class VendorEditMenuController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/categories/',
+        api: 'http://10.10.13.99:8090/vendors/categories/',
         headers: headers,
       );
       final data = await BaseClient.handleResponse(res) as List<dynamic>;
@@ -90,7 +90,7 @@ class VendorEditMenuController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/$id/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/deals/$id/'),
         headers: headers,
       );
       if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -218,7 +218,7 @@ class VendorEditMenuController extends GetxController {
       headers.remove('Content-Type'); // multipart boundary is set automatically
 
       final uri = Uri.parse(
-          'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/$menuId/');
+          'http://10.10.13.99:8090/vendors/deals/$menuId/');
       final req = http.MultipartRequest('PATCH', uri)..headers.addAll(headers);
 
       final diff = _diffTextFields();

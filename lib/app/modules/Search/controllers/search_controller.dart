@@ -25,7 +25,7 @@ class SearchController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/auth/all-search-history/',
+        api: 'http://10.10.13.99:8090/auth/all-search-history/',
         headers: headers,
       );
 
@@ -89,7 +89,7 @@ class SearchController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/auth/search-history/',
+        api: 'http://10.10.13.99:8090/auth/search-history/',
         headers: headers,
       );
       final decoded = json.decode(res.body);
@@ -118,7 +118,7 @@ class SearchController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       await BaseClient.postRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/auth/search-history/',
+        api: 'http://10.10.13.99:8090/auth/search-history/',
         body: json.encode({"query": query.trim()}),
         headers: headers,
       );

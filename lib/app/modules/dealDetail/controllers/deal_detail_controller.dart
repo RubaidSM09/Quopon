@@ -34,7 +34,7 @@ class DealDetailController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final resp = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/',
+        api: 'http://10.10.13.99:8090/vendors/wish-deals/',
         headers: headers,
       );
 
@@ -64,7 +64,7 @@ class DealDetailController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final res = await BaseClient.postRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/',
+        api: 'http://10.10.13.99:8090/vendors/wish-deals/',
         headers: headers,
         body: jsonEncode({'deal': dealId}),
       );
@@ -103,7 +103,7 @@ class DealDetailController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final resp = await http.delete(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/wish-deals/$id/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/wish-deals/$id/'),
         headers: headers,
       );
 

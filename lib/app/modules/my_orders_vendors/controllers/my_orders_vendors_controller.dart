@@ -25,7 +25,7 @@ class MyOrdersVendorsController extends GetxController {
   }
 
   Future<void> fetchOrders() async {
-    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/vendor-orders/');
+    final url = Uri.parse('http://10.10.13.99:8090/order/orders/vendor-orders/');
     try {
       print(await ApiClient.authHeaders());
       final response = await http.get(url, headers: await ApiClient.authHeaders());
@@ -45,7 +45,7 @@ class MyOrdersVendorsController extends GetxController {
   }
 
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
-    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/status/');
+    final url = Uri.parse('http://10.10.13.99:8090/order/orders/$orderId/status/');
     try {
       final response = await http.post(
         url,
@@ -73,7 +73,7 @@ class MyOrdersVendorsController extends GetxController {
   }
 
   Future<void> cancelOrder(String orderId, String cancellationReason) async {
-    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/cancel/');
+    final url = Uri.parse('http://10.10.13.99:8090/order/orders/$orderId/cancel/');
     try {
       final response = await http.post(
         url,
@@ -101,7 +101,7 @@ class MyOrdersVendorsController extends GetxController {
   }
 
   Future<bool> verifyDelivery(String orderId, String code) async {
-    final url = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/verify-delivery/');
+    final url = Uri.parse('http://10.10.13.99:8090/order/orders/$orderId/verify-delivery/');
     try {
       final response = await http.post(
         url,

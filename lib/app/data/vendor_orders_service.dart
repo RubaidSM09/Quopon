@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class VendorOrdersService {
   static const _url =
-      'https://intensely-optimal-unicorn.ngrok-free.app/order/orders/vendor-orders/';
+      'http://10.10.13.99:8090/order/orders/vendor-orders/';
 
   // If you need auth, place your token logic here.
   static Future<Map<String, String>> _headers() async {

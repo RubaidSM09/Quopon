@@ -21,7 +21,7 @@ class SendPushNotificationsController extends GetxController {
       print(headers);
 
       final res = await BaseClient.postRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/$dealId/send-notification/',
+        api: 'http://10.10.13.99:8090/vendors/$dealId/send-notification/',
         headers: headers,
         body: json.encode(body),
       );

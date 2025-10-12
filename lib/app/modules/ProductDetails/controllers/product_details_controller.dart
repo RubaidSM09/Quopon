@@ -107,7 +107,7 @@ class ProductDetailsController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final uri = Uri.parse(
-          'https://intensely-optimal-unicorn.ngrok-free.app/order/cart/add/');
+          'http://10.10.13.99:8090/order/cart/add/');
 
       final resp = await http.post(
         uri,

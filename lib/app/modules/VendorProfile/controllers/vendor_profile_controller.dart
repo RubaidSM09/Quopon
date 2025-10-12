@@ -138,7 +138,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final response = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/'),
+        Uri.parse('http://10.10.13.99:8090/food/my-profile/'),
         headers: headers,
       );
 
@@ -160,7 +160,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/customers/followed-vendors/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/customers/followed-vendors/'),
         headers: headers,
       );
       if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -190,7 +190,7 @@ class VendorProfileController extends GetxController {
     followBusy.value = true;
     try {
       final headers = await BaseClient.authHeaders();
-      final base = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/vendors/$vendorProfileId';
+      final base = 'http://10.10.13.99:8090/vendors/vendors/$vendorProfileId';
       final uri = Uri.parse(isFollowed.value ? '$base/unfollow/' : '$base/follow/');
       final res = await http.post(uri, headers: headers);
 
@@ -217,7 +217,7 @@ class VendorProfileController extends GetxController {
       await fetchUserProfile(); // Fetch subscription status before deals
       final headers = await BaseClient.authHeaders();
       final response = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/'),
+        Uri.parse('http://10.10.13.99:8090/vendors/all-vendor-deals/'),
         headers: headers,
       );
 
@@ -261,7 +261,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/',
+        api: 'http://10.10.13.99:8090/vendors/deals/',
         params: {'user_id': id.toString()},
         headers: headers,
       );

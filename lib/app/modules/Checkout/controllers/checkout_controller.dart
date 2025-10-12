@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:quopon/app/modules/landing/views/landing_view.dart';
 
 import '../../../data/base_client.dart';
 import '../../../data/model/vendor_profile_lite.dart';
@@ -118,7 +119,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/"),
+        Uri.parse("http://10.10.13.99:8090/food/my-profile/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -161,7 +162,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/"),
+        Uri.parse("http://10.10.13.99:8090/vendors/all-business-profile/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -228,7 +229,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/"),
+        Uri.parse("http://10.10.13.99:8090/vendors/all-vendor-deals/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -326,7 +327,7 @@ class CheckoutController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final res = await http.post(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/order/cart/checkout/calculate/"),
+        Uri.parse("http://10.10.13.99:8090/order/cart/checkout/calculate/"),
         headers: headers,
         body: jsonEncode({"deal_id": deal.id}),
       );
@@ -451,7 +452,7 @@ class CheckoutController extends GetxController {
       }
 
       final orderRes = await http.post(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/order/orders/create/"),
+        Uri.parse("http://10.10.13.99:8090/order/orders/create/"),
         headers: headers,
         body: json.encode(body),
       );
@@ -474,7 +475,8 @@ class CheckoutController extends GetxController {
         } else {
           // Cash: no webview—just confirm & go to details
           Get.snackbar("Success", "Order placed successfully (Cash).");
-          Get.offAll(() => const OrderDetailsView(), arguments: {"order_id": orderId});
+          Get.offAll(() => LandingView());
+          Get.to(() => const OrderDetailsView(), arguments: {"order_id": orderId});
         }
 
       } else {
@@ -492,7 +494,7 @@ class CheckoutController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final response = await http.post(
-        Uri.parse("https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/process-payment/"),
+        Uri.parse("http://10.10.13.99:8090/order/orders/$orderId/process-payment/"),
         headers: headers,
       );
 

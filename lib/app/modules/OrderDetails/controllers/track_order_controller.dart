@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:quopon/app/data/api_client.dart';
 
+import '../../../services/review_prompt_service.dart';
 import '../../Review/views/review_view.dart';
 
 class TrackOrderController extends GetxController {
@@ -38,7 +39,7 @@ class TrackOrderController extends GetxController {
   Future<void> fetchOrder() async {
     try {
       final response = await http.get(
-        Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/order/orders/$orderId/'),
+        Uri.parse('http://10.10.13.99:8090/order/orders/$orderId/'),
         headers: await ApiClient.authHeaders(),
       );
       if (response.statusCode == 200) {
@@ -133,23 +134,23 @@ class TrackOrderController extends GetxController {
     if (items.isEmpty) return;
 
     final first = (items.first as Map<String, dynamic>?) ?? const {};
-    // Try common keys for a readable item name
     final menuName = _asString(first['item_name']) ??
         _asString(first['title']) ??
         _asString(first['name']);
 
-    if (menuName == null || menuName.trim().isEmpty) {
-      return; // no name, skip
-    }
+    if (menuName == null || menuName.trim().isEmpty) return;
 
-    _reviewShown = true; // prevent multiple dialogs
+    _reviewShown = true;
 
-    // Pass NAME to the Review dialog
-    Future.microtask(() {
-      if (Get.context != null) {
-        Get.dialog(ReviewView(menuName: menuName.trim()));
-      }
-    });
+    // NEW: schedule the review 5 minutes from now (or from server-delivered time if you have it)
+    ReviewPromptService.to.scheduleReview(
+      orderId: orderId,
+      menuName: menuName.trim(),
+      // deliveredAt: parse from orderData if you have server clock, otherwise omit to use now
+    );
+
+    // Optional UX hint:
+    // Get.snackbar('Thanks!', 'We’ll ask for a quick review in about 5 minutes.');
   }
 
   String? _asString(dynamic v) {

@@ -64,7 +64,7 @@ class VendorCreateDealController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/',
+        api: 'http://10.10.13.99:8090/vendors/deals/',
         params: {'user_id': userId},
         headers: headers,
       );
@@ -172,7 +172,7 @@ class VendorCreateDealController extends GetxController {
       print(body);
 
       final res = await BaseClient.postRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/create-deals/',
+        api: 'http://10.10.13.99:8090/vendors/create-deals/',
         headers: headers,
         body: json.encode(body),
       );
@@ -199,7 +199,7 @@ class VendorCreateDealController extends GetxController {
   // Helper method to upload image and return URL
   Future<String> uploadImage(File imageFile, Map<String, String> headers) async {
     try {
-      final uri = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/upload/');
+      final uri = Uri.parse('http://10.10.13.99:8090/vendors/upload/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
 
       // File

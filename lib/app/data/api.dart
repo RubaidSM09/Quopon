@@ -1,13 +1,14 @@
 class Api {
   /// base url
 
-  static const baseUrl = "https://intensely-optimal-unicorn.ngrok-free.app";
+  static const baseUrl = "http://10.10.13.99:8090";
   //static const socket = "https://socket.thirdshotslot.co.uk/";
 
 
   ///auth
   static const signup = "$baseUrl/auth/register/";//done
   static const login = "$baseUrl/auth/login/"; //done
+  static const socialSignin = '$baseUrl/auth/social-signin/';
   static const verification = "$baseUrl/auth/verify-otp/"; //done
   static const forgotPassword = "$baseUrl/auth/forgot-password/"; //done
   static const resetPassword = "$baseUrl/auth/set-new-password/"; //done
@@ -26,7 +27,7 @@ class Api {
 
   /// Profile
   static const followedVendors = "$baseUrl/vendors/customers/followed-vendors/";
-  static const cart = 'https://intensely-optimal-unicorn.ngrok-free.app/order/cart/';
+  static const cart = 'http://10.10.13.99:8090/order/cart/';
 
   static String menu(int userId) {
     return "$baseUrl/discover/menu/1/name";
@@ -40,5 +41,5 @@ class Api {
   static const activeOrders = "$baseUrl/discover/my-orders/?status=active";
   static const completedOrders = "$baseUrl/discover/my-orders/?status=completed";
 
-  static const deals = 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/';
+  static const deals = 'http://10.10.13.99:8090/vendors/deals/';
 }

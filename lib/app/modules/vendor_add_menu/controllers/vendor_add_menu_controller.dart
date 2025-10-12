@@ -94,7 +94,7 @@ class VendorAddMenuController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/categories/',
+        api: 'http://10.10.13.99:8090/vendors/categories/',
         headers: headers,
       );
 
@@ -160,7 +160,7 @@ class VendorAddMenuController extends GetxController {
       headers.remove('Content-Type');
 
       final uri = Uri.parse(
-          'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/');
+          'http://10.10.13.99:8090/vendors/deals/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
 
       // Fields

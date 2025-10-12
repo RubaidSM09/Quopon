@@ -65,7 +65,7 @@ class EditProfileController extends GetxController {
 
     try {
       final headers = await BaseClient.authHeaders(); // includes token if needed
-      final uri = Uri.parse('https://intensely-optimal-unicorn.ngrok-free.app/vendors/upload/');
+      final uri = Uri.parse('http://10.10.13.99:8090/vendors/upload/');
       final req = http.MultipartRequest('POST', uri);
 
       // Important: DO NOT set 'Content-Type' manually here; http will set multipart boundary.

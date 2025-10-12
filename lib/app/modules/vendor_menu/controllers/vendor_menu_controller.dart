@@ -36,7 +36,7 @@ class VendorMenuController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/',
+        api: 'http://10.10.13.99:8090/vendors/deals/',
         params: {'user_id': userId},
         headers: headers,
       );
@@ -96,7 +96,7 @@ class VendorMenuController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.deleteRequest(
-        api: 'https://intensely-optimal-unicorn.ngrok-free.app/vendors/deals/$menuId/',
+        api: 'http://10.10.13.99:8090/vendors/deals/$menuId/',
         headers: headers,
       );
 

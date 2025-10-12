@@ -50,52 +50,53 @@ class HomeView extends GetView<HomeController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Left side
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Deliver to',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,  // Use ScreenUtil for font size
-                                    color: Color(0xFF6F7E8D),
-                                    fontWeight: FontWeight.w400,
+                            // Left: location, flexible to avoid overlap
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Deliver to',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: const Color(0xFF6F7E8D),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/Home/Location.png',
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      'Elizabeth City',
-                                      style: TextStyle(
-                                        fontSize: 16.sp,  // Use ScreenUtil for font size
-                                        color: Color(0xFF020711),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  Row(
+                                    children: [
+                                      Image.asset('assets/images/Home/Location.png'),
+                                      SizedBox(width: 4.w),
+                                      Obx(() => Flexible(
+                                        child: Text(
+                                          controller.locationLabel.value, // <- live, concise label
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: const Color(0xFF020711),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                            // Right side
+
+                            // Right: icons (don’t allow these to squish text)
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: Image.asset('assets/images/Home/Notification.png'),
-                                  onPressed: () {
-                                    Get.to(NotificationsView());
-                                  },
+                                  onPressed: () => Get.to(NotificationsView()),
                                 ),
                                 IconButton(
                                   icon: Image.asset('assets/images/Home/Cart.png'),
-                                  onPressed: () {
-                                    Get.to(() => CartView());
-                                  },
+                                  onPressed: () => Get.to(() => CartView()),
                                 ),
                               ],
                             ),
@@ -282,51 +283,70 @@ class HomeView extends GetView<HomeController> {
                                 ),
                               );
                             }
+
+                            final original = controller.beyondNeighbourhood;
+                            final list = List.of(original); // make a mutable copy
+
+                            // Move the first premium item to index 1 (second place), if possible
+                            final firstPremiumIdx = list.indexWhere((e) => e.isPremium == true);
+                            if (firstPremiumIdx != -1 && list.length >= 2) {
+                              final premiumItem = list.removeAt(firstPremiumIdx);
+
+                              // If the first premium was already at index 1, remove/insert is a no-op visually
+                              list.insert(1, premiumItem);
+                            }
+
+                            // We'll blur only if the item at index 1 is premium
+                            final blurIndex = (list.length >= 2 && list[1].isPremium) ? 1 : -1;
+
                             return SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
-                                children: controller.beyondNeighbourhood.map((beyondNeighbourhood) {
+                                children: List.generate(list.length, (i) {
+                                  final item = list[i];
+                                  final blurThis = i == blurIndex && item.isPremium;
+
                                   return Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 6.w),
                                     child: GestureDetector(
                                       onTap: () {
-                                        !beyondNeighbourhood.isPremium
+                                        !item.isPremium
                                             ? Get.dialog(
                                           DealDetailView(
-                                            dealId: beyondNeighbourhood.id,
-                                            dealImage: beyondNeighbourhood.coverImageUrl!,
-                                            dealTitle: beyondNeighbourhood.offers,
-                                            dealDescription: beyondNeighbourhood.description,
-                                            dealValidity: DateFormat('hh:mm a, MMM dd').format(
-                                              DateTime.parse(beyondNeighbourhood.dealValidity),
-                                            ),
-                                            dealStoreName: beyondNeighbourhood.name,
-                                            brandLogo: beyondNeighbourhood.logoUrl!,
-                                            address: beyondNeighbourhood.address,
-                                            redemptionType: beyondNeighbourhood.redemptionType,
-                                            deliveryCost: beyondNeighbourhood.deliveryFee,
-                                            minOrder: beyondNeighbourhood.minOrder,
-                                            userType: beyondNeighbourhood.userType,
-                                            freeDiscount: beyondNeighbourhood.discountValueFree,
-                                            plusDiscount: beyondNeighbourhood.discountValuePaid,
+                                            dealId: item.id,
+                                            dealImage: item.coverImageUrl!,
+                                            dealTitle: item.offers,
+                                            dealDescription: item.description,
+                                            dealValidity: DateFormat('hh:mm a, MMM dd')
+                                                .format(DateTime.parse(item.dealValidity)),
+                                            dealStoreName: item.name,
+                                            brandLogo: item.logoUrl!,
+                                            address: item.address,
+                                            redemptionType: item.redemptionType,
+                                            deliveryCost: item.deliveryFee,
+                                            minOrder: item.minOrder,
+                                            userType: item.userType,
+                                            freeDiscount: item.discountValueFree,
+                                            plusDiscount: item.discountValuePaid,
                                           ),
                                         )
                                             : Get.bottomSheet(QuoponPlusView());
                                       },
                                       child: HomeRestaurantCard(
-                                        discountText: '',
-                                        restaurantImg: beyondNeighbourhood.coverImageUrl!,
-                                        restaurantName: beyondNeighbourhood.name,
-                                        deliveryFee: beyondNeighbourhood.deliveryFee.toString(),
-                                        distance: beyondNeighbourhood.distanceMiles,
-                                        rating: beyondNeighbourhood.rating.toString(),
-                                        reviewCount: beyondNeighbourhood.rating.toString(),
-                                        deliveryTime: beyondNeighbourhood.deliveryTimeMinutes.toString(),
-                                        isPremium: beyondNeighbourhood.isPremium,
+                                        discountText: item.title,
+                                        restaurantImg: item.coverImageUrl!,
+                                        restaurantName: item.name,
+                                        deliveryFee: item.deliveryFee.toString(),
+                                        distance: item.distanceMiles,
+                                        rating: item.rating.toString(),
+                                        reviewCount: item.rating.toString(),
+                                        deliveryTime: item.deliveryTimeMinutes.toString(),
+                                        isPremium: item.isPremium,           // gating
+                                        showPremiumBlur: blurThis,           // visual blur only for the first premium
                                       ),
                                     ),
                                   );
-                                }).toList(),
+                                }),
                               ),
                             );
                           }),
@@ -464,47 +484,57 @@ class HomeView extends GetView<HomeController> {
                                 child: CircularProgressIndicator(),  // Show loading spinner if categories are not fetched yet
                               );
                             } else {
+                              final sList = controller.speedyDeliveries;
+                              final firstPremiumSpeedyIdx = sList.indexWhere((e) => e.isPremium == true);
+
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
-                                  children: controller.speedyDeliveries.map((speedyDeliveries) {
+                                  children: List.generate(sList.length, (i) {
+                                    final item = sList[i];
+                                    final blurThis = item.isPremium && i == firstPremiumSpeedyIdx && firstPremiumSpeedyIdx != -1;
+
                                     return Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 6.w),
                                       child: GestureDetector(
                                         onTap: () {
-                                          !speedyDeliveries.isPremium ? Get.dialog(
-                                              DealDetailView(
-                                                dealId: speedyDeliveries.id,
-                                                dealImage: speedyDeliveries.coverImageUrl!,
-                                                dealTitle: speedyDeliveries.offers,
-                                                dealDescription: speedyDeliveries.description,
-                                                dealValidity: DateFormat('hh:mm a, MMM dd').format(DateTime.parse(speedyDeliveries.dealValidity)),
-                                                dealStoreName: speedyDeliveries.name,
-                                                brandLogo: speedyDeliveries.logoUrl!,
-                                                address: 'Amsterdam',
-                                                redemptionType: speedyDeliveries.redemptionType,
-                                                deliveryCost: speedyDeliveries.deliveryFee,
-                                                minOrder: speedyDeliveries.minOrder,
-                                                userType: false,
-                                                freeDiscount: '10%',  // ← NEW
-                                                plusDiscount: '15%',
-                                              )
-                                          ) : Get.bottomSheet(QuoponPlusView());
+                                          !item.isPremium
+                                              ? Get.dialog(
+                                            DealDetailView(
+                                              dealId: item.id,
+                                              dealImage: item.coverImageUrl!,
+                                              dealTitle: item.offers,
+                                              dealDescription: item.description,
+                                              dealValidity: DateFormat('hh:mm a, MMM dd')
+                                                  .format(DateTime.parse(item.dealValidity)),
+                                              dealStoreName: item.name,
+                                              brandLogo: item.logoUrl!,
+                                              address: 'Amsterdam',
+                                              redemptionType: item.redemptionType,
+                                              deliveryCost: item.deliveryFee,
+                                              minOrder: item.minOrder,
+                                              userType: false,
+                                              freeDiscount: '10%',
+                                              plusDiscount: '15%',
+                                            ),
+                                          )
+                                              : Get.bottomSheet(QuoponPlusView());
                                         },
                                         child: HomeRestaurantCard(
                                           discountText: '',
-                                          restaurantImg: speedyDeliveries.coverImageUrl!,
-                                          restaurantName: speedyDeliveries.name,
-                                          deliveryFee: speedyDeliveries.deliveryFee,
-                                          distance: speedyDeliveries.distanceMiles,
-                                          rating: speedyDeliveries.rating,
-                                          reviewCount: speedyDeliveries.rating,
-                                          deliveryTime: speedyDeliveries.deliveryTimeMinutes.toString(),
-                                          isPremium: speedyDeliveries.isPremium,
+                                          restaurantImg: item.coverImageUrl!,
+                                          restaurantName: item.name,
+                                          deliveryFee: item.deliveryFee,
+                                          distance: item.distanceMiles,
+                                          rating: item.rating,
+                                          reviewCount: item.rating,
+                                          deliveryTime: item.deliveryTimeMinutes.toString(),
+                                          isPremium: item.isPremium,          // gating
+                                          showPremiumBlur: blurThis,          // blur only the first premium
                                         ),
                                       ),
-                                    ); // Use category object here
-                                  }).toList(),
+                                    );
+                                  }),
                                 ),
                               );
                             }

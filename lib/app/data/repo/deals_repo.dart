@@ -16,11 +16,11 @@ class DealBundle {
 
 class DealsRepo {
   static String dealByIdUrl(int id) =>
-      'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-vendor-deals/$id/';
+      'http://10.10.13.99:8090/vendors/all-vendor-deals/$id/';
   static String allBusinessProfileUrl =
-      'https://intensely-optimal-unicorn.ngrok-free.app/vendors/all-business-profile/';
+      'http://10.10.13.99:8090/vendors/all-business-profile/';
   static String myProfileUrl =
-      'https://intensely-optimal-unicorn.ngrok-free.app/food/my-profile/';
+      'http://10.10.13.99:8090/food/my-profile/';
 
   // Optional tiny cache to avoid repeated address lookups during a session
   static final Map<int, String> _addressCacheByVendorId = {};
