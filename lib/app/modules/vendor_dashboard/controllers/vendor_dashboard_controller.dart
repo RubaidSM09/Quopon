@@ -25,7 +25,7 @@ class VendorDashboardController extends GetxController {
   }
 
   Future<void> fetchOrders() async {
-    final url = Uri.parse('http://10.10.13.99:8090/order/orders/vendor-orders/');
+    final url = Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/vendor-orders/');
     try {
       print(await ApiClient.authHeaders());
       final response = await http.get(url, headers: await ApiClient.authHeaders());
@@ -43,7 +43,7 @@ class VendorDashboardController extends GetxController {
 
   Future<void> fetchDeals() async {
     // Recommended: endpoint that includes push_sent_count
-    final url = Uri.parse('http://10.10.13.99:8090/vendors/all-vendor-deals/');
+    final url = Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/');
     try {
       final headers = await ApiClient.authHeaders();
 

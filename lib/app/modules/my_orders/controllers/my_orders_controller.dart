@@ -19,7 +19,7 @@ class MyOrdersController extends GetxController {
       errorText.value = '';
 
       final headers = await BaseClient.authHeaders();
-      final response = await BaseClient.getRequest(api: 'http://10.10.13.99:8090/order/orders/', headers: headers);
+      final response = await BaseClient.getRequest(api: 'https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/', headers: headers);
       final data = await BaseClient.handleResponse(response);
 
       List<Order> allOrders = [];

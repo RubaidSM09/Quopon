@@ -1,7 +1,7 @@
 class Api {
   /// base url
 
-  static const baseUrl = "http://10.10.13.99:8090";
+  static const baseUrl = "https://doctorless-stopperless-turner.ngrok-free.dev";
   //static const socket = "https://socket.thirdshotslot.co.uk/";
 
 
@@ -27,7 +27,7 @@ class Api {
 
   /// Profile
   static const followedVendors = "$baseUrl/vendors/customers/followed-vendors/";
-  static const cart = 'http://10.10.13.99:8090/order/cart/';
+  static const cart = 'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/';
 
   static String menu(int userId) {
     return "$baseUrl/discover/menu/1/name";
@@ -41,5 +41,5 @@ class Api {
   static const activeOrders = "$baseUrl/discover/my-orders/?status=active";
   static const completedOrders = "$baseUrl/discover/my-orders/?status=completed";
 
-  static const deals = 'http://10.10.13.99:8090/vendors/deals/';
+  static const deals = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/';
 }

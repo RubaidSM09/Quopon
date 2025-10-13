@@ -7,6 +7,7 @@ import 'package:quopon/app/modules/ChooseRedemptionDeal/views/pickup_view.dart';
 import 'package:quopon/app/modules/VendorProfile/views/vendor_profile_view.dart';
 
 import '../../../../common/customTextButton.dart';
+import '../../QuoponPlus/views/quopon_plus_view.dart';
 import '../../home/views/home_view.dart';
 import '../controllers/deal_detail_controller.dart';
 
@@ -634,7 +635,7 @@ class DealDetailView extends GetView<DealDetailController> {
                                 ),
                       
                                 GestureDetector(
-                                  onTap: () { },
+                                  onTap: () => Get.bottomSheet(QuoponPlusView()),
                                   child: Container(
                                     padding: EdgeInsets.all(1.r),
                                     decoration: BoxDecoration(

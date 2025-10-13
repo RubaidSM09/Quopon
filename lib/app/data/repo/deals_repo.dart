@@ -16,11 +16,11 @@ class DealBundle {
 
 class DealsRepo {
   static String dealByIdUrl(int id) =>
-      'http://10.10.13.99:8090/vendors/all-vendor-deals/$id/';
+      'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/$id/';
   static String allBusinessProfileUrl =
-      'http://10.10.13.99:8090/vendors/all-business-profile/';
+      'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/';
   static String myProfileUrl =
-      'http://10.10.13.99:8090/food/my-profile/';
+      'https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/';
 
   // Optional tiny cache to avoid repeated address lookups during a session
   static final Map<int, String> _addressCacheByVendorId = {};

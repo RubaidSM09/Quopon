@@ -34,7 +34,7 @@ class VendorDealPerformanceController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final uri = Uri.parse(
-        'http://10.10.13.99:8090/vendors/$dealId/send-notification/',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/$dealId/send-notification/',
       );
 
       // ✅ REQUIRED BODY
@@ -80,7 +80,7 @@ class VendorDealPerformanceController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final uri = Uri.parse(
-        'http://10.10.13.99:8090/vendors/deals/$dealId/daily-metrics/?days=7',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/$dealId/daily-metrics/?days=7',
       );
       final res = await http.get(uri, headers: headers);
 

@@ -521,7 +521,7 @@ class HomeView extends GetView<HomeController> {
                                               : Get.bottomSheet(QuoponPlusView());
                                         },
                                         child: HomeRestaurantCard(
-                                          discountText: '',
+                                          discountText: item.title,
                                           restaurantImg: item.coverImageUrl!,
                                           restaurantName: item.name,
                                           deliveryFee: item.deliveryFee,

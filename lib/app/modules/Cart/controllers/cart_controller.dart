@@ -141,7 +141,7 @@ class CartController extends GetxController {
       };
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/order/cart/add/'); // use https
+          'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/add/'); // use https
 
       final body = {
         'menu_item_id': menuItemId,
@@ -182,7 +182,7 @@ class CartController extends GetxController {
       };
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/order/cart/item/$itemId/delete/');
+          'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/item/$itemId/delete/');
 
       final res = await http.delete(uri, headers: headers);
 
@@ -213,7 +213,7 @@ class CartController extends GetxController {
       };
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/order/cart/item/$itemId/increment/');
+          'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/item/$itemId/increment/');
 
       final res = await http.post(uri, headers: headers);
 
@@ -244,7 +244,7 @@ class CartController extends GetxController {
       };
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/order/cart/item/$itemId/decrement/');
+          'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/item/$itemId/decrement/');
 
       final res = await http.post(uri, headers: headers);
 

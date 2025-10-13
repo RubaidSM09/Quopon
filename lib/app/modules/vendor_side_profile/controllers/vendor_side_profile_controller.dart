@@ -82,7 +82,7 @@ class VendorSideProfileController extends GetxController {
 
     try {
       final headers = await BaseClient.authHeaders(); // includes token if needed
-      final uri = Uri.parse('http://10.10.13.99:8090/vendors/upload/');
+      final uri = Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/vendors/upload/');
       final req = http.MultipartRequest('POST', uri);
 
       // Important: DO NOT set 'Content-Type' manually here; http will set multipart boundary.
@@ -214,7 +214,7 @@ class VendorSideProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.99:8090/vendors/vendor-categories/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/vendor-categories/',
         headers: headers,
       );
       final data = await BaseClient.handleResponse(res) as List<dynamic>;
@@ -266,7 +266,7 @@ class VendorSideProfileController extends GetxController {
       String? userId = await BaseClient.getUserId();
       if (userId == null) throw "User ID not found. Please log in again.";
 
-      final apiUrl = 'http://10.10.13.99:8090/home/users/$userId/business-hours/';
+      final apiUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
 
@@ -317,7 +317,7 @@ class VendorSideProfileController extends GetxController {
       final String? userId = await BaseClient.getUserId();
       if (userId == null) throw "User ID not found. Please log in again.";
 
-      final apiUrl = 'http://10.10.13.99:8090/home/users/$userId/business-hours/';
+      final apiUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
       headers['Content-Type'] = 'application/json';
 

@@ -107,7 +107,7 @@ class ProductDetailsController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/order/cart/add/');
+          'https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/add/');
 
       final resp = await http.post(
         uri,

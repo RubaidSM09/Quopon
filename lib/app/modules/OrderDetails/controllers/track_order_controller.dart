@@ -39,7 +39,7 @@ class TrackOrderController extends GetxController {
   Future<void> fetchOrder() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.10.13.99:8090/order/orders/$orderId/'),
+        Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/$orderId/'),
         headers: await ApiClient.authHeaders(),
       );
       if (response.statusCode == 200) {

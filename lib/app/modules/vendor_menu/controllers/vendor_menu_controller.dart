@@ -36,7 +36,7 @@ class VendorMenuController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.99:8090/vendors/deals/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/',
         params: {'user_id': userId},
         headers: headers,
       );
@@ -96,7 +96,7 @@ class VendorMenuController extends GetxController {
 
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.deleteRequest(
-        api: 'http://10.10.13.99:8090/vendors/deals/$menuId/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/$menuId/',
         headers: headers,
       );
 

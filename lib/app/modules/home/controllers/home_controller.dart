@@ -128,7 +128,7 @@ class HomeController extends GetxController {
   Future<void> fetchVendorCategories() async {
     try {
       final apiUrl =
-          'http://10.10.13.99:8090/vendors/vendor-categories/';
+          'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/vendor-categories/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(
@@ -188,7 +188,7 @@ class HomeController extends GetxController {
       // A) user (for premium)
       final profileRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/food/my-profile/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/',
         headers: headers,
       );
       bool isUserPremium = false;
@@ -214,7 +214,7 @@ class HomeController extends GetxController {
       // C) deals
       final dealsRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/vendors/all-vendor-deals/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/',
         headers: headers,
       );
       if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
@@ -225,7 +225,7 @@ class HomeController extends GetxController {
       // D) vendors → map by (assumed) user_id == vendor_id
       final vendorsRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/vendors/all-business-profile/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/',
         headers: headers,
       );
       final Map<int, Map<String, dynamic>> vendorByUserId = {};
@@ -396,7 +396,7 @@ class HomeController extends GetxController {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/home/users/$userId/business-hours/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/home/users/$userId/business-hours/',
         headers: headers,
       );
       if (res.statusCode >= 200 && res.statusCode < 300) {
@@ -454,7 +454,7 @@ class HomeController extends GetxController {
 
       final response = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/vendors/all-business-profile/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/',
         headers: headers,
       );
 
@@ -469,7 +469,7 @@ class HomeController extends GetxController {
         try {
           final dealsRes = await BaseClient.getRequest(
             api:
-                'http://10.10.13.99:8090/vendors/all-vendor-deals/',
+                'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/',
             headers: headers,
           );
           if (dealsRes.statusCode >= 200 && dealsRes.statusCode < 300) {
@@ -671,7 +671,7 @@ class HomeController extends GetxController {
       // B) who is the user? (premium affects blur)
       final profileRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/food/my-profile/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/',
         headers: headers,
       );
       bool isUserPremium = false;
@@ -688,7 +688,7 @@ class HomeController extends GetxController {
       // C) deals (deliverable)
       final dealsRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/vendors/all-vendor-deals/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/',
         headers: headers,
       );
       if (dealsRes.statusCode < 200 || dealsRes.statusCode >= 300) {
@@ -699,7 +699,7 @@ class HomeController extends GetxController {
       // D) vendors (map by user_id == vendor_id)
       final vendorsRes = await BaseClient.getRequest(
         api:
-            'http://10.10.13.99:8090/vendors/all-business-profile/',
+            'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/',
         headers: headers,
       );
       final Map<int, Map<String, dynamic>> vendorByUserId = {};
@@ -1097,7 +1097,7 @@ class HomeController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final uri = Uri.parse(
-        'http://10.10.13.99:8090/vendors/deals/?user_id=$vendorId',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/?user_id=$vendorId',
       );
       final res = await BaseClient.getRequest(
         api: uri.toString(),

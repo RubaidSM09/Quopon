@@ -5,7 +5,7 @@ import 'package:quopon/app/data/base_client.dart';
 import 'package:quopon/app/data/model/user_profile.dart';
 
 class ProfileApi {
-  static const _base = 'http://10.10.13.99:8090/food/my-profile/';
+  static const _base = 'https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/';
 
   static Future<UserProfile> fetch() async {
     final headers = await BaseClient.authHeaders();
@@ -49,9 +49,9 @@ class ProfileApi {
 
 class VendorProfileApi {
   // FETCH (GET) – your existing fetch endpoint
-  static const _fetchUrl = 'http://10.10.13.99:8090/vendors/business-profile/';
+  static const _fetchUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/business-profile/';
   // UPDATE (PATCH) – as you requested (note: “businessh” in path per your API)
-  static const _patchUrl = 'http://10.10.13.99:8090/vendors/businessh-profile/manage/';
+  static const _patchUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/businessh-profile/manage/';
 
   static Future<VendorBusinessProfile> fetch() async {
     final headers = await BaseClient.authHeaders();

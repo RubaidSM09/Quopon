@@ -105,7 +105,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ONBOARDING,
-      page: () => OnboardingView(),
+      page: () => OnboardingVendorView(),
       binding: OnboardingBinding(),
     ),
     GetPage(

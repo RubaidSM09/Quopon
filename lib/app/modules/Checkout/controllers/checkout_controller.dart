@@ -119,7 +119,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("http://10.10.13.99:8090/food/my-profile/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -162,7 +162,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("http://10.10.13.99:8090/vendors/all-business-profile/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -229,7 +229,7 @@ class CheckoutController extends GetxController {
       final headers = await BaseClient.authHeaders();
       headers['ngrok-skip-browser-warning'] = 'true';
       final res = await http.get(
-        Uri.parse("http://10.10.13.99:8090/vendors/all-vendor-deals/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/"),
         headers: headers,
       );
       if (res.statusCode == 200) {
@@ -327,7 +327,7 @@ class CheckoutController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final res = await http.post(
-        Uri.parse("http://10.10.13.99:8090/order/cart/checkout/calculate/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/order/cart/checkout/calculate/"),
         headers: headers,
         body: jsonEncode({"deal_id": deal.id}),
       );
@@ -452,7 +452,7 @@ class CheckoutController extends GetxController {
       }
 
       final orderRes = await http.post(
-        Uri.parse("http://10.10.13.99:8090/order/orders/create/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/create/"),
         headers: headers,
         body: json.encode(body),
       );
@@ -494,7 +494,7 @@ class CheckoutController extends GetxController {
       headers['Content-Type'] = 'application/json';
 
       final response = await http.post(
-        Uri.parse("http://10.10.13.99:8090/order/orders/$orderId/process-payment/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/$orderId/process-payment/"),
         headers: headers,
       );
 

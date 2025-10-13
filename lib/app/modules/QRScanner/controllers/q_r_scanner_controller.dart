@@ -21,7 +21,7 @@ class QRScannerController extends GetxController {
   // Cache vendor profiles for this session
   final RxList<VendorProfile> _vendors = <VendorProfile>[].obs;
   final String _vendorsUrl =
-      'http://10.10.13.99:8090/vendors/all-business-profile/';
+      'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/';
 
   @override
   void onInit() {
@@ -78,7 +78,7 @@ class QRScannerController extends GetxController {
       return;
     }
 
-    final url = 'http://10.10.13.99:8090/vendors/all-deals/$dealId/';
+    final url = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-deals/$dealId/';
 
     try {
       await qrController?.pauseCamera();

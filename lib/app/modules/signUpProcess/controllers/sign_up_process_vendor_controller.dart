@@ -49,7 +49,7 @@ class SignUpProcessVendorController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.99:8090/vendors/vendor-categories/';
+      final apiUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/vendor-categories/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -97,7 +97,7 @@ class SignUpProcessVendorController extends GetxController {
       }
 
       final apiUrl =
-          'http://10.10.13.99:8090/home/users/$userId/business-hours/';
+          'https://doctorless-stopperless-turner.ngrok-free.dev/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.getRequest(api: apiUrl, headers: headers);
@@ -234,7 +234,7 @@ class SignUpProcessVendorController extends GetxController {
         throw "User ID not found. Please log in again.";
       }
 
-      final apiUrl = 'http://10.10.13.99:8090/home/users/$userId/business-hours/';
+      final apiUrl = 'https://doctorless-stopperless-turner.ngrok-free.dev/home/users/$userId/business-hours/';
       final headers = await BaseClient.authHeaders();
       headers['Content-Type'] = 'application/json';
 
@@ -323,7 +323,7 @@ class SignUpProcessVendorController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final response = await BaseClient.postRequest(
-        api: 'http://10.10.13.99:8090/vendors/business-profile/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/business-profile/',
         body: json.encode(requestBody),
         headers: headers,
       );

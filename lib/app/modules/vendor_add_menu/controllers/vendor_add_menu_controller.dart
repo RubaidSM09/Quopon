@@ -94,7 +94,7 @@ class VendorAddMenuController extends GetxController {
       final headers = await BaseClient.authHeaders();
 
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.99:8090/vendors/categories/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/categories/',
         headers: headers,
       );
 
@@ -160,7 +160,7 @@ class VendorAddMenuController extends GetxController {
       headers.remove('Content-Type');
 
       final uri = Uri.parse(
-          'http://10.10.13.99:8090/vendors/deals/');
+          'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/');
       final req = http.MultipartRequest('POST', uri)..headers.addAll(headers);
 
       // Fields

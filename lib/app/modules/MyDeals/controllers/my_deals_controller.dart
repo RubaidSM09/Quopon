@@ -97,7 +97,7 @@ class MyDealsController extends GetxController {
       // 1) Wishlist rows
       final wishRes = await BaseClient.getRequest(
         api:
-        'http://10.10.13.99:8090/vendors/wish-deals/',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/wish-deals/',
         headers: headers,
       );
       if (wishRes.statusCode < 200 || wishRes.statusCode >= 300) {
@@ -116,7 +116,7 @@ class MyDealsController extends GetxController {
       // 2) All deals
       final allDealsRes = await BaseClient.getRequest(
         api:
-        'http://10.10.13.99:8090/vendors/all-vendor-deals/',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/',
         headers: headers,
       );
       if (allDealsRes.statusCode < 200 || allDealsRes.statusCode >= 300) {
@@ -135,7 +135,7 @@ class MyDealsController extends GetxController {
       // 3) Vendors (enrichment)
       final vendorsRes = await BaseClient.getRequest(
         api:
-        'http://10.10.13.99:8090/vendors/all-business-profile/',
+        'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-business-profile/',
         headers: headers,
       );
       final Map<int, Map<String, dynamic>> vendorById = {};

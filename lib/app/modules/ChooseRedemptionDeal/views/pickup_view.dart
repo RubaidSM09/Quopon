@@ -86,7 +86,7 @@ class PickupView extends GetView {
                             child: Image.network(
                               qRCodeImage.startsWith('http')
                                   ? qRCodeImage
-                                  : 'http://10.10.13.99:8090$qRCodeImage',
+                                  : 'https://doctorless-stopperless-turner.ngrok-free.dev$qRCodeImage',
                               fit: BoxFit.cover,
                               width: 200.w,
                               height: 200.h,

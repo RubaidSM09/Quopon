@@ -21,7 +21,7 @@ class SendPushNotificationsController extends GetxController {
       print(headers);
 
       final res = await BaseClient.postRequest(
-        api: 'http://10.10.13.99:8090/vendors/$dealId/send-notification/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/$dealId/send-notification/',
         headers: headers,
         body: json.encode(body),
       );

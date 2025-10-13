@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiClient {
-  static const _base = 'http://10.10.13.99:8090';
+  static const _base = 'https://doctorless-stopperless-turner.ngrok-free.dev';
   static const _json = {'Content-Type': 'application/json'};
 
   static const _storage = FlutterSecureStorage();

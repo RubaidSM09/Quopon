@@ -19,7 +19,7 @@ class MyDealsDetailsController extends GetxController {
 
       final resp = await http.delete(
         Uri.parse(
-          'http://10.10.13.99:8090/vendors/wish-deals/$wishlistId/',
+          'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/wish-deals/$wishlistId/',
         ),
         headers: headers,
       );

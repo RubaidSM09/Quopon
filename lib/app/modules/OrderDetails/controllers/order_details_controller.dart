@@ -99,7 +99,7 @@ class OrderDetailsController extends GetxController {
       headers['ngrok-skip-browser-warning'] = 'true';
 
       final res = await http.get(
-        Uri.parse("http://10.10.13.99:8090/order/orders/$orderId/"),
+        Uri.parse("https://doctorless-stopperless-turner.ngrok-free.dev/order/orders/$orderId/"),
         headers: headers,
       );
 

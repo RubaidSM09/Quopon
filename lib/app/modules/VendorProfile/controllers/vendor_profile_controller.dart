@@ -138,7 +138,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final response = await http.get(
-        Uri.parse('http://10.10.13.99:8090/food/my-profile/'),
+        Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/food/my-profile/'),
         headers: headers,
       );
 
@@ -160,7 +160,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await http.get(
-        Uri.parse('http://10.10.13.99:8090/vendors/customers/followed-vendors/'),
+        Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/vendors/customers/followed-vendors/'),
         headers: headers,
       );
       if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -190,7 +190,7 @@ class VendorProfileController extends GetxController {
     followBusy.value = true;
     try {
       final headers = await BaseClient.authHeaders();
-      final base = 'http://10.10.13.99:8090/vendors/vendors/$vendorProfileId';
+      final base = 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/vendors/$vendorProfileId';
       final uri = Uri.parse(isFollowed.value ? '$base/unfollow/' : '$base/follow/');
       final res = await http.post(uri, headers: headers);
 
@@ -217,7 +217,7 @@ class VendorProfileController extends GetxController {
       await fetchUserProfile(); // Fetch subscription status before deals
       final headers = await BaseClient.authHeaders();
       final response = await http.get(
-        Uri.parse('http://10.10.13.99:8090/vendors/all-vendor-deals/'),
+        Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/vendors/all-vendor-deals/'),
         headers: headers,
       );
 
@@ -261,7 +261,7 @@ class VendorProfileController extends GetxController {
     try {
       final headers = await BaseClient.authHeaders();
       final res = await BaseClient.getRequest(
-        api: 'http://10.10.13.99:8090/vendors/deals/',
+        api: 'https://doctorless-stopperless-turner.ngrok-free.dev/vendors/deals/',
         params: {'user_id': id.toString()},
         headers: headers,
       );
