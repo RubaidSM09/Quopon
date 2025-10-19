@@ -54,7 +54,7 @@ dependencies:
   latlong2: ^0.9.1
   qr_code_scanner_plus: ^2.0.12
   firebase_messaging: ^16.0.2
-  firebase_core: ^4.1.1
+  firebase_core: ^4.2.0
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   collection: ^1.19.1

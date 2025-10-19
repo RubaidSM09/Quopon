@@ -24,8 +24,11 @@ class SocialAuthService {
 
   /// Google Sign-In (works on 6.3.0)
   Future<UserCredential> google() async {
+    print('Hi1');
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    print('Hi2');
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =

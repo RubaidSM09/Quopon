@@ -47,6 +47,7 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
           onRefresh: () async {
             await controller.fetchOrders();
             await controller.fetchDeals();
+            await controller.fetchVendorProfile();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -55,78 +56,90 @@ class VendorDashboardView extends GetView<VendorDashboardController> {
               child: Column(
                 children: [
                   // Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 20.r,
-                            backgroundImage: const AssetImage(
-                                'assets/images/Vendor/Dashboard/Starbucks.png'),
-                          ),
-                          SizedBox(width: 10.w),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Hi, Good Evening!',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.sp,
-                                  color: const Color(0xFF020711),
+                  Obx(() {
+                    final vp = controller.vendorProfile.value;
+
+                    // Greeting by current local time
+                    String greeting() {
+                      final h = DateTime.now().hour; // device local time
+                      if (h < 12) return 'Good Morning!';
+                      if (h < 17) return 'Good Afternoon!';
+                      return 'Good Evening!';
+                    }
+
+                    // name + logo fallback
+                    final displayName = (vp?.name?.isNotEmpty == true) ? vp!.name : 'Vendor';
+                    final logoUrl = vp?.logoImage ?? '';
+
+                    Widget avatar;
+                    if (logoUrl.startsWith('http')) {
+                      avatar = CircleAvatar(radius: 20.r, backgroundImage: NetworkImage(logoUrl));
+                    } else {
+                      avatar = CircleAvatar(
+                        radius: 20.r,
+                        backgroundImage: const AssetImage('assets/images/Vendor/Dashboard/placeholder_vendor.png'),
+                      );
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            avatar,
+                            SizedBox(width: 10.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Hi, ${greeting()}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.sp,
+                                    color: const Color(0xFF020711),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'Starbucks',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: const Color(0xFF6F7E8D),
+                                Text(
+                                  displayName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                    color: const Color(0xFF6F7E8D),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withAlpha(15),
-                                  blurRadius: 16,
-                                )
                               ],
                             ),
-                            child: GestureDetector(
-                              onTap: () => Get.to(() => VendorCreateDealView()),
-                              child: const Icon(Icons.add),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)],
+                              ),
+                              child: GestureDetector(
+                                onTap: () => Get.to(() => VendorCreateDealView()),
+                                child: const Icon(Icons.add),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Container(
-                            padding: EdgeInsets.all(8.r),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withAlpha(15),
-                                  blurRadius: 16,
-                                )
-                              ],
+                            SizedBox(width: 12.w),
+                            Container(
+                              padding: EdgeInsets.all(8.r),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [BoxShadow(color: Colors.black.withAlpha(15), blurRadius: 16)],
+                              ),
+                              child: Image.asset('assets/images/Home/Notification.png'),
                             ),
-                            child: Image.asset('assets/images/Home/Notification.png'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }),
 
                   SizedBox(height: 15.h),
 

@@ -9,6 +9,7 @@ import 'app/modules/Review/views/review_view.dart';
 import 'app/routes/app_pages.dart';
 import 'app/services/notification_services.dart';
 import 'app/services/review_prompt_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ void main() async {
 
   await Get.putAsync<ReviewPromptService>(() async => ReviewPromptService().init());
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService().initializeNotifications();
   runApp(
     ScreenUtilInit(

@@ -17,11 +17,54 @@ class VendorDashboardController extends GetxController {
   // start at 0; we will compute from API
   RxInt pushesSent = 0.obs;
 
+  final Rxn<VendorProfileLite> vendorProfile = Rxn<VendorProfileLite>();
+
   Future<void> refreshAll() async {
     await Future.wait([
       fetchOrders(),
       fetchDeals(),
+      fetchVendorProfile(),
     ]).catchError((_) {});
+  }
+
+  Future<void> fetchVendorProfile() async {
+    final url = Uri.parse('https://doctorless-stopperless-turner.ngrok-free.dev/vendors/business-profile/');
+    try {
+      final headers = await ApiClient.authHeaders();
+      final res = await http.get(url, headers: headers);
+      if (res.statusCode == 200) {
+        final body = jsonDecode(res.body);
+        final List list = (body is List) ? body : <dynamic>[];
+
+        final profiles = list
+            .cast<Map<String, dynamic>>()
+            .map(VendorProfileLite.fromJson)
+            .toList();
+
+        // Try to match current logged-in vendor id if available
+        String? myUserId;
+        try {
+          myUserId = await ApiClient.getUserId(); // should be vendor user id
+        } catch (_) {
+          myUserId = null;
+        }
+
+        VendorProfileLite? found;
+        if (myUserId != null && myUserId.isNotEmpty) {
+          final meId = int.tryParse(myUserId);
+          if (meId != null) {
+            found = profiles.firstWhereOrNull((p) => p.vendorId == meId);
+          }
+        }
+
+        vendorProfile.value = found ?? (profiles.isNotEmpty ? profiles.first : null);
+      } else {
+        // fallback: clear (keeps placeholder UI)
+        vendorProfile.value = null;
+      }
+    } catch (_) {
+      vendorProfile.value = null;
+    }
   }
 
   Future<void> fetchOrders() async {
@@ -107,6 +150,7 @@ class VendorDashboardController extends GetxController {
   void onInit() {
     fetchOrders();
     fetchDeals();
+    fetchVendorProfile();
     super.onInit();
   }
 
@@ -223,4 +267,23 @@ class DeliveryCost {
       minOrderAmount: json['min_order_amount'] ?? '0.00',
     );
   }
+}
+
+
+class VendorProfileLite {
+  final int vendorId;
+  final String name;
+  final String logoImage;
+
+  VendorProfileLite({
+    required this.vendorId,
+    required this.name,
+    required this.logoImage,
+  });
+
+  factory VendorProfileLite.fromJson(Map<String, dynamic> j) => VendorProfileLite(
+    vendorId: j['vendor_id'] ?? 0,
+    name: (j['name'] ?? '').toString(),
+    logoImage: (j['logo_image'] ?? '').toString(),
+  );
 }
